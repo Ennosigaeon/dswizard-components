@@ -1,3 +1,7 @@
+scikit-learn
+networkx
+numpy
+ConfigSpace
 # =============================================================================
 # DEPRECATION WARNING:
 #
