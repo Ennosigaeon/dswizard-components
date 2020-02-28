@@ -12,6 +12,7 @@ class NormalizerComponent(PreprocessingAlgorithm):
     def fit(self, X, y=None):
         from sklearn.preprocessing import Normalizer
         self.preprocessor = Normalizer(norm=self.norm, copy=False)
+        return self
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

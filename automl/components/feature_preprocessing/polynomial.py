@@ -14,14 +14,14 @@ class PolynomialFeaturesComponent(PreprocessingAlgorithm):
         self.include_bias = include_bias
 
     def fit(self, X, y=None):
-        import sklearn.preprocessing
+        from sklearn.preprocessing import PolynomialFeatures
 
         self.interaction_only = check_for_bool(self.interaction_only)
         self.include_bias = check_for_bool(self.include_bias)
 
-        self.preprocessor = sklearn.preprocessing.PolynomialFeatures(degree=self.degree,
-                                                                     interaction_only=self.interaction_only,
-                                                                     include_bias=self.include_bias)
+        self.preprocessor = PolynomialFeatures(degree=self.degree,
+                                               interaction_only=self.interaction_only,
+                                               include_bias=self.include_bias)
         self.preprocessor.fit(X, y)
         return self
 

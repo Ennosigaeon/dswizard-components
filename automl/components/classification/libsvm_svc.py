@@ -92,7 +92,7 @@ class LibSVM_SVC(PredictionAlgorithm):
                                          random_state=self.random_state,
                                          cache_size=cache_size,
                                          decision_function_shape='ovr',
-                                         probability=False)
+                                         probability=True)
         self.estimator.fit(X, Y)
         return self
 

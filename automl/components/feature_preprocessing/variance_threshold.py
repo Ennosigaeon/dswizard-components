@@ -10,8 +10,8 @@ class VarianceThresholdComponent(PreprocessingAlgorithm):
         self.threshold = threshold
 
     def fit(self, X, y=None):
-        import sklearn.feature_selection
-        self.preprocessor = sklearn.feature_selection.VarianceThreshold(threshold=self.threshold)
+        from sklearn.feature_selection import VarianceThreshold
+        self.preprocessor = VarianceThreshold(threshold=self.threshold)
         self.preprocessor = self.preprocessor.fit(X)
         return self
 

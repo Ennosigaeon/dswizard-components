@@ -1,37 +1,44 @@
 import numpy as np
 import pandas as pd
 from ConfigSpace.configuration_space import ConfigurationSpace
-from sklearn.preprocessing import OneHotEncoder
 
 from automl.components.base import PreprocessingAlgorithm
 
 
 class OneHotEncoderComponent(PreprocessingAlgorithm):
-    def __init__(self,
-                 categorical_features=None,
-                 random_state=None):
+    def __init__(self, sparse: bool = False):
         super().__init__()
-        self.categorical_features = categorical_features
+        self.sparse = sparse
+
+    def fit(self, X, y=None):
+        from sklearn.preprocessing import OneHotEncoder
+        self.preprocessor = OneHotEncoder(sparse=self.sparse)
+
+        self.preprocessor.fit(X)
+        return self
 
     def transform(self, X: np.ndarray):
-        OneHotEncoder
+
         categorical = []
         numeric = []
+
         for i in range(X.shape[1]):
             try:
-                X[:, i].astype(float)
+                X.iloc[:, i].values.astype(float)
                 numeric.append(i)
             except ValueError:
                 categorical.append(i)
 
         if len(categorical) == 0:
-            return X
+            df = pd.DataFrame(X)
+            return df.to_numpy()
 
-        df = pd.DataFrame.from_records(X[:, categorical])
-        df = pd.get_dummies(df)
+        df = pd.DataFrame.from_records(X.iloc[:, categorical].values)
+        cat = X.columns[categorical].values
+        df = pd.get_dummies(df, prefix=[cat])
 
         for i in numeric:
-            df[len(df.columns)] = X[:, i].astype(float)
+            df[len(df.columns)] = X.iloc[:, i].values.astype(float)
         return df.to_numpy()
 
     @staticmethod

@@ -18,13 +18,13 @@ class PCAComponent(PreprocessingAlgorithm):
         self.random_state = random_state
 
     def fit(self, X, Y=None):
-        import sklearn.decomposition
+        from sklearn.decomposition import PCA
         self.whiten = check_for_bool(self.whiten)
 
-        self.preprocessor = sklearn.decomposition.PCA(n_components=self.n_components,
-                                                      whiten=self.whiten,
-                                                      random_state=self.random_state,
-                                                      copy=False)
+        self.preprocessor = PCA(n_components=self.n_components,
+                                whiten=self.whiten,
+                                random_state=self.random_state,
+                                copy=False)
         self.preprocessor.fit(X)
 
         if not np.isfinite(self.preprocessor.components_).all():

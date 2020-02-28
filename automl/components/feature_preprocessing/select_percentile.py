@@ -33,15 +33,14 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
 
     def fit(self, X, y):
         import scipy.sparse
-        import sklearn.feature_selection
+        from sklearn.feature_selection import SelectPercentile, chi2
 
-        self.preprocessor = sklearn.feature_selection.SelectPercentile(
-            score_func=self.score_func,
-            percentile=self.percentile)
+        self.preprocessor = SelectPercentile(score_func=self.score_func,
+                                             percentile=self.percentile)
 
         # Because the pipeline guarantees that each feature is positive,
         # clip all values below zero to zero
-        if self.score_func == sklearn.feature_selection.chi2:
+        if self.score_func == chi2:
             if scipy.sparse.issparse(X):
                 X.data[X.data < 0] = 0.0
             else:

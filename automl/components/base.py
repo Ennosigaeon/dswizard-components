@@ -198,6 +198,8 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
     def __init__(self):
         self.estimator: Optional[BaseEstimator] = None
         self.properties: Optional[Dict] = None
+        # TODO generalize for other learning tasks
+        self._estimator_type = "classifier"
 
     def get_estimator(self):
         """Return the underlying estimator object.
