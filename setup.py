@@ -24,7 +24,12 @@ if __name__ == "__main__":
           version='0.1',
           description='Contains sklearn algorithms',
           license='MIT',
-          packages=['automl'],
+          packages=['automl',
+                    'automl.components',
+                    'automl.components.classification',
+                    'automl.components.data_preprocessing',
+                    'automl.components.feature_preprocessing',
+                    'automl.util'],
           include_package_data=True,
           zip_safe=False)
 
