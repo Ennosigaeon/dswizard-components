@@ -24,7 +24,8 @@ if __name__ == "__main__":
           version='0.1',
           description='Contains sklearn algorithms',
           license='MIT',
-          packages=['automl'],
+          packages=['sklearn_components'],
+          include_package_data=True,
           zip_safe=False)
 
     # setup(use_pyscaffold=True)
