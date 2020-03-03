@@ -24,7 +24,7 @@ if __name__ == "__main__":
           version='0.1',
           description='Contains sklearn algorithms',
           license='MIT',
-          packages=['sklearn_components'],
+          packages=['automl'],
           include_package_data=True,
           zip_safe=False)
 
