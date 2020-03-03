@@ -20,4 +20,11 @@ except VersionConflict:
 
 
 if __name__ == "__main__":
-    setup(use_pyscaffold=True)
+    setup(name='sklearn-components',
+          version='0.1',
+          description='Contains sklearn algorithms',
+          license='MIT',
+          packages=['sklearn-components'],
+          zip_safe=False)
+
+    # setup(use_pyscaffold=True)
