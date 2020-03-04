@@ -6,9 +6,10 @@ from automl.components.base import PreprocessingAlgorithm
 
 
 class OneHotEncoderComponent(PreprocessingAlgorithm):
-    def __init__(self, sparse: bool = False):
+    def __init__(self, categories: str = 'auto', sparse: bool = False):
         super().__init__()
         self.sparse = sparse
+        self.categories = categories  # TODO testen ob es immernoch funktioniert wenn man OHE categories übergibt
 
     def fit(self, X, y=None):
         from sklearn.preprocessing import OneHotEncoder
