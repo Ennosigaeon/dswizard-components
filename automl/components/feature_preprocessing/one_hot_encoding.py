@@ -13,7 +13,7 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
 
     def fit(self, X, y=None):
         from sklearn.preprocessing import OneHotEncoder
-        self.preprocessor = OneHotEncoder(sparse=self.sparse)
+        self.preprocessor = OneHotEncoder(categories=self.categories, sparse=self.sparse)
 
         self.preprocessor.fit(X)
         return self
@@ -35,8 +35,8 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
             return df.to_numpy()
 
         df = pd.DataFrame.from_records(X.iloc[:, categorical].values)
-        cat = X.columns[categorical].values
-        df = pd.get_dummies(df, prefix=[cat])
+        cat = X.columns[categorical].values.tolist()
+        df = pd.get_dummies(df, prefix=[cat[i] for i in range(len(cat))])
 
         for i in numeric:
             df[len(df.columns)] = X.iloc[:, i].values.astype(float)
