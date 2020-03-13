@@ -6,6 +6,9 @@ from automl.components.base import PreprocessingAlgorithm
 
 class SelectPercentileClassification(PreprocessingAlgorithm):
 
+    """SelectPercentile removes all but a user-specified highest scoring percentage of features. It provides an
+        automatic procedure for keeping only a certain percentage of the best, associated features."""
+
     def __init__(self,
                  percentile: float = 10,
                  score_func: str = "chi2",
