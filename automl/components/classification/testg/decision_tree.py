@@ -12,6 +12,7 @@ class DecisionTree(PredictionAlgorithm):
 
     def __init__(self,
                  criterion: str = "gini",
+                 splitter: float = 0.,
                  max_depth_factor: float = 1,
                  min_samples_split: int = 2,
                  min_samples_leaf: int = 1,
@@ -20,10 +21,11 @@ class DecisionTree(PredictionAlgorithm):
                  random_state=None,
                  max_leaf_nodes: int = None,
                  min_impurity_decrease: float = 0.,
-                 class_weight=None,
+                 class_weight = None
                  ):
         super().__init__()
         self.criterion = criterion
+        self.splitter = splitter
         self.max_features = max_features
         self.max_depth_factor = max_depth_factor
         self.min_samples_split = min_samples_split
@@ -48,6 +50,7 @@ class DecisionTree(PredictionAlgorithm):
 
         self.estimator = DecisionTreeClassifier(
             criterion=self.criterion,
+            splitter=self.splitter,
             max_depth=max_depth,
             min_samples_split=self.min_samples_split,
             min_samples_leaf=self.min_samples_leaf,
@@ -84,6 +87,7 @@ class DecisionTree(PredictionAlgorithm):
         cs = ConfigurationSpace()
 
         criterion = CategoricalHyperparameter("criterion", ["gini", "entropy"], default_value="gini")
+        splitter = CategoricalHyperparameter("splitter", ["best","random"], default_value="best")
         max_depth_factor = UniformFloatHyperparameter('max_depth_factor', 0., 2., default_value=0.5)
         min_samples_split = UniformIntegerHyperparameter("min_samples_split", 2, 20, default_value=2)
         min_samples_leaf = UniformIntegerHyperparameter("min_samples_leaf", 1, 20, default_value=1)
@@ -92,7 +96,7 @@ class DecisionTree(PredictionAlgorithm):
         max_leaf_nodes = UnParametrizedHyperparameter("max_leaf_nodes", "None")
         min_impurity_decrease = UnParametrizedHyperparameter('min_impurity_decrease', 0.0)
 
-        cs.add_hyperparameters([criterion, max_features, max_depth_factor,
+        cs.add_hyperparameters([criterion, splitter, max_features, max_depth_factor,
                                 min_samples_split, min_samples_leaf,
                                 min_weight_fraction_leaf, max_leaf_nodes,
                                 min_impurity_decrease])
