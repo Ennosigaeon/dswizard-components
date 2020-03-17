@@ -2,7 +2,7 @@ import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
 
-from automl.components.classification.libsvm_svc import LibSVM_SVC
+from automl.components.classification.testg.libsvm_svc import LibSVM_SVC
 from tests import base_test
 
 

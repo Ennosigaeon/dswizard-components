@@ -8,10 +8,11 @@ from automl.util.common import check_for_bool
 
 class BernoulliNB(PredictionAlgorithm):
 
-    def __init__(self, alpha: float = 1.0, fit_prior: bool = True, random_state=None, verbose: int = 0):
+    def __init__(self, alpha: float = 1.0, fit_prior: bool = True, binarize: float = 0., random_state=None, verbose: int = 0):
         super().__init__()
         self.alpha = alpha
         self.fit_prior = fit_prior
+        self.binarize = binarize
         self.random_state = random_state
         self.verbose = int(verbose)
         self.classes_ = None
@@ -20,7 +21,7 @@ class BernoulliNB(PredictionAlgorithm):
         import sklearn.naive_bayes
 
         self.fit_prior = check_for_bool(self.fit_prior)
-        self.estimator = sklearn.naive_bayes.BernoulliNB(alpha=self.alpha, fit_prior=self.fit_prior)
+        self.estimator = sklearn.naive_bayes.BernoulliNB(alpha=self.alpha, binarize=self.binarize, fit_prior=self.fit_prior)
         self.classes_ = np.unique(y.astype(int))
 
         # Fallback for multilabel classification
@@ -52,7 +53,8 @@ class BernoulliNB(PredictionAlgorithm):
         # the smoothing parameter is a non-negative float
         # I will limit it to 1000 and put it on a logarithmic scale. (SF)
         # Please adjust that, if you know a proper range, this is just a guess.
-        alpha = UniformFloatHyperparameter(name="alpha", lower=1e-2, upper=100, default_value=1, log=True)
+        alpha = UniformFloatHyperparameter(name="alpha", lower=0., upper=10, default_value=1, log=True)
+        binarize = UniformFloatHyperparameter("binarize", 0., 10., default_value=0.)
         fit_prior = CategoricalHyperparameter(name="fit_prior", choices=[True, False], default_value=True)
 
         cs.add_hyperparameters([alpha, fit_prior])

@@ -1,4 +1,6 @@
 from scipy import sparse
+from ConfigSpace.configuration_space import ConfigurationSpace
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, UniformIntegerHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
 
@@ -8,6 +10,20 @@ class FastICAComponent(PreprocessingAlgorithm):
         super().__init__()
         from sklearn.decomposition import FastICA
         self.preprocessor = FastICA()
+
+    @staticmethod
+    def get_hyperparameter_search_space(dataset_properties=None):
+        cs = ConfigurationSpace()
+
+        n_components = UniformIntegerHyperparameter("n_components", 10, 10000, default_value= 100)
+        algorithm = CategoricalHyperparameter("algorithm", ["parallel", "deflation"], default_value="parallel")
+        whiten = CategoricalHyperparameter("whiten", [True,False], default_value=True)
+        fun = CategoricalHyperparameter("fun", ["logcosh", "exp", "cube"], default_value="logcosh")
+        max_iter = UniformIntegerHyperparameter("max_iter", 1, 1000, default_value=100)
+        tol = UniformFloatHyperparameter("tol", 1e-5, 5., default_value=1.)
+
+        cs.add_hyperparameter(n_components,algorithm, whiten, fun, max_iter, tol)
+        return cs
 
     @staticmethod
     def get_properties(dataset_properties=None):

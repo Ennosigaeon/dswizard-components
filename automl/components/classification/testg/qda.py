@@ -16,8 +16,8 @@ class SVCClassifier(PredictionAlgorithm):
                  tol: float = 1e-4
                  ):
         super().__init__()
-        self.reg_param = reg_param,
-        self.store_covariance = store_covariance,
+        self.reg_param = reg_param
+        self.store_covariance = store_covariance
         self.tol = tol
 
     def fit(self, X, y):

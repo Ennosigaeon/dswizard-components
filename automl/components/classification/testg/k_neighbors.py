@@ -19,11 +19,11 @@ class KNeighborsClassifier(PredictionAlgorithm):
                  metric: str = "minkowski"
                  ):
         super().__init__()
-        self.n_neighbors = n_neighbors,
-        self.weights = weights,
-        self.algorithm = algorithm,
-        self.leaf_size = leaf_size,
-        self.p = p,
+        self.n_neighbors = n_neighbors
+        self.weights = weights
+        self.algorithm = algorithm
+        self.leaf_size = leaf_size
+        self.p = p
         self.metric = metric
 
     def fit(self, X, y):

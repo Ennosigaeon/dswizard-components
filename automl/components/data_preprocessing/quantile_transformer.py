@@ -1,12 +1,33 @@
 from automl.components.base import PreprocessingAlgorithm
-
+from ConfigSpace.configuration_space import ConfigurationSpace
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter, \
+    UniformIntegerHyperparameter
 
 class QuantileTransformerComponent(PreprocessingAlgorithm):
 
-    def __init__(self):
+    def __init__(self, n_quantiles: int = 1000, output_distribution: str = "uniform", ignore_implicit_zeros: bool = False, subsample: int = 1e5, copy: bool = True):
         super().__init__()
+        self.n_quantiles = n_quantiles
+        self.output_distribution = output_distribution
+        self.ignore_implicit_zeros = ignore_implicit_zeros
+        self.subsample = subsample
+        self.copy = copy
         from sklearn.preprocessing import QuantileTransformer
         self.preprocessor = QuantileTransformer(copy=False)
+
+    @staticmethod
+    def get_hyperparameter_search_space(dataset_properties=None):
+        cs = ConfigurationSpace()
+
+        n_quantiles = UniformIntegerHyperparameter("n_quantiles", 10, 10000, default_value=1000)
+        output_distribution = CategoricalHyperparameter("output_distribution", ["uniform", "normal"],
+                                                        default_value="uniform")
+        ignore_implicit_zeros = CategoricalHyperparameter("ignore_implicit_zeros", [True, False], default_value=False)
+        subsample = UniformIntegerHyperparameter("subsample", 1e3, 1e8, default_value=1e5)
+        copy = CategoricalHyperparameter("copy", [True, False], default_value=True)
+
+        cs.add_hyperparameter([n_quantiles, output_distribution, ignore_implicit_zeros, subsample, copy])
+        return cs
 
     @staticmethod
     def get_properties(dataset_properties=None):

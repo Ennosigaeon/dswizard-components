@@ -1,6 +1,6 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
-    UnParametrizedHyperparameter, Constant
+    UnParametrizedHyperparameter, Constant, CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.common import check_none
@@ -21,6 +21,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
                  n_iter_no_change: int = None,
                  validation_fraction: float = 0.1,
                  random_state=None,
+                 warm_start: bool = False,
                  verbose=0):
         super().__init__()
         self.loss = loss
@@ -35,6 +36,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         self.scoring = scoring
         self.n_iter_no_change = n_iter_no_change
         self.validation_fraction = validation_fraction
+        self.warm_start = warm_start
         self.random_state = random_state
         self.verbose = verbose
 
@@ -59,6 +61,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
             l2_regularization=self.l2_regularization,
             tol=self.tol,
             scoring=self.scoring,
+            warm_start=self.warm_start,
             n_iter_no_change=self.n_iter_no_change,
             validation_fraction=self.validation_fraction,
             verbose=self.verbose,
@@ -84,7 +87,8 @@ class GradientBoostingClassifier(PredictionAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
-        loss = Constant("loss", "auto")
+
+        loss = CategoricalHyperparameter("loss", ["binary_crossentropy", "categorical_crossentropy"], default_value="binary_crossentropy")
         learning_rate = UniformFloatHyperparameter(name="learning_rate", lower=0.01, upper=1, default_value=0.1,
                                                    log=True)
         max_iter = UniformIntegerHyperparameter("max_iter", 32, 512, default_value=100)
@@ -96,14 +100,15 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         max_bins = Constant("max_bins", 255)
         l2_regularization = UniformFloatHyperparameter(name="l2_regularization", lower=1E-10, upper=1,
                                                        default_value=1E-10, log=True)
-        tol = UnParametrizedHyperparameter(name="tol", value=1e-7)
-        scoring = UnParametrizedHyperparameter(name="scoring", value="loss")
+        warm_start = CategoricalHyperparameter("warm_start", [True,False], default_value=False)
+        tol = UniformFloatHyperparameter("tol", 1e-9, 0.01, default_value=1e-7)
+        scoring = CategoricalHyperparameter("scoring", ["accuracy", "balanced_accuracy", "average_precision", "f1", "f1_weighted", "precision", "recall", "roc_auc", "roc_auc_ovr", "roc_auc_ovo", "loss"], default_value="loss")
         n_iter_no_change = UniformIntegerHyperparameter(name="n_iter_no_change", lower=1, upper=20, default_value=10)
         validation_fraction = UniformFloatHyperparameter(name="validation_fraction", lower=0.01, upper=0.4,
                                                          default_value=0.1)
 
         cs.add_hyperparameters(
             [loss, learning_rate, max_iter, min_samples_leaf, max_depth, max_leaf_nodes, max_bins, l2_regularization,
-             tol, scoring, n_iter_no_change, validation_fraction])
+             tol, scoring, n_iter_no_change, validation_fraction, warm_start])
 
         return cs

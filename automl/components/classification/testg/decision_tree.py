@@ -21,7 +21,8 @@ class DecisionTree(PredictionAlgorithm):
                  random_state=None,
                  max_leaf_nodes: int = None,
                  min_impurity_decrease: float = 0.,
-                 class_weight = None
+                 class_weight = None,
+                 ccp_alpha: float = 0.
                  ):
         super().__init__()
         self.criterion = criterion
@@ -35,6 +36,7 @@ class DecisionTree(PredictionAlgorithm):
         self.min_impurity_decrease = min_impurity_decrease
         self.random_state = random_state
         self.class_weight = class_weight
+        self.ccp_alpha = ccp_alpha
 
     def fit(self, X, y, sample_weight=None):
         from sklearn.tree import DecisionTreeClassifier
@@ -58,6 +60,7 @@ class DecisionTree(PredictionAlgorithm):
             min_weight_fraction_leaf=self.min_weight_fraction_leaf,
             min_impurity_decrease=self.min_impurity_decrease,
             class_weight=self.class_weight,
+            ccp_alpha = self.ccp_alpha,
             random_state=self.random_state)
         self.estimator.fit(X, y, sample_weight=sample_weight)
         return self
@@ -95,6 +98,7 @@ class DecisionTree(PredictionAlgorithm):
         max_features = UnParametrizedHyperparameter('max_features', 1.0)
         max_leaf_nodes = UnParametrizedHyperparameter("max_leaf_nodes", "None")
         min_impurity_decrease = UnParametrizedHyperparameter('min_impurity_decrease', 0.0)
+        ccp_alpha = UniformFloatHyperparameter("ccp_alpha", 0., 5., default_value=0.)
 
         cs.add_hyperparameters([criterion, splitter, max_features, max_depth_factor,
                                 min_samples_split, min_samples_leaf,

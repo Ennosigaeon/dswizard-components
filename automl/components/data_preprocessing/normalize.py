@@ -5,20 +5,25 @@ from automl.components.base import PreprocessingAlgorithm
 
 
 class NormalizerComponent(PreprocessingAlgorithm):
-    def __init__(self, norm: str = 'l2'):
+    def __init__(self, norm: str = 'l2', copy: bool = True):
         super().__init__()
         self.norm = norm
+        self.copy = copy
 
     def fit(self, X, y=None):
         from sklearn.preprocessing import Normalizer
-        self.preprocessor = Normalizer(norm=self.norm, copy=False)
+        self.preprocessor = Normalizer(norm=self.norm, copy=self.copy)
         return self
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
-        threshold = CategoricalHyperparameter('norm', ['l1', 'l2', 'max'], default_value='l2')
-        cs.add_hyperparameter(threshold)
+
+
+
+        norm = CategoricalHyperparameter('norm', ['l1', 'l2', 'max'], default_value='l2')
+        copy = CategoricalHyperparameter("copy", [True,False], default_value=True)
+        cs.add_hyperparameter(norm)
         return cs
 
     @staticmethod

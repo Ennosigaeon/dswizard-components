@@ -1,6 +1,7 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     CategoricalHyperparameter, UnParametrizedHyperparameter, Constant
+from ConfigSpace.conditions import InCondition
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
@@ -17,7 +18,6 @@ class LogisticRegression(PredictionAlgorithm):
                  intercept_scaling: float = 1,
                  max_iter: int = 100
                  ):
-
         super().__init__()
         self.penalty = penalty
         self.solver = solver
@@ -74,8 +74,16 @@ class LogisticRegression(PredictionAlgorithm):
         tol = UniformFloatHyperparameter("tol", lower=1.0e-5, upper=100, default_value=1.0e-4, log=True)
         C = UniformFloatHyperparameter("C", lower=0.0, upper=2.0, default_value=1.0, log=True)
         fit_intercept = CategoricalHyperparameter("fit_intercept", choices=[True, False], default_value=True)
-        intercept_scaling = UniformFloatHyperparameter("intercept_scaling", lower=0.0, upper=2.0, default_value=1.0, log=True)
+        intercept_scaling = UniformFloatHyperparameter("intercept_scaling", lower=0.0, upper=2.0, default_value=1.0,
+                                                       log=True)
         max_iter = UniformIntegerHyperparameter("max_iter", 50, 150, default_value=100)
+        multi_class = CategoricalHyperparameter("multi_class", ["ovr", "multinomial"], default_value="ovr")
+        warm_start = CategoricalHyperparameter("warm_start", [True, False], default_value=False)
+        l1_ratio = UniformFloatHyperparameter("l1_ratio", 0., 1., default_value=0.1)
 
-        cs.add_hyperparameters([penalty, solver, dual, tol, C, fit_intercept, intercept_scaling, max_iter])
+        l1_ratio_condition = InCondition(l1_ratio, penalty, ["elasticnet"])
+        cs.add_hyperparameters(
+            [penalty, solver, dual, tol, C, fit_intercept, intercept_scaling, max_iter, multi_class, warm_start,
+             l1_ratio])
+        cs.add_condition(l1_ratio_condition)
         return cs

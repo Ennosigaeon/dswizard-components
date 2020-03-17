@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn.naive_bayes
 
-from automl.components.classification.bernoulli_nb import BernoulliNB
+from automl.components.classification.testg.bernoulli_nb import BernoulliNB
 from tests import base_test
 
 

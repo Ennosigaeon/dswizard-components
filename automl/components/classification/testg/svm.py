@@ -10,45 +10,42 @@ from automl.util.util import convert_multioutput_multiclass_to_multilabel
 
 class SVCClassifier(PredictionAlgorithm):
 
-    def __init__(self, C: float = 1.0,
-                 kernel: str = "rbf",
-                 degree: int = 3,
-                 gamma: float = 0.5,
-                 coef0: float = 0.,
-                 shrinking: bool = True,
-                 probability: bool = False,
-                 tol: float = 1e-3,
-                 max_iter: int = -1,
-                 decision_function_shape: str = "ovr",
-                 break_ties: bool = False,
+    def __init__(self,
+                 penalty: str = "l2",
+                 loss: str = "squared_hinge",
+                 dual: bool = True,
+                 tol: float = 1e-4,
+                 multi_class: str = "ovr",
+                 C: float = 1.,
+                 fit_intercept: bool = True,
+                 intercept_scaling: float = 1.,
+                 max_iter: int = 1000
                  ):
         super().__init__()
-        self.C = C,
-        self.kernel = kernel,
-        self.degree = degree,
-        self.gamma = gamma,
-        self.coef0 = coef0
-        self.shrinking = shrinking
-        self.probability = probability
+        self.penalty = penalty
+        self.loss = loss
+        self.dual = dual
         self.tol = tol
+        self.multi_class = multi_class
+        self.C = C
+        self.fit_intercept = fit_intercept
+        self.intercept_scaling = intercept_scaling
         self.max_iter = max_iter
-        self.decision_function_shape = decision_function_shape
-        self.break_ties = break_ties
+
 
     def fit(self, X, y):
-        from sklearn.svm import SVC
+        from sklearn.svm import LinearSVC
 
-        self.estimator = SVC(
+        self.estimator = LinearSVC(
             C=self.C,
-            kernel=self.kernel,
-            degree=self.degree,
-            gamma=self.gamma,
-            coef0=self.coef0,
-            shrinking=self.shrinking,
-            probability=self.probability,
+            penalty=self.penalty,
+            loss=self.loss,
+            dual=self.dual,
             tol=self.tol,
-            max_iter=self.max_iter,
-            decision_function_shape=self.decision_function_shape
+            multi_class=self.multi_class,
+            fit_intercept=self.fit_intercept,
+            intercept_scaling=self.intercept_scaling,
+            max_iter=self.max_iter
         )
         self.estimator.fit(X, y)
         return self
@@ -62,8 +59,8 @@ class SVCClassifier(PredictionAlgorithm):
 
     @staticmethod
     def get_properties(dataset_properties=None):
-        return {'shortname': 'SVC',
-                'name': 'Support Vector Classifier',
+        return {'shortname': 'LinearSVC',
+                'name': 'Linear Support Vector Classifier',
                 'handles_regression': False,
                 'handles_classification': True,
                 'handles_multiclass': True,
@@ -77,21 +74,17 @@ class SVCClassifier(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
+        penalty = CategoricalHyperparameter("penalty", ["l1","l2"], default_value="l2")
+        loss = CategoricalHyperparameter("loss", ["hinge", "squared_hinge"], default_value="squared_hinge")
+        dual = CategoricalHyperparameter("dual", [True,False], default_value=True)
+        tol = UniformFloatHyperparameter("tol", 1e-5, 2., default_value=1e-4)
         C = UniformFloatHyperparameter("C", 0., 10., default_value=1.)
-        kernel = CategoricalHyperparameter("kernel", ["linear", "poly", "rbf", "sigmoid"], default_value="rbf")
-        degree = UniformIntegerHyperparameter("degree", 2, 10, default_value=3)
-        gamma = UniformFloatHyperparameter("gamma", 0., 1., default_value=0.5)
-        coef0 = UniformFloatHyperparameter("coef0", 0., 5., default_value=0.)
-        shrinking = CategoricalHyperparameter("shrinking", [True, False], default_value=True)
-        probability = CategoricalHyperparameter("probability", [True, False], default_value=False)
-        tol = UniformFloatHyperparameter("tol", 1e-5, 1., default_value=1e-3)
-        max_iter = UniformIntegerHyperparameter("max_iter", -1, 1000, default_value=-1)
-        decision_function_shape = CategoricalHyperparameter("decision_function_shape", ["ovr", "ovo"],
-                                                            default_value="ovr")
-        break_ties = CategoricalHyperparameter("break_ties", [True, False], default_value=False)
+        multi_class = CategoricalHyperparameter("multi_class", ["ovr","or","crammer_singer"], default_value="ovr")
+        fit_intercept = CategoricalHyperparameter("fit_intercept", [True,False], default_value=True)
+        intercept_scaling = UniformFloatHyperparameter("intercept_scaling", 0., 1., default_value=1.)
+        max_iter = UniformIntegerHyperparameter("max_iter", 100, 10000, default_value=1000)
 
         cs.add_hyperparameters(
-            [C, kernel, degree, gamma, coef0, shrinking, probability, tol, max_iter, decision_function_shape,
-             break_ties])
+            [C, penalty, loss, dual, tol, multi_class, fit_intercept, intercept_scaling, max_iter])
 
         return cs

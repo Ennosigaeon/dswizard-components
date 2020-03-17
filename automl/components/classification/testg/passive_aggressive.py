@@ -2,6 +2,7 @@ import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     CategoricalHyperparameter, UnParametrizedHyperparameter, Constant
+from ConfigSpace.conditions import EqualsCondition
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.common import check_none
@@ -24,16 +25,16 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
                  average: int = 1
                  ):
         super().__init__()
-        self.C = C,
-        self.fit_intercept = fit_intercept,
-        self.tol = tol,
-        self.max_iter = max_iter,
-        self.early_stopping = early_stopping,
-        self.validation_fraction = validation_fraction,
-        self.n_iter_no_change = n_iter_no_change,
-        self.shuffle = shuffle,
-        self.loss = loss,
-        self.warm_start = warm_start,
+        self.C = C
+        self.fit_intercept = fit_intercept
+        self.tol = tol
+        self.max_iter = max_iter
+        self.early_stopping = early_stopping
+        self.validation_fraction = validation_fraction
+        self.n_iter_no_change = n_iter_no_change
+        self.shuffle = shuffle
+        self.loss = loss
+        self.warm_start = warm_start
         self.average = average
 
     def fit(self, X, y):
@@ -94,5 +95,8 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
         cs.add_hyperparameters(
             [C, fit_intercept, max_iter, tol, early_stopping, validation_fraction, n_iter_no_change, shuffle, loss,
              warm_start, average])
+
+        validation_fraction_condition = EqualsCondition(validation_fraction, early_stopping, True)
+        cs.add_condition(validation_fraction_condition)
 
         return cs

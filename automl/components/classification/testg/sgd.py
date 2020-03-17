@@ -2,6 +2,7 @@ import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     CategoricalHyperparameter, UnParametrizedHyperparameter, Constant
+from ConfigSpace.conditions import EqualsCondition, InCondition
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.common import check_none
@@ -121,5 +122,10 @@ class SGDClassifier(PredictionAlgorithm):
         cs.add_hyperparameters(
             [loss, penaly, alpha, l1_ratio, fit_intercept, max_iter, tol, shuffle, epsilon, learning_rate, eta0,
              power_t, early_stopping, validation_fraction, n_iter_no_change, warm_start, average])
+
+        eta0_condition = InCondition(eta0, learning_rate, ["constant", "invscaling", "adaptive"])
+        validation_fraction_condition = EqualsCondition(validation_fraction, early_stopping, True)
+        cs.add_condition(eta0_condition)
+        cs.add_condition(validation_fraction_condition)
 
         return cs

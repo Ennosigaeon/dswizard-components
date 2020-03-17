@@ -2,6 +2,7 @@ import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     CategoricalHyperparameter, UnParametrizedHyperparameter, Constant
+from ConfigSpace.conditions import EqualsCondition, InCondition, LessThanCondition, AndConjunction
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.common import check_none
@@ -33,25 +34,25 @@ class MLPClassifier(PredictionAlgorithm):
                  max_fun: int = 15000
                  ):
         super().__init__()
-        self.activation = activation,
-        self.alpha = alpha,
-        self.solver = solver,
-        self.batch_size = batch_size,
-        self.learning_rate = learning_rate,
-        self.learning_rate_init = learning_rate_init,
-        self.power_t = power_t,
-        self.max_iter = max_iter,
-        self.shuffle = shuffle,
-        self.tol = tol,
-        self.warm_start = warm_start,
-        self.momentum = momentum,
+        self.activation = activation
+        self.alpha = alpha
+        self.solver = solver
+        self.batch_size = batch_size
+        self.learning_rate = learning_rate
+        self.learning_rate_init = learning_rate_init
+        self.power_t = power_t
+        self.max_iter = max_iter
+        self.shuffle = shuffle
+        self.tol = tol
+        self.warm_start = warm_start
+        self.momentum = momentum
         self.nesterovs_momentum = nesterovs_momentum
-        self.early_stopping = early_stopping,
-        self.validation_fraction = validation_fraction,
-        self.beta_1 = beta_1,
-        self.beta_2 = beta_2,
-        self.epsilon = epsilon,
-        self.n_iter_no_change = n_iter_no_change,
+        self.early_stopping = early_stopping
+        self.validation_fraction = validation_fraction
+        self.beta_1 = beta_1
+        self.beta_2 = beta_2
+        self.epsilon = epsilon
+        self.n_iter_no_change = n_iter_no_change
         self.max_fun = max_fun
 
     def fit(self, X, y):
@@ -76,7 +77,8 @@ class MLPClassifier(PredictionAlgorithm):
             beta_1=self.beta_1,
             beta_2=self.beta_2,
             epsilon=self.epsilon,
-            n_iter_no_change=self.n_iter_no_change
+            n_iter_no_change=self.n_iter_no_change,
+            max_fun=self.max_fun
         )
         self.estimator.fit(X, y)
         return self
@@ -108,7 +110,7 @@ class MLPClassifier(PredictionAlgorithm):
         # How ? hidden_layer_sizes =
         activation = CategoricalHyperparameter("activation", ["identity", "logistic", "tanh", "relu"],
                                                default_value="relu")
-        solver = CategoricalHyperparameter("solver", ["identity", "logistic", "tanh", "relu"], default_value="relu")
+        solver = CategoricalHyperparameter("solver", ["lbfgs", "sgd", "adam"], default_value="adam")
         alpha = UniformFloatHyperparameter("alpha", 0.00001, 0.1, default_value=0.0001)
         batch_size = UniformIntegerHyperparameter("batch_size", 5, 1000, default_value=200)
         learning_rate = CategoricalHyperparameter("learning_rate", ["constant", "invscaling", "adaptive"],
@@ -133,5 +135,29 @@ class MLPClassifier(PredictionAlgorithm):
             [activation, solver, alpha, batch_size, learning_rate, learning_rate_init, power_t, max_iter,
              shuffle, tol, warm_start, momentum, nesterovs_momentum, early_stopping, validation_fraction,
              beta_1, beta_2, epsilon, n_iter_no_change, max_fun])
+
+        learning_rate_init_condition = InCondition(learning_rate_init, solver, ["sgd", "adam"])
+        power_t_condition = InCondition(power_t, solver, ["sgd"])
+        power_t_2_condition = InCondition(power_t, learning_rate, ["invscaling"])
+        momentum_condition = InCondition(momentum, solver, ["sgd"])
+        nesterovs_momentum_condition = LessThanCondition(nesterovs_momentum, momentum, 0.)
+        nesterovs_momentum_condition_2 = InCondition(nesterovs_momentum, solver, ["sgd"])
+        early_stopping_condition = InCondition(early_stopping, solver, ["sgd", "adam"])
+        validation_fraction = EqualsCondition(validation_fraction, early_stopping, True)
+        beta_1_condition = InCondition(beta_1, solver, ["adam"])
+        beta_2_condition = InCondition(beta_2, solver, ["adam"])
+        epsilon_condition = InCondition(epsilon, solver, ["adam"])
+        n_iter_no_change_condition = InCondition(n_iter_no_change, solver, ["sgd", "adam"])
+
+        cs.add_condition(learning_rate_init_condition)
+        cs.add_condition(AndConjunction(power_t_condition, power_t_2_condition))
+        cs.add_condition(momentum_condition)
+        cs.add_condition(AndConjunction(nesterovs_momentum_condition, nesterovs_momentum_condition_2))
+        cs.add_condition(early_stopping_condition)
+        cs.add_condition(validation_fraction)
+        cs.add_condition(beta_1_condition)
+        cs.add_condition(beta_2_condition)
+        cs.add_condition(epsilon_condition)
+        cs.add_condition(n_iter_no_change_condition)
 
         return cs

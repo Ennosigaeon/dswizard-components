@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn.tree
 
-from automl.components.classification.decision_tree import DecisionTree
+from automl.components.classification.testg.decision_tree import DecisionTree
 from tests import base_test
 
 

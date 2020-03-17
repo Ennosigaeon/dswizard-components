@@ -19,6 +19,10 @@ class RandomForest(PredictionAlgorithm):
                  bootstrap: bool = True,
                  max_leaf_nodes: int = None,
                  min_impurity_decrease: float = 0.,
+                 oob_score: bool = False,
+                 warm_start: bool = False,
+                 ccp_alpha: float = 0.1,
+                 max_samples: float = 1.,
                  random_state=None,
                  class_weight=None):
         super().__init__()
@@ -34,6 +38,10 @@ class RandomForest(PredictionAlgorithm):
         self.min_impurity_decrease = min_impurity_decrease
         self.random_state = random_state
         self.class_weight = class_weight
+        self.oob_score = oob_score
+        self.warm_start = warm_start
+        self.ccp_alpha = ccp_alpha
+        self.max_samples = max_samples
 
     def fit(self, X, y, sample_weight=None):
         from sklearn.ensemble import RandomForestClassifier
@@ -69,7 +77,10 @@ class RandomForest(PredictionAlgorithm):
             min_impurity_decrease=self.min_impurity_decrease,
             random_state=self.random_state,
             class_weight=self.class_weight,
-            warm_start=True)
+            oob_score=self.oob_score,
+            warm_start=self.warm_start,
+            max_samples=self.max_samples,
+            ccp_alpha=self.ccp_alpha)
         self.estimator.fit(X, y, sample_weight=sample_weight)
         return self
 
@@ -96,22 +107,26 @@ class RandomForest(PredictionAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
-        n_estimators = Constant("n_estimators", 100)
-        criterion = CategoricalHyperparameter("criterion", ["gini", "entropy"], default_value="gini")
 
+        n_estimators = UniformIntegerHyperparameter("n_estimators", 10, 10000, default_value=100)
+        criterion = CategoricalHyperparameter("criterion", ["gini", "entropy"], default_value="gini")
         # The maximum number of features used in the forest is calculated as m^max_features, where
         # m is the total number of features, and max_features is the hyperparameter specified below.
         # The default is 0.5, which yields sqrt(m) features as max_features in the estimator. This
         # corresponds with Geurts' heuristic.
         max_features = UniformFloatHyperparameter("max_features", 0., 1., default_value=0.5)
-
-        max_depth = UnParametrizedHyperparameter("max_depth", "None")
+        max_depth = UniformIntegerHyperparameter("max_depth", 2, 100, default_value=10)
         min_samples_split = UniformIntegerHyperparameter("min_samples_split", 2, 20, default_value=2)
         min_samples_leaf = UniformIntegerHyperparameter("min_samples_leaf", 1, 20, default_value=1)
         min_weight_fraction_leaf = UnParametrizedHyperparameter("min_weight_fraction_leaf", 0.)
-        max_leaf_nodes = UnParametrizedHyperparameter("max_leaf_nodes", "None")
-        min_impurity_decrease = UnParametrizedHyperparameter('min_impurity_decrease', 0.0)
+        max_leaf_nodes = UniformIntegerHyperparameter("max_leaf_nodes", 2, 100, default_value=10)
+        min_impurity_decrease = UniformFloatHyperparameter("min_impurity_decrease", 1e-3, 5., default_value=0.1)
         bootstrap = CategoricalHyperparameter("bootstrap", [True, False], default_value=True)
+        oob_score = CategoricalHyperparameter("oob_score", [True,False], default_value=False)
+        warm_start = CategoricalHyperparameter("warm_start", [True,False], default_value=False)
+        ccp_alpha = UniformFloatHyperparameter("ccp_alpha", 0., 5., default_value=0.1)
+        max_samples = UniformFloatHyperparameter("max_samples", 0., 1., default_value=1.)
         cs.add_hyperparameters([n_estimators, criterion, max_features, max_depth, min_samples_split, min_samples_leaf,
-                                min_weight_fraction_leaf, max_leaf_nodes, bootstrap, min_impurity_decrease])
+                                min_weight_fraction_leaf, max_leaf_nodes, bootstrap, min_impurity_decrease, oob_score, warm_start, ccp_alpha, max_samples])
+
         return cs

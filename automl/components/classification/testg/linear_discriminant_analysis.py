@@ -11,20 +11,22 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
                  solver: str = 'svd',
                  shrinkage: str = 'None',
                  store_covariance: bool = False,
-                 tol: float = 1.0e-4
+                 tol: float = 1.0e-4,
+                 n_components: int = 10
                  ):
         super().__init__()
         self.solver = solver
         self.shrikage = shrinkage
         self.store_covariance = store_covariance
         self.tol = tol
+        self.n_components = n_components
 
     def fit(self, X, y, sample_weight=None):
         from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
         # initial fit of only increment trees
         self.estimator = LinearDiscriminantAnalysis(
-            solver=self.solver, shrinkage=self.shrikage, store_covariance=self.store_covariance, tol=self.tol)
+            solver=self.solver, shrinkage=self.shrikage, store_covariance=self.store_covariance, tol=self.tol, n_components=self.n_components)
         self.estimator.fit(X, y)
         return self
 
@@ -51,10 +53,11 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
-        shrinkage = CategoricalHyperparameter("shrinkage", ["auto"], default_value='auto')  # oder float zw 1 & 0
+        shrinkage = UniformFloatHyperparameter("shrinkage", 0., 1., default_value=0.1)  # oder float zw 1 & 0
         solver = CategoricalHyperparameter("solver", ["svd", "lsqr", "eigen"], default_value="svd")
+        n_components = UniformIntegerHyperparameter("n_components", 2, 100, default_value=10)
         store_covariance = CategoricalHyperparameter("store_covariance", choices=[True, False], default_value=False)
         tol = UniformFloatHyperparameter(name="tol", lower=1.0e-5, upper=100, default_value=1.0e-4, log=True)
 
-        cs.add_hyperparameters([shrinkage, solver, store_covariance, tol])
+        cs.add_hyperparameters([shrinkage, solver, store_covariance, tol, n_components])
         return cs
