@@ -13,7 +13,11 @@ class QuantileTransformerComponent(PreprocessingAlgorithm):
         self.subsample = subsample
         self.copy = copy
         from sklearn.preprocessing import QuantileTransformer
-        self.preprocessor = QuantileTransformer(copy=False)
+        self.preprocessor = QuantileTransformer(copy=self.copy,
+                                                n_quantiles=self.n_quantiles,
+                                                output_distribution=self.output_distribution,
+                                                ignore_implicit_zeros=self.ignore_implicit_zeros,
+                                                subsample=self.subsample)
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
