@@ -29,7 +29,7 @@ class BinarizerComponent(PreprocessingAlgorithm):
         encode = CategoricalHyperparameter("encode", ["onehot", "onehot-dense", "ordinal"], default_value="onehot")
         strategy = CategoricalHyperparameter("strategy", ["uniform", "quantile", "kmeans"], default_value="quantile")
 
-        cs.add_hyperparameter(n_bins,encode,strategy)
+        cs.add_hyperparameters([n_bins, encode, strategy])
         return cs
 
     @staticmethod

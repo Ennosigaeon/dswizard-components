@@ -79,6 +79,6 @@ class GaussianProcessClassifier(PredictionAlgorithm):
                                                 default_value="one_vs_rest")
 
         cs.add_hyperparameters(
-            [n_restarts_optimizer, max_iter_predict, warm_start, copy_X_train, multi_class,kernel,alpha,optimizer])
+            [n_restarts_optimizer, max_iter_predict, warm_start, copy_X_train, multi_class, kernel, optimizer])
 
         return cs

@@ -74,9 +74,9 @@ class SVCClassifier(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        penalty = CategoricalHyperparameter("penalty", ["l1","l2"], default_value="l2")
+        penalty = CategoricalHyperparameter("penalty", ["l1", "l2"], default_value="l2")
         loss = CategoricalHyperparameter("loss", ["hinge", "squared_hinge"], default_value="squared_hinge")
-        dual = CategoricalHyperparameter("dual", [True,False], default_value=True)
+        dual = CategoricalHyperparameter("dual", [True, False], default_value=True)
         tol = UniformFloatHyperparameter("tol", 1e-5, 2., default_value=1e-4)
         C = UniformFloatHyperparameter("C", 0., 10., default_value=1.)
         multi_class = CategoricalHyperparameter("multi_class", ["ovr","or","crammer_singer"], default_value="ovr")

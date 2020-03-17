@@ -12,10 +12,16 @@ class ImputationComponent(PreprocessingAlgorithm):
         self.add_indicator = add_indicator
 
     def fit(self, X, y=None):
-        import sklearn.impute
-        self.preprocessor = sklearn.impute.SimpleImputer(strategy=self.strategy, copy=self.copy, add_indicator=self.add_indicator)
+        from sklearn.impute import SimpleImputer
+
+        self.preprocessor = SimpleImputer(strategy=self.strategy, add_indicator=self.add_indicator, copy=False)
         self.preprocessor = self.preprocessor.fit(X)
         return self
+
+    def transform(self, X):
+        if self.preprocessor is None:
+            raise NotImplementedError()
+        return self.preprocessor.transform(X)
 
     @staticmethod
     def get_properties(dataset_properties=None):
@@ -42,8 +48,9 @@ class ImputationComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         # TODO add replace by zero!
         strategy = CategoricalHyperparameter("strategy", ["mean", "median", "most_frequent"], default_value="mean")
-        copy = CategoricalHyperparameter("copy", [True,False], default_value=True)
-        add_indicator = CategoricalHyperparameter("add_indicator", [True,False], default_value=False)
+        copy = CategoricalHyperparameter("copy", [True, False], default_value=True)
+        add_indicator = CategoricalHyperparameter("add_indicator", [True, False], default_value=False)
+
         cs = ConfigurationSpace()
-        cs.add_hyperparameter(strategy,copy,add_indicator)
+        cs.add_hyperparameters([strategy, copy, add_indicator])
         return cs

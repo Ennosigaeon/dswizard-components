@@ -31,22 +31,22 @@ class SGDClassifier(PredictionAlgorithm):
                  average: bool = False
                  ):
         super().__init__()
-        self.loss = loss,
-        self.penalty = penalty,
-        self.alpha = alpha,
-        self.l1_ratio = l1_ratio,
-        self.fit_intercept = fit_intercept,
-        self.max_iter = max_iter,
+        self.loss = loss
+        self.penalty = penalty
+        self.alpha = alpha
+        self.l1_ratio = l1_ratio
+        self.fit_intercept = fit_intercept
+        self.max_iter = max_iter
         self.tol = tol
-        self.shuffle = shuffle,
-        self.epsilon = epsilon,
-        self.learning_rate = learning_rate,
-        self.eta0 = eta0,
-        self.power_t = power_t,
-        self.early_stopping = early_stopping,
-        self.validation_fraction = validation_fraction,
-        self.n_iter_no_change = n_iter_no_change,
-        self.warm_start = warm_start,
+        self.shuffle = shuffle
+        self.epsilon = epsilon
+        self.learning_rate = learning_rate
+        self.eta0 = eta0
+        self.power_t = power_t
+        self.early_stopping = early_stopping
+        self.validation_fraction = validation_fraction
+        self.n_iter_no_change = n_iter_no_change
+        self.warm_start = warm_start
         self.average = average
 
     def fit(self, X, y):
@@ -65,9 +65,6 @@ class SGDClassifier(PredictionAlgorithm):
             learning_rate=self.learning_rate,
             eta0=self.eta0,
             power_t=self.power_t,
-            early_stopping=self.early_stopping,
-            validation_fraction=self.validation_fraction,
-            n_iter_no_change=self.n_iter_no_change,
             warm_start=self.warm_start,
             average=self.average
         )
