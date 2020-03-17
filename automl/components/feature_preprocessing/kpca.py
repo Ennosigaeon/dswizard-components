@@ -28,14 +28,14 @@ class KernelPCAComponent(PreprocessingAlgorithm):
         self.kernel = kernel
         self.degree = degree
         self.gamma = gamma
-        self.coef0 = coef0,
-        self.alpha = alpha,
-        self.fit_inverse_transform = fit_inverse_transform,
-        self.eigen_solver = eigen_solver,
-        self.tol = tol,
-        self.max_iter = max_iter,
-        self.remove_zero_eigen = remove_zero_eigen,
-        self.copy_X = copy_X,
+        self.coef0 = coef0
+        self.alpha = alpha
+        self.fit_inverse_transform = fit_inverse_transform
+        self.eigen_solver = eigen_solver
+        self.tol = tol
+        self.max_iter = max_iter
+        self.remove_zero_eigen = remove_zero_eigen
+        self.copy_X = copy_X
         self.random_state = random_state
 
     def fit(self, X, Y=None):

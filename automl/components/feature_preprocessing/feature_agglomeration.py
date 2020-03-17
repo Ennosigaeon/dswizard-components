@@ -1,4 +1,5 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
+from ConfigSpace.forbidden import ForbiddenAndConjunction, ForbiddenInClause, ForbiddenEqualsClause
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformIntegerHyperparameter, UniformFloatHyperparameter
 
@@ -53,11 +54,16 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
         affinity = CategoricalHyperparameter("affinity",
                                              ["euclidean", "l1", "l2", "manhattan", "cosine", "precomputed"],
                                              default_value="euclidean")
-        compute_full_tree = CategoricalHyperparameter("compute_full_tree", [True, False], default_value="auto")
+        compute_full_tree = CategoricalHyperparameter("compute_full_tree", [True, False, 'auto'], default_value="auto")
         linkage = CategoricalHyperparameter("linkage", ["ward", "complete", "average", "single"], default_value="ward")
         distance_threshold = UniformFloatHyperparameter("distance_threshold", 0.001, 0.5, default_value=None)
 
         cs = ConfigurationSpace()
-        cs.add_hyperparameters([n_clusters,affinity,compute_full_tree,linkage,distance_threshold])
+        cs.add_hyperparameters([n_clusters, affinity, compute_full_tree, linkage, distance_threshold])
+
+        affinity_and_linkage = ForbiddenAndConjunction(
+            ForbiddenInClause(affinity, ["manhattan", "cosine"]),
+            ForbiddenEqualsClause(linkage, "ward"))
+        cs.add_forbidden_clause(affinity_and_linkage)
 
         return cs

@@ -40,7 +40,7 @@ class FastICAComponent(PreprocessingAlgorithm):
         max_iter = UniformIntegerHyperparameter("max_iter", 1, 1000, default_value=100)
         tol = UniformFloatHyperparameter("tol", 1e-5, 5., default_value=1.)
 
-        cs.add_hyperparameter(n_components,algorithm, whiten, fun, max_iter, tol)
+        cs.add_hyperparameters([n_components, algorithm, whiten, fun, max_iter, tol])
         return cs
 
     @staticmethod
