@@ -15,13 +15,27 @@ class KernelPCAComponent(PreprocessingAlgorithm):
                  degree: int = 3,
                  gamma: float = 0.25,
                  coef0: float = 0.0,
+                 alpha: int = 1,
+                 fit_inverse_transform: bool = True,
+                 eigen_solver: str = "dense",
+                 tol: float = 0.,
+                 max_iter: int = 10000,
+                 remove_zero_eigen: bool = False,
+                 copy_X: bool = True,
                  random_state=None):
         super().__init__()
         self.n_components = n_components
         self.kernel = kernel
         self.degree = degree
         self.gamma = gamma
-        self.coef0 = coef0
+        self.coef0 = coef0,
+        self.alpha = alpha,
+        self.fit_inverse_transform = fit_inverse_transform,
+        self.eigen_solver = eigen_solver,
+        self.tol = tol,
+        self.max_iter = max_iter,
+        self.remove_zero_eigen = remove_zero_eigen,
+        self.copy_X = copy_X,
         self.random_state = random_state
 
     def fit(self, X, Y=None):
@@ -34,9 +48,19 @@ class KernelPCAComponent(PreprocessingAlgorithm):
         self.coef0 = float(self.coef0)
 
         self.preprocessor = KernelPCA(
-            n_components=self.n_components, kernel=self.kernel,
-            degree=self.degree, gamma=self.gamma, coef0=self.coef0,
-            remove_zero_eig=True, random_state=self.random_state)
+            n_components=self.n_components,
+            kernel=self.kernel,
+            degree=self.degree,
+            gamma=self.gamma,
+            coef0=self.coef0,
+            random_state=self.random_state,
+            alpha=self.alpha,
+            fit_inverse_transform=self.fit_inverse_transform,
+            eigen_solver=self.eigen_solver,
+            tol=self.tol,
+            max_iter=self.max_iter,
+            remove_zero_eig=self.remove_zero_eigen,
+            copy_X=self.copy_X)
 
         if scipy.sparse.issparse(X):
             X = X.astype(np.float64)
@@ -83,12 +107,23 @@ class KernelPCAComponent(PreprocessingAlgorithm):
         gamma = UniformFloatHyperparameter("gamma", 3.0517578125e-05, 8, log=True, default_value=1.0)
         degree = UniformIntegerHyperparameter('degree', 2, 5, 3)
         coef0 = UniformFloatHyperparameter("coef0", -1, 1, default_value=0)
+        alpha = UniformIntegerHyperparameter("alpha", 1, 10, default_value=1)
+        fit_inverse_transform = CategoricalHyperparameter("fit_inverse_transform", [True, False], default_value=False)
+        eigen_solver = CategoricalHyperparameter("eigen_solver", ["dense", "arpack"], default_value="dense")
+        tol = UniformFloatHyperparameter("tol", 0., 2., default_value=0.)
+        max_iter = UniformIntegerHyperparameter("max_iter", 1, 10000, default_value=10000)
+        remove_zero_eigen = CategoricalHyperparameter("remove_zero_eigen", [True, False], default_value=False)
+        copy_X = CategoricalHyperparameter("copy_X", [True, False], default_value=True)
 
         cs = ConfigurationSpace()
-        cs.add_hyperparameters([n_components, kernel, degree, gamma, coef0])
+        cs.add_hyperparameters(
+            [n_components, kernel, degree, gamma, coef0, alpha, fit_inverse_transform, eigen_solver, tol, max_iter,
+             remove_zero_eigen, copy_X])
 
         degree_depends_on_poly = EqualsCondition(degree, kernel, "poly")
         coef0_condition = InCondition(coef0, kernel, ["poly", "sigmoid"])
         gamma_condition = InCondition(gamma, kernel, ["poly", "rbf"])
-        cs.add_conditions([degree_depends_on_poly, coef0_condition, gamma_condition])
+        alpha_condition = EqualsCondition(alpha, fit_inverse_transform, True)
+        tol_condition = InCondition(tol, eigen_solver, ["arpack"])
+        cs.add_conditions([degree_depends_on_poly, coef0_condition, gamma_condition, alpha_condition, tol_condition])
         return cs

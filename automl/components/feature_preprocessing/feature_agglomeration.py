@@ -11,7 +11,7 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
                  affinity: str = "euclidean",
                  compute_full_tree: str = "auto",
                  linkage: str = "ward",
-                 distance: float = 0.01):
+                 distance_threshold: float = None):
         super().__init__()
         self.n_clusters = n_clusters
         self.affinity = affinity
@@ -21,6 +21,10 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
 
     def fit(self, X, y=None):
         from sklearn.cluster import FeatureAgglomeration
+
+        if self.distance_threshold is not None:
+            self.n_clusters = None
+            self.compute_full_tree = True
 
         self.preprocessor = FeatureAgglomeration(n_clusters=self.n_clusters,
                                                  affinity=self.affinity,
@@ -51,7 +55,7 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
                                              default_value="euclidean")
         compute_full_tree = CategoricalHyperparameter("compute_full_tree", [True, False], default_value="auto")
         linkage = CategoricalHyperparameter("linkage", ["ward", "complete", "average", "single"], default_value="ward")
-        distance_threshold = UniformFloatHyperparameter("distance_threshold", 0.001, 0.5, default_value=0.01)
+        distance_threshold = UniformFloatHyperparameter("distance_threshold", 0.001, 0.5, default_value=None)
 
         cs = ConfigurationSpace()
         cs.add_hyperparameters([n_clusters,affinity,compute_full_tree,linkage,distance_threshold])

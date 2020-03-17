@@ -40,6 +40,6 @@ class VarianceThresholdComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
         # TODO upper limit is totally ad hoc
-        threshold = UniformFloatHyperparameter('threshold', 0., 1, default_value=0.)
+        threshold = UniformFloatHyperparameter('threshold', 0., 1., default_value=0.)
         cs.add_hyperparameter(threshold)
         return cs

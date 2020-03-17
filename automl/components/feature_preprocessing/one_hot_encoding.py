@@ -1,19 +1,22 @@
 import numpy as np
 import pandas as pd
 from ConfigSpace.configuration_space import ConfigurationSpace
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter, \
+    UniformIntegerHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
 
 
 class OneHotEncoderComponent(PreprocessingAlgorithm):
-    def __init__(self, categories: str = 'auto', sparse: bool = False):
+    def __init__(self, categories: str = 'auto', sparse: bool = False, drop: str = None):
         super().__init__()
         self.sparse = sparse
+        self.drop = drop
         self.categories = categories  # TODO testen ob es immernoch funktioniert wenn man OHE categories übergibt
 
     def fit(self, X, y=None):
         from sklearn.preprocessing import OneHotEncoder
-        self.preprocessor = OneHotEncoder(categories=self.categories, sparse=self.sparse)
+        self.preprocessor = OneHotEncoder(categories=self.categories, sparse=self.sparse,drop=self.drop)
 
         self.preprocessor.fit(X)
         return self
@@ -59,4 +62,8 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
+
+        drop = CategoricalHyperparameter("drop", [None, "first"], default_value="first")
+        cs.add_hyperparameters([drop])
+
         return cs

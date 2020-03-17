@@ -1,6 +1,7 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, \
     UniformIntegerHyperparameter
+from ConfigSpace.conditions import InCondition
 from scipy import sparse
 
 from automl.components.base import PreprocessingAlgorithm
@@ -43,11 +44,13 @@ class TruncatedSVDComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         n_components = UniformIntegerHyperparameter(name="n_components", lower=1, upper=20, default_value=2)
         n_iter = UniformIntegerHyperparameter(name="n_iter", lower=1, upper=20, default_value=5)
-        tol = UniformFloatHyperparameter(name="tol", lower=0, upper=30, default_value=0)
+        tol = UniformFloatHyperparameter(name="tol", lower=1e-5, upper=10, default_value=0.01)
         algorithm = CategoricalHyperparameter(name="algorithm", choices=["arpack", "randomized"],
                                               default_value="randomized")
 
         cs = ConfigurationSpace()
         cs.add_hyperparameters([n_components, algorithm, n_iter, tol])
+        tol_condition = InCondition(tol, algorithm, ["arpack"])
+        cs.add_conditions([tol_condition])
 
         return cs
