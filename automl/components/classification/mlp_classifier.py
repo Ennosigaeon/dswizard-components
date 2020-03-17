@@ -31,9 +31,13 @@ class MLPClassifier(PredictionAlgorithm):
                  beta_2: float = 0.999,
                  epsilon: float = 1e-8,
                  n_iter_no_change: int = 10,
-                 max_fun: int = 15000
+                 max_fun: int = 15000,
+                 layer_1_size: int = 3,
+                 layer_2_size: int = 150
                  ):
         super().__init__()
+        self.layer_1_size = layer_1_size
+        self.layer_2_size = layer_2_size
         self.activation = activation
         self.alpha = alpha
         self.solver = solver
@@ -59,6 +63,7 @@ class MLPClassifier(PredictionAlgorithm):
         from sklearn.neural_network import MLPClassifier
 
         self.estimator = MLPClassifier(
+            hidden_layer_sizes=(self.layer_1_size,self.layer_2_size),
             activation=self.activation,
             solver=self.solver,
             alpha=self.alpha,
@@ -107,7 +112,8 @@ class MLPClassifier(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        # How ? hidden_layer_sizes =
+        layer_1_size = UniformIntegerHyperparameter("layer_1_size", 1, 5, default_value=3)
+        layer_2_size = UniformIntegerHyperparameter("layer_2_size", 1, 500, default_value=150)
         activation = CategoricalHyperparameter("activation", ["identity", "logistic", "tanh", "relu"],
                                                default_value="relu")
         solver = CategoricalHyperparameter("solver", ["lbfgs", "sgd", "adam"], default_value="adam")
@@ -132,9 +138,9 @@ class MLPClassifier(PredictionAlgorithm):
         max_fun = UniformIntegerHyperparameter("max_fun", 20, 100000, default_value=15000)
 
         cs.add_hyperparameters(
-            [activation, solver, alpha, batch_size, learning_rate, learning_rate_init, power_t, max_iter,
-             shuffle, tol, warm_start, momentum, nesterovs_momentum, early_stopping, validation_fraction,
-             beta_1, beta_2, epsilon, n_iter_no_change, max_fun])
+            [layer_1_size, layer_2_size, activation, solver, alpha, batch_size, learning_rate, learning_rate_init,
+             power_t, max_iter, shuffle, tol, warm_start, momentum, nesterovs_momentum, early_stopping,
+             validation_fraction, beta_1, beta_2, epsilon, n_iter_no_change, max_fun])
 
         learning_rate_init_condition = InCondition(learning_rate_init, solver, ["sgd", "adam"])
         power_t_condition = InCondition(power_t, solver, ["sgd"])
