@@ -1,10 +1,7 @@
-import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
-    CategoricalHyperparameter, UnParametrizedHyperparameter, Constant
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
-from automl.util.common import check_none
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
 
 

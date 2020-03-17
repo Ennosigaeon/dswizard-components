@@ -1,9 +1,8 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
-    UnParametrizedHyperparameter, Constant, CategoricalHyperparameter
+    CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
-from automl.util.common import check_none
 
 
 class AdaBoostingClassifier(PredictionAlgorithm):

@@ -7,8 +7,11 @@ from automl.util.common import check_for_bool
 
 
 class FeatureAgglomerationComponent(PreprocessingAlgorithm):
-    def __init__(self, n_clusters: int = 2, affinity: str = "euclidean", compute_full_tree: str = "auto",
-                 linkage: str = "ward", distance: float = 0.01):
+    def __init__(self, n_clusters: int = 2,
+                 affinity: str = "euclidean",
+                 compute_full_tree: str = "auto",
+                 linkage: str = "ward",
+                 distance: float = 0.01):
         super().__init__()
         self.n_clusters = n_clusters
         self.affinity = affinity
