@@ -12,7 +12,7 @@ class PCAComponent(PreprocessingAlgorithm):
                  n_components: float = None,
                  whiten: bool = False,
                  svd_solver: str = "full",
-                 tol: flot = 1e-2,
+                 tol: float = 1e-2,
                  iterated_power: int = 1000,
                  random_state=None):
         super().__init__()

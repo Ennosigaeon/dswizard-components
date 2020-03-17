@@ -31,6 +31,34 @@ class GaussianProcessClassifier(PredictionAlgorithm):
     def fit(self, X, y):
         from sklearn.gaussian_process import GaussianProcessClassifier
 
+        if self.kernel is "constant":
+            from sklearn.gaussian_process.kernels import ConstantKernel
+            self.kernel = ConstantKernel()
+        elif self.kernel is "rbf":
+            from sklearn.gaussian_process.kernels import RBF
+            self.kernel = RBF()
+        elif self.kernel is "materb":
+            from sklearn.gaussian_process.kernels import Matern
+            self.kernel = Matern()
+        elif self.kernel is "rational_quadratic":
+            from sklearn.gaussian_process.kernels import RationalQuadratic
+            self.kernel = RationalQuadratic()
+        elif self.kernel is "exp_sin_squared":
+            from sklearn.gaussian_process.kernels import ExpSineSquared
+            self.kernel = ExpSineSquared()
+        elif self.kernel is "white":
+            from sklearn.gaussian_process.kernels import WhiteKernel
+            self.kernel = WhiteKernel()
+        elif self.kernel is "product":
+            from sklearn.gaussian_process.kernels import Product
+            self.kernel = Product()
+        elif self.kernel is "exponentiation":
+            from sklearn.gaussian_process.kernels import Exponentiation
+            self.kernel = Exponentiation()
+        elif self.kernel is "dot":
+            from sklearn.gaussian_process.kernels import DotProduct
+            self.kernel = DotProduct()
+
         self.estimator = GaussianProcessClassifier(
             kernel=self.kernel,
             optimizer=self.optimizer,
@@ -68,7 +96,7 @@ class GaussianProcessClassifier(PredictionAlgorithm):
         cs = ConfigurationSpace()
 
         kernel = CategoricalHyperparameter("kernel",
-                                           ["constant", "rbf", "matern", "rational_quadratic", "exp_sine_squared"],
+                                           ["constant", "rbf", "matern", "rational_quadratic", "exp_sine_squared", "white", "product", "exponentiation", "dot"],
                                            default_value="rbf")
         optimizer = Constant("optimizer", "fmin_l_bfgs_b")
         n_restarts_optimizer = UniformIntegerHyperparameter("n_restarts_optimizer", 0, 1000, default_value=0)

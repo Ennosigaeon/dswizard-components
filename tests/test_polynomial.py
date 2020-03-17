@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.preprocessing import PolynomialFeatures
 
-from automl.components.feature_preprocessing.polynomial import PolynomialFeaturesComponent
+from automl.components.feature_preprocessing.test.polynomial import PolynomialFeaturesComponent
 from tests import base_test
 
 

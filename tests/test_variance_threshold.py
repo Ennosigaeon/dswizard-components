@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.feature_selection import VarianceThreshold
 
-from automl.components.feature_preprocessing.variance_threshold import VarianceThresholdComponent
+from automl.components.feature_preprocessing.test.variance_threshold import VarianceThresholdComponent
 from tests import base_test
 
 

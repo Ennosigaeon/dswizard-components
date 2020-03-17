@@ -1,7 +1,8 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     CategoricalHyperparameter, UnParametrizedHyperparameter, Constant
-from ConfigSpace.conditions import InCondition
+from ConfigSpace.conditions import InCondition, AndConjunction
+from ConfigSpace import ForbiddenAndConjunction, ForbiddenEqualsClause, ForbiddenInClause
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
@@ -16,7 +17,10 @@ class LogisticRegression(PredictionAlgorithm):
                  C: float = 1.0,
                  fit_intercept: bool = True,
                  intercept_scaling: float = 1,
-                 max_iter: int = 100
+                 max_iter: int = 100,
+                 multi_class: str = "ovr",
+                 warm_start: bool = False,
+                 l1_ratio: float = 0.1
                  ):
         super().__init__()
         self.penalty = penalty
@@ -27,6 +31,9 @@ class LogisticRegression(PredictionAlgorithm):
         self.fit_intercept = fit_intercept
         self.intercept_scaling = intercept_scaling
         self.max_iter = max_iter
+        self.multi_class = multi_class
+        self.warm_start = warm_start
+        self.l1_ratio = l1_ratio
 
     def fit(self, X, y, sample_weight=None):
         from sklearn.linear_model import LogisticRegression
@@ -40,7 +47,9 @@ class LogisticRegression(PredictionAlgorithm):
             fit_intercept=self.fit_intercept,
             intercept_scaling=self.intercept_scaling,
             max_iter=self.max_iter,
-            warm_start=True)
+            multi_class=self.multi_class,
+            warm_start=self.warm_start,
+            l1_ratio=self.l1_ratio)
         self.estimator.fit(X, y, sample_weight=sample_weight)
         return self
 
@@ -74,7 +83,7 @@ class LogisticRegression(PredictionAlgorithm):
         tol = UniformFloatHyperparameter("tol", lower=1.0e-5, upper=100, default_value=1.0e-4, log=True)
         C = UniformFloatHyperparameter("C", lower=1.0, upper=2.0, default_value=1.0, log=True)
         fit_intercept = CategoricalHyperparameter("fit_intercept", choices=[True, False], default_value=True)
-        intercept_scaling = UniformFloatHyperparameter("intercept_scaling", lower=0.0, upper=2.0, default_value=1.0,
+        intercept_scaling = UniformFloatHyperparameter("intercept_scaling", lower=0.0001, upper=2.0, default_value=1.0,
                                                        log=True)
         max_iter = UniformIntegerHyperparameter("max_iter", lower=50, upper=150, default_value=100)
         multi_class = CategoricalHyperparameter("multi_class", ["ovr", "multinomial"], default_value="ovr")
@@ -82,8 +91,36 @@ class LogisticRegression(PredictionAlgorithm):
         l1_ratio = UniformFloatHyperparameter("l1_ratio", lower=0., upper=1., default_value=0.1)
 
         l1_ratio_condition = InCondition(l1_ratio, penalty, ["elasticnet"])
+        dual_condition = AndConjunction(InCondition(dual, penalty, ["l2"]), InCondition(dual,solver,["liblinear"]))
         cs.add_hyperparameters(
             [penalty, solver, dual, tol, C, fit_intercept, intercept_scaling, max_iter, multi_class, warm_start,
              l1_ratio])
+        penaltyAndLbfgs = ForbiddenAndConjunction(
+            ForbiddenEqualsClause(solver, "lbfgs"),
+            ForbiddenInClause(penalty, ["l1", "elasticnet"])
+        )
+        penaltyAndNewton = ForbiddenAndConjunction(
+            ForbiddenEqualsClause(solver, "newton-cg"),
+            ForbiddenInClause(penalty, ["l1", "elasticnet"])
+        )
+        penaltyAndSag = ForbiddenAndConjunction(
+            ForbiddenEqualsClause(solver, "sag"),
+            ForbiddenInClause(penalty, ["l1", "elasticnet"])
+        )
+        penaltyAndSaga = ForbiddenAndConjunction(
+            ForbiddenInClause(penalty, ["elasticnet"]),
+            ForbiddenInClause(solver, ["newton-cg", "lbfgs", "sag"])
+        )
+        penaltyAndSagaa = ForbiddenAndConjunction(
+            ForbiddenInClause(penalty, ["elasticnet", "none"]),
+            ForbiddenInClause(solver, ["liblinear"])
+        )
+
+        cs.add_forbidden_clause(penaltyAndLbfgs)
+        cs.add_forbidden_clause(penaltyAndNewton)
+        cs.add_forbidden_clause(penaltyAndSag)
+        cs.add_forbidden_clause(penaltyAndSagaa)
+        cs.add_forbidden_clause(penaltyAndSaga)
         cs.add_condition(l1_ratio_condition)
+        cs.add_condition(dual_condition)
         return cs

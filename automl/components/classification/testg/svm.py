@@ -2,6 +2,7 @@ import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     CategoricalHyperparameter, UnParametrizedHyperparameter, Constant
+from ConfigSpace import ForbiddenAndConjunction, ForbiddenEqualsClause
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.common import check_none
@@ -79,12 +80,29 @@ class SVCClassifier(PredictionAlgorithm):
         dual = CategoricalHyperparameter("dual", [True, False], default_value=True)
         tol = UniformFloatHyperparameter("tol", 1e-5, 2., default_value=1e-4)
         C = UniformFloatHyperparameter("C", 0., 10., default_value=1.)
-        multi_class = CategoricalHyperparameter("multi_class", ["ovr","or","crammer_singer"], default_value="ovr")
+        multi_class = CategoricalHyperparameter("multi_class", ["ovr", "crammer_singer"], default_value="ovr")
         fit_intercept = CategoricalHyperparameter("fit_intercept", [True,False], default_value=True)
         intercept_scaling = UniformFloatHyperparameter("intercept_scaling", 0., 1., default_value=1.)
         max_iter = UniformIntegerHyperparameter("max_iter", 100, 10000, default_value=1000)
 
         cs.add_hyperparameters(
             [C, penalty, loss, dual, tol, multi_class, fit_intercept, intercept_scaling, max_iter])
+
+        penalty_and_loss = ForbiddenAndConjunction(
+            ForbiddenEqualsClause(penalty, "l1"),
+            ForbiddenEqualsClause(loss, "hinge")
+        )
+        constant_penalty_and_loss = ForbiddenAndConjunction(
+            ForbiddenEqualsClause(dual, False),
+            ForbiddenEqualsClause(penalty, "l2"),
+            ForbiddenEqualsClause(loss, "hinge")
+        )
+        penalty_and_dual = ForbiddenAndConjunction(
+            ForbiddenEqualsClause(dual, False),
+            ForbiddenEqualsClause(penalty, "l1")
+        )
+        cs.add_forbidden_clause(penalty_and_loss)
+        cs.add_forbidden_clause(constant_penalty_and_loss)
+        cs.add_forbidden_clause(penalty_and_dual)
 
         return cs
