@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 
-from automl.components.data_preprocessing.standardize import StandardScalerComponent
+from automl.components.data_preprocessing.test.standardize import StandardScalerComponent
 from tests import base_test
 
 
