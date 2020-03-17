@@ -1,3 +1,5 @@
+from ConfigSpace.configuration_space import ConfigurationSpace
+
 from automl.components.base import PreprocessingAlgorithm
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, UniformIntegerHyperparameter
 
@@ -15,9 +17,9 @@ class StandardScalerComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        with_mean = CategoricalHyperparameter("with_mean", [True,False], default_value=True)
-        with_std = CategoricalHyperparameter("with_std", [True,False], default_value=True)
-        copy = CategoricalHyperparameter("copy", [True,False], default_value=True)
+        with_mean = CategoricalHyperparameter("with_mean", [True, False], default_value=True)
+        with_std = CategoricalHyperparameter("with_std", [True, False], default_value=True)
+        copy = CategoricalHyperparameter("copy", [True, False], default_value=True)
 
         cs.add_hyperparameters([with_mean, with_std, copy])
         return cs

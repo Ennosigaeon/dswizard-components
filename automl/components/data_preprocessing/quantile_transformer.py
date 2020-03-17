@@ -30,7 +30,7 @@ class QuantileTransformerComponent(PreprocessingAlgorithm):
         subsample = UniformIntegerHyperparameter("subsample", 1e3, 1e8, default_value=1e5)
         copy = CategoricalHyperparameter("copy", [True, False], default_value=True)
 
-        cs.add_hyperparameter([n_quantiles, output_distribution, ignore_implicit_zeros, subsample, copy])
+        cs.add_hyperparameters([n_quantiles, output_distribution, ignore_implicit_zeros, subsample, copy])
         return cs
 
     @staticmethod

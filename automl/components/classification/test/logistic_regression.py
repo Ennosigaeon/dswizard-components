@@ -72,14 +72,14 @@ class LogisticRegression(PredictionAlgorithm):
                                            default_value="lbfgs")
         dual = CategoricalHyperparameter("dual", choices=[True, False], default_value=False)
         tol = UniformFloatHyperparameter("tol", lower=1.0e-5, upper=100, default_value=1.0e-4, log=True)
-        C = UniformFloatHyperparameter("C", lower=0.0, upper=2.0, default_value=1.0, log=True)
+        C = UniformFloatHyperparameter("C", lower=1.0, upper=2.0, default_value=1.0, log=True)
         fit_intercept = CategoricalHyperparameter("fit_intercept", choices=[True, False], default_value=True)
         intercept_scaling = UniformFloatHyperparameter("intercept_scaling", lower=0.0, upper=2.0, default_value=1.0,
                                                        log=True)
-        max_iter = UniformIntegerHyperparameter("max_iter", 50, 150, default_value=100)
+        max_iter = UniformIntegerHyperparameter("max_iter", lower=50, upper=150, default_value=100)
         multi_class = CategoricalHyperparameter("multi_class", ["ovr", "multinomial"], default_value="ovr")
         warm_start = CategoricalHyperparameter("warm_start", [True, False], default_value=False)
-        l1_ratio = UniformFloatHyperparameter("l1_ratio", 0., 1., default_value=0.1)
+        l1_ratio = UniformFloatHyperparameter("l1_ratio", lower=0., upper=1., default_value=0.1)
 
         l1_ratio_condition = InCondition(l1_ratio, penalty, ["elasticnet"])
         cs.add_hyperparameters(
