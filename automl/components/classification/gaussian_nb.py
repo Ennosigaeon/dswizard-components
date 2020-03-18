@@ -7,14 +7,15 @@ from automl.components.base import PredictionAlgorithm
 
 class GaussianNB(PredictionAlgorithm):
 
-    def __init__(self, random_state=None, var_smoothing: float = 1e-9, verbose: int = 0):
+    def __init__(self, random_state=None,
+                 var_smoothing: float = 1e-9,
+                 verbose: int = 0):
         super().__init__()
         self.random_state = random_state
         self.verbose = int(verbose)
         self.estimator = None
         self.classes_ = None
         self.var_smoothing = var_smoothing
-
 
     def fit(self, X, y):
         import sklearn.naive_bayes

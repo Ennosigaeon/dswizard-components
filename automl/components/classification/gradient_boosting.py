@@ -106,15 +106,16 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         max_bins = UniformIntegerHyperparameter("max_bins", 5, 255, default_value=255)
         l2_regularization = UniformFloatHyperparameter(name="l2_regularization", lower=0., upper=1.,
                                                        default_value=0., log=True)
-        warm_start = CategoricalHyperparameter("warm_start", [True,False], default_value=False)
+        warm_start = CategoricalHyperparameter("warm_start", [True, False], default_value=False)
         tol = UniformFloatHyperparameter("tol", 0., 0.25, default_value=1e-7)
-        scoring = CategoricalHyperparameter("scoring", ["accuracy", "balanced_accuracy", "average_precision", "f1", "f1_weighted", "precision", "recall", "roc_auc", "roc_auc_ovr", "roc_auc_ovo", "loss"], default_value="loss")
+        scoring = CategoricalHyperparameter("scoring", ["accuracy", "balanced_accuracy", "average_precision", "f1",
+                                                        "f1_weighted", "precision", "recall", "roc_auc", "roc_auc_ovr",
+                                                        "roc_auc_ovo", "loss"], default_value="loss")
         n_iter_no_change = UniformIntegerHyperparameter(name="n_iter_no_change", lower=1, upper=100, default_value=10)
         validation_fraction = UniformFloatHyperparameter(name="validation_fraction", lower=0.001, upper=0.5,
                                                          default_value=0.1)
 
-        cs.add_hyperparameters(
-            [loss, learning_rate, max_iter, min_samples_leaf, max_depth, max_leaf_nodes, max_bins, l2_regularization,
-             tol, scoring, n_iter_no_change, validation_fraction, warm_start])
+        cs.add_hyperparameters([loss, learning_rate, max_iter, min_samples_leaf, max_depth, max_leaf_nodes, max_bins,
+                                l2_regularization, tol, scoring, n_iter_no_change, validation_fraction, warm_start])
 
         return cs

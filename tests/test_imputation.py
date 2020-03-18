@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.impute import SimpleImputer
 
-from automl.components.data_preprocessing.test.imputation import ImputationComponent
+from automl.components.data_preprocessing.imputation import ImputationComponent
 from tests import base_test
 
 

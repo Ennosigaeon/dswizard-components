@@ -1,11 +1,9 @@
-import numpy as np
+from ConfigSpace.conditions import InCondition, LessThanCondition, EqualsCondition, AndConjunction
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
-    CategoricalHyperparameter, UnParametrizedHyperparameter, Constant
-from ConfigSpace.conditions import EqualsCondition, InCondition, LessThanCondition, AndConjunction
+    CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
-from automl.util.common import check_none
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
 
 
@@ -34,7 +32,7 @@ class MLPClassifier(PredictionAlgorithm):
                  max_fun: int = 15000,
                  layer_1_size: int = 3,
                  layer_2_size: int = 150,
-                 random_state = None
+                 random_state=None
                  ):
         super().__init__()
         self.layer_1_size = layer_1_size

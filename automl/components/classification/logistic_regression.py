@@ -1,8 +1,8 @@
+from ConfigSpace import ForbiddenAndConjunction, ForbiddenEqualsClause, ForbiddenInClause
+from ConfigSpace.conditions import InCondition, AndConjunction
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
-    CategoricalHyperparameter, UnParametrizedHyperparameter, Constant
-from ConfigSpace.conditions import InCondition, AndConjunction
-from ConfigSpace import ForbiddenAndConjunction, ForbiddenEqualsClause, ForbiddenInClause
+    CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
@@ -94,10 +94,10 @@ class LogisticRegression(PredictionAlgorithm):
         l1_ratio = UniformFloatHyperparameter("l1_ratio", lower=0., upper=1., default_value=0.1)
 
         l1_ratio_condition = InCondition(l1_ratio, penalty, ["elasticnet"])
-        dual_condition = AndConjunction(InCondition(dual, penalty, ["l2"]), InCondition(dual,solver,["liblinear"]))
-        cs.add_hyperparameters(
-            [penalty, solver, dual, tol, C, fit_intercept, intercept_scaling, max_iter, multi_class, warm_start,
-             l1_ratio])
+        dual_condition = AndConjunction(InCondition(dual, penalty, ["l2"]), InCondition(dual, solver, ["liblinear"]))
+        cs.add_hyperparameters([penalty, solver, dual, tol, C, fit_intercept, intercept_scaling, max_iter, multi_class,
+                                warm_start, l1_ratio])
+
         penaltyAndLbfgs = ForbiddenAndConjunction(
             ForbiddenEqualsClause(solver, "lbfgs"),
             ForbiddenInClause(penalty, ["l1", "elasticnet"])

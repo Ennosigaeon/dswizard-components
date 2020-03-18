@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.decomposition import PCA
 
-from automl.components.feature_preprocessing.test.pca import PCAComponent
+from automl.components.feature_preprocessing.pca import PCAComponent
 from tests import base_test
 
 

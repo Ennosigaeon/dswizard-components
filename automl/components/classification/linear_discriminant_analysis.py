@@ -1,6 +1,6 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
-    CategoricalHyperparameter, UnParametrizedHyperparameter, Constant
+    CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
@@ -25,8 +25,11 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
         from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
         # initial fit of only increment trees
-        self.estimator = LinearDiscriminantAnalysis(
-            solver=self.solver, shrinkage=self.shrikage, store_covariance=self.store_covariance, tol=self.tol, n_components=self.n_components)
+        self.estimator = LinearDiscriminantAnalysis(solver=self.solver,
+                                                    shrinkage=self.shrikage,
+                                                    store_covariance=self.store_covariance,
+                                                    tol=self.tol,
+                                                    n_components=self.n_components)
         self.estimator.fit(X, y)
         return self
 

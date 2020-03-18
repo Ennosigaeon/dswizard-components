@@ -1,7 +1,7 @@
 import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
-    CategoricalHyperparameter, UnParametrizedHyperparameter, Constant
+    CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.common import check_none
@@ -21,7 +21,7 @@ class DecisionTree(PredictionAlgorithm):
                  random_state=None,
                  max_leaf_nodes: int = None,
                  min_impurity_decrease: float = 0.,
-                 class_weight = None,
+                 class_weight=None,
                  ccp_alpha: float = 0.
                  ):
         super().__init__()
@@ -63,7 +63,7 @@ class DecisionTree(PredictionAlgorithm):
             min_weight_fraction_leaf=self.min_weight_fraction_leaf,
             min_impurity_decrease=self.min_impurity_decrease,
             class_weight=self.class_weight,
-            ccp_alpha = self.ccp_alpha,
+            ccp_alpha=self.ccp_alpha,
             random_state=self.random_state)
         self.estimator.fit(X, y, sample_weight=sample_weight)
         return self
@@ -106,6 +106,6 @@ class DecisionTree(PredictionAlgorithm):
         cs.add_hyperparameters([criterion, splitter, max_features, max_depth_factor,
                                 min_samples_split, min_samples_leaf,
                                 min_weight_fraction_leaf, max_leaf_nodes,
-                                min_impurity_decrease,ccp_alpha])
+                                min_impurity_decrease, ccp_alpha])
 
         return cs

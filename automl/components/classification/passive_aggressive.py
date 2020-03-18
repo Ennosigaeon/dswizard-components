@@ -95,9 +95,8 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
         warm_start = CategoricalHyperparameter("warm_start", [True, False], default_value=True)
         average = UniformIntegerHyperparameter("average", 1, 100, default_value=1)
 
-        cs.add_hyperparameters(
-            [C, fit_intercept, max_iter, tol, early_stopping, validation_fraction, n_iter_no_change, shuffle, loss,
-             warm_start, average])
+        cs.add_hyperparameters([C, fit_intercept, max_iter, tol, early_stopping, validation_fraction, n_iter_no_change,
+                                shuffle, loss, warm_start, average])
 
         validation_fraction_condition = EqualsCondition(validation_fraction, early_stopping, True)
         cs.add_condition(validation_fraction_condition)

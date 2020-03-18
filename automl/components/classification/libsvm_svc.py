@@ -1,12 +1,11 @@
 import resource
 import sys
 
+from ConfigSpace import ForbiddenAndConjunction, ForbiddenInClause
 from ConfigSpace.conditions import EqualsCondition, InCondition
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
-    CategoricalHyperparameter, UnParametrizedHyperparameter
-from ConfigSpace import ForbiddenAndConjunction, ForbiddenEqualsClause, ForbiddenInClause
-
+    CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.common import check_none, check_for_bool
@@ -46,7 +45,7 @@ class LibSVM_SVC(PredictionAlgorithm):
         self.break_ties = break_ties
 
     def fit(self, X, Y):
-        import sklearn.svm
+        from sklearn.svm import SVC
 
         # Calculate the size of the kernel cache (in MB) for sklearn's LibSVM. The cache size is
         # calculated as 2/3 of the available memory (which is calculated as the memory limit minus
@@ -88,20 +87,21 @@ class LibSVM_SVC(PredictionAlgorithm):
         if check_none(self.class_weight):
             self.class_weight = None
 
-        self.estimator = sklearn.svm.SVC(C=self.C,
-                                         kernel=self.kernel,
-                                         degree=self.degree,
-                                         gamma=self.gamma,
-                                         coef0=self.coef0,
-                                         shrinking=self.shrinking,
-                                         tol=self.tol,
-                                         class_weight=self.class_weight,
-                                         max_iter=self.max_iter,
-                                         random_state=self.random_state,
-                                         cache_size=cache_size,
-                                         probability=self.probability,
-                                         break_ties=self.break_ties,
-                                         decision_function_shape=self.decision_function_shape,)
+        self.estimator = SVC(C=self.C,
+                             kernel=self.kernel,
+                             degree=self.degree,
+                             gamma=self.gamma,
+                             coef0=self.coef0,
+                             shrinking=self.shrinking,
+                             tol=self.tol,
+                             class_weight=self.class_weight,
+                             max_iter=self.max_iter,
+                             random_state=self.random_state,
+                             cache_size=cache_size,
+                             probability=self.probability,
+                             break_ties=self.break_ties,
+                             decision_function_shape=self.decision_function_shape
+                             )
         self.estimator.fit(X, Y)
         return self
 
@@ -139,11 +139,13 @@ class LibSVM_SVC(PredictionAlgorithm):
         tol = UniformFloatHyperparameter("tol", 1e-7, 0.5, default_value=1e-3, log=True)
         # cache size is not a hyperparameter, but an argument to the program!
         max_iter = UniformIntegerHyperparameter("max_iter", 10, 50000, default_value=100)
-        decision_function_shape = CategoricalHyperparameter("decision_function_shape", ["ovr", "ovo"], default_value="ovr")
-        break_ties = CategoricalHyperparameter("break_ties", [True,False], default_value=False)
+        decision_function_shape = CategoricalHyperparameter("decision_function_shape", ["ovr", "ovo"],
+                                                            default_value="ovr")
+        break_ties = CategoricalHyperparameter("break_ties", [True, False], default_value=False)
 
         cs = ConfigurationSpace()
-        cs.add_hyperparameters([C, kernel, degree, gamma, coef0, shrinking, tol, max_iter,probability,decision_function_shape,break_ties])
+        cs.add_hyperparameters([C, kernel, degree, gamma, coef0, shrinking, tol, max_iter, probability,
+                                decision_function_shape, break_ties])
 
         degree_depends_on_poly = EqualsCondition(degree, kernel, "poly")
         coef0_condition = InCondition(coef0, kernel, ["poly", "sigmoid"])

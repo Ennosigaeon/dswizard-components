@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.preprocessing import Normalizer
 
-from automl.components.data_preprocessing.test.normalize import NormalizerComponent
+from automl.components.data_preprocessing.normalize import NormalizerComponent
 from tests import base_test
 
 

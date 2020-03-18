@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn.naive_bayes
 
-from automl.components.classification.testg.gaussian_nb import GaussianNB
+from automl.components.classification.gaussian_nb import GaussianNB
 from tests import base_test
 
 
