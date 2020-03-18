@@ -4,17 +4,18 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntege
 from automl.components.base import PreprocessingAlgorithm
 
 
-class ImputationComponent(PreprocessingAlgorithm):
-    def __init__(self, n_components: int = 256, learning_rate: float = 0.1, n_iter: int = 10):
+class BernoulliRBM(PreprocessingAlgorithm):
+    def __init__(self, n_components: int = 256, learning_rate: float = 0.1, n_iter: int = 10, random_state = None):
         super().__init__()
         self.n_components = n_components
         self.learning_rate = learning_rate
         self.n_iter = n_iter
+        self.random_state = random_state
 
     def fit(self, X, y=None):
         from sklearn.neural_network import BernoulliRBM
 
-        self.preprocessor = BernoulliRBM(n_components=self.n_components, learning_rate=self.learning_rate, n_iter=self.n_iter)
+        self.preprocessor = BernoulliRBM(n_components=self.n_components, learning_rate=self.learning_rate, n_iter=self.n_iter, random_state=self.random_state)
         self.preprocessor = self.preprocessor.fit(X)
         return self
 

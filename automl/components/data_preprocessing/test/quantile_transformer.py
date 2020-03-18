@@ -5,19 +5,20 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatH
 
 class QuantileTransformerComponent(PreprocessingAlgorithm):
 
-    def __init__(self, n_quantiles: int = 1000, output_distribution: str = "uniform", ignore_implicit_zeros: bool = False, subsample: int = 1e5, copy: bool = True):
+    def __init__(self, n_quantiles: int = 1000, output_distribution: str = "uniform", ignore_implicit_zeros: bool = False, subsample: int = 1e5, copy: bool = True, random_state=None):
         super().__init__()
         self.n_quantiles = n_quantiles
         self.output_distribution = output_distribution
         self.ignore_implicit_zeros = ignore_implicit_zeros
         self.subsample = subsample
         self.copy = copy
+        self.random_state = random_state
         from sklearn.preprocessing import QuantileTransformer
         self.preprocessor = QuantileTransformer(copy=self.copy,
                                                 n_quantiles=self.n_quantiles,
                                                 output_distribution=self.output_distribution,
                                                 ignore_implicit_zeros=self.ignore_implicit_zeros,
-                                                subsample=self.subsample)
+                                                subsample=self.subsample,random_state=self.random_state)
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

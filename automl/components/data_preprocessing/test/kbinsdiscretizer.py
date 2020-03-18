@@ -5,7 +5,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformInteg
 from automl.components.base import PreprocessingAlgorithm
 
 
-class BinarizerComponent(PreprocessingAlgorithm):
+class KBinsDiscretizer(PreprocessingAlgorithm):
 
     def __init__(self, n_bins: int = 5,
                  encode: str = "onehot",
