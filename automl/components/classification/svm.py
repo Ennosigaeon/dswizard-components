@@ -101,8 +101,14 @@ class SVCClassifier(PredictionAlgorithm):
             ForbiddenEqualsClause(dual, False),
             ForbiddenEqualsClause(penalty, "l1")
         )
+        constant_penalty_and_loss2 = ForbiddenAndConjunction(
+            ForbiddenEqualsClause(dual, True),
+            ForbiddenEqualsClause(penalty, "l1"),
+            ForbiddenEqualsClause(loss, "squared_hinge")
+        )
         cs.add_forbidden_clause(penalty_and_loss)
         cs.add_forbidden_clause(constant_penalty_and_loss)
         cs.add_forbidden_clause(penalty_and_dual)
+        cs.add_forbidden_clause(constant_penalty_and_loss2)
 
         return cs

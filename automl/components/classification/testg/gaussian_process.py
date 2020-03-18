@@ -2,6 +2,7 @@ import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     CategoricalHyperparameter, UnParametrizedHyperparameter, Constant
+from ConfigSpace.conditions import EqualsCondition
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.common import check_none
@@ -18,6 +19,7 @@ class GaussianProcessClassifier(PredictionAlgorithm):
                  warm_start: bool = False,
                  copy_X_train: bool = True,
                  multi_class: str = "one_vs_rest",
+                 exponent: int = 3
                  ):
         super().__init__()
         self.kernel = kernel
@@ -27,6 +29,7 @@ class GaussianProcessClassifier(PredictionAlgorithm):
         self.warm_start = warm_start
         self.copy_X_train = copy_X_train
         self.multi_class = multi_class
+        self.exponent = exponent
 
     def fit(self, X, y):
         from sklearn.gaussian_process import GaussianProcessClassifier
@@ -37,7 +40,7 @@ class GaussianProcessClassifier(PredictionAlgorithm):
         elif self.kernel is "rbf":
             from sklearn.gaussian_process.kernels import RBF
             self.kernel = RBF()
-        elif self.kernel is "materb":
+        elif self.kernel is "matern":
             from sklearn.gaussian_process.kernels import Matern
             self.kernel = Matern()
         elif self.kernel is "rational_quadratic":
@@ -54,7 +57,7 @@ class GaussianProcessClassifier(PredictionAlgorithm):
             self.kernel = Product()
         elif self.kernel is "exponentiation":
             from sklearn.gaussian_process.kernels import Exponentiation
-            self.kernel = Exponentiation()
+            self.kernel = Exponentiation(exponent=self.exponent)
         elif self.kernel is "dot":
             from sklearn.gaussian_process.kernels import DotProduct
             self.kernel = DotProduct()
@@ -105,8 +108,12 @@ class GaussianProcessClassifier(PredictionAlgorithm):
         copy_X_train = CategoricalHyperparameter("copy_X_train", [True, False], default_value=True)
         multi_class = CategoricalHyperparameter("multi_class", ["one_vs_rest", "one_vs_one"],
                                                 default_value="one_vs_rest")
+        exponent = UniformIntegerHyperparameter("exponent", 2, 4, default_value=2)
 
         cs.add_hyperparameters(
-            [n_restarts_optimizer, max_iter_predict, warm_start, copy_X_train, multi_class, kernel, optimizer])
+            [n_restarts_optimizer, max_iter_predict, warm_start, copy_X_train, multi_class, kernel, optimizer, exponent])
+
+        beta_1_condition = EqualsCondition(exponent, kernel, "exponentiation")
+        cs.add_condition(beta_1_condition)
 
         return cs

@@ -27,6 +27,9 @@ class PCAComponent(PreprocessingAlgorithm):
         from sklearn.decomposition import PCA
         self.whiten = check_for_bool(self.whiten)
 
+        if self.svd_solver is "randomized":
+            self.n_components = int(len(X) * self.n_components)
+
         self.preprocessor = PCA(n_components=self.n_components,
                                 whiten=self.whiten,
                                 random_state=self.random_state,
