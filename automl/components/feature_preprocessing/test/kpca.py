@@ -111,7 +111,7 @@ class KernelPCAComponent(PreprocessingAlgorithm):
         fit_inverse_transform = CategoricalHyperparameter("fit_inverse_transform", [True, False], default_value=False)
         eigen_solver = CategoricalHyperparameter("eigen_solver", ["dense", "arpack"], default_value="dense")
         tol = UniformFloatHyperparameter("tol", 0., 2., default_value=0.)
-        max_iter = UniformIntegerHyperparameter("max_iter", 1, 1000, default_value=10000)
+        max_iter = UniformIntegerHyperparameter("max_iter", 1, 1000, default_value=100)
         remove_zero_eigen = CategoricalHyperparameter("remove_zero_eigen", [True, False], default_value=False)
         copy_X = CategoricalHyperparameter("copy_X", [True, False], default_value=True)
 

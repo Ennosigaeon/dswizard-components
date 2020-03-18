@@ -79,7 +79,7 @@ class SVCClassifier(PredictionAlgorithm):
         loss = CategoricalHyperparameter("loss", ["hinge", "squared_hinge"], default_value="squared_hinge")
         dual = CategoricalHyperparameter("dual", [True, False], default_value=True)
         tol = UniformFloatHyperparameter("tol", 1e-5, 120., default_value=1e-4)
-        C = UniformFloatHyperparameter("C", 0., 100., default_value=1.)
+        C = UniformFloatHyperparameter("C", 1e-7, 100., default_value=1.)
         multi_class = CategoricalHyperparameter("multi_class", ["ovr", "crammer_singer"], default_value="ovr")
         fit_intercept = CategoricalHyperparameter("fit_intercept", [True,False], default_value=True)
         intercept_scaling = UniformFloatHyperparameter("intercept_scaling", 0., 1., default_value=1.)

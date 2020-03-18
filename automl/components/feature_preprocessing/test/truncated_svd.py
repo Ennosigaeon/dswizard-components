@@ -2,7 +2,7 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, \
     UniformIntegerHyperparameter
 from ConfigSpace.conditions import InCondition
-import numpy as np
+
 from scipy import sparse
 
 from automl.components.base import PreprocessingAlgorithm
@@ -23,6 +23,7 @@ class TruncatedSVDComponent(PreprocessingAlgorithm):
         self.random_state = random_state
 
     def fit(self, X, Y):
+        import numpy as np
         num_features = X.shape[1]
         self.n_components = max(1, int(np.round(self.n_components * num_features, 0)))
         from sklearn.decomposition import TruncatedSVD

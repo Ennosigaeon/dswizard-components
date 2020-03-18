@@ -99,8 +99,8 @@ class SGDClassifier(PredictionAlgorithm):
                                                   "squared_loss", "huber", "epsilon_insensitive",
                                                   "squared_epsilon_insensitive"], default_value="hinge")
         penaly = CategoricalHyperparameter("penalty", ["l2", "l1", "elasticnet"], default_value="l2")
-        alpha = UniformFloatHyperparameter("alpha", 0., 50., default_value=0.001)
-        l1_ratio = UniformFloatHyperparameter("l1_ratio", 0., 1., default_value=0.15)
+        alpha = UniformFloatHyperparameter("alpha", 1e-7, 50., default_value=0.001)
+        l1_ratio = UniformFloatHyperparameter("l1_ratio", 1e-7, 1., default_value=0.15)
         fit_intercept = CategoricalHyperparameter("fit_intercept", [True, False], default_value=True)
         max_iter = UniformIntegerHyperparameter("max_iter", 20, 1000, default_value=1000)
         tol = UniformFloatHyperparameter("tol", 1e-9, 1., default_value=1e-3)
@@ -108,7 +108,7 @@ class SGDClassifier(PredictionAlgorithm):
         epsilon = UniformFloatHyperparameter("epsilon", 1e-9, 50., default_value=0.1)
         learning_rate = CategoricalHyperparameter("learning_rate", ["constant", "optimal", "invscaling", "adaptive"],
                                                   default_value="optimal")
-        eta0 = UniformFloatHyperparameter("eta0", 1e-9, 50., default_value=0.)
+        eta0 = UniformFloatHyperparameter("eta0", 1e-9, 50., default_value=1e-9)
         power_t = UniformFloatHyperparameter("power_t", 1e-9, 50., default_value=0.5)
         early_stopping = CategoricalHyperparameter("early_stopping", [True, False], default_value=False)
         validation_fraction = UniformFloatHyperparameter("validation_fraction", 0., 1., default_value=0.1)

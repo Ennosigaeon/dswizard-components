@@ -80,8 +80,8 @@ class LogisticRegression(PredictionAlgorithm):
         solver = CategoricalHyperparameter("solver", ["newton-cg", "lbfgs", "liblinear", "sag", "saga"],
                                            default_value="lbfgs")
         dual = CategoricalHyperparameter("dual", choices=[True, False], default_value=False)
-        tol = UniformFloatHyperparameter("tol", lower=0., upper=100., default_value=1.0e-4, log=True)
-        C = UniformFloatHyperparameter("C", lower=1.0, upper=100., default_value=1.0, log=True)
+        tol = UniformFloatHyperparameter("tol", lower=1e-7, upper=100., default_value=1.0e-4, log=True)
+        C = UniformFloatHyperparameter("C", lower=1e-7, upper=100., default_value=1.0, log=True)
         fit_intercept = CategoricalHyperparameter("fit_intercept", choices=[True, False], default_value=True)
         intercept_scaling = UniformFloatHyperparameter("intercept_scaling", lower=0.0001, upper=2.0, default_value=1.0,
                                                        log=True)

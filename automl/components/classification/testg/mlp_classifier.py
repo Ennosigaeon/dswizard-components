@@ -121,7 +121,7 @@ class MLPClassifier(PredictionAlgorithm):
         batch_size = UniformIntegerHyperparameter("batch_size", 5, 200, default_value=200)
         learning_rate = CategoricalHyperparameter("learning_rate", ["constant", "invscaling", "adaptive"],
                                                   default_value="constant")
-        learning_rate_init = UniformFloatHyperparameter("learning_rate_init", 0.0001, 1., default_value=0.001)
+        learning_rate_init = UniformFloatHyperparameter("learning_rate_init", 1e-7, 1., default_value=0.001)
         power_t = UniformFloatHyperparameter("power_t", 0.01, 0.99, default_value=0.5)
         max_iter = UniformIntegerHyperparameter("max_iter", 5, 1000, default_value=200)
         shuffle = CategoricalHyperparameter("shuffle", [True, False], default_value=True)
