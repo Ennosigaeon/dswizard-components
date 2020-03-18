@@ -20,7 +20,8 @@ class SVCClassifier(PredictionAlgorithm):
                  C: float = 1.,
                  fit_intercept: bool = True,
                  intercept_scaling: float = 1.,
-                 max_iter: int = 1000
+                 max_iter: int = 1000,
+                 random_state = None
                  ):
         super().__init__()
         self.penalty = penalty
@@ -32,6 +33,7 @@ class SVCClassifier(PredictionAlgorithm):
         self.fit_intercept = fit_intercept
         self.intercept_scaling = intercept_scaling
         self.max_iter = max_iter
+        self.random_state = random_state
 
 
     def fit(self, X, y):
@@ -46,7 +48,8 @@ class SVCClassifier(PredictionAlgorithm):
             multi_class=self.multi_class,
             fit_intercept=self.fit_intercept,
             intercept_scaling=self.intercept_scaling,
-            max_iter=self.max_iter
+            max_iter=self.max_iter,
+            random_state=self.random_state
         )
         self.estimator.fit(X, y)
         return self

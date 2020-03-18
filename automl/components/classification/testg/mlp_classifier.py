@@ -33,7 +33,8 @@ class MLPClassifier(PredictionAlgorithm):
                  n_iter_no_change: int = 10,
                  max_fun: int = 15000,
                  layer_1_size: int = 3,
-                 layer_2_size: int = 150
+                 layer_2_size: int = 150,
+                 random_state = None
                  ):
         super().__init__()
         self.layer_1_size = layer_1_size
@@ -58,6 +59,7 @@ class MLPClassifier(PredictionAlgorithm):
         self.epsilon = epsilon
         self.n_iter_no_change = n_iter_no_change
         self.max_fun = max_fun
+        self.random_state = random_state
 
     def fit(self, X, y):
         from sklearn.neural_network import MLPClassifier
@@ -83,7 +85,8 @@ class MLPClassifier(PredictionAlgorithm):
             beta_2=self.beta_2,
             epsilon=self.epsilon,
             n_iter_no_change=self.n_iter_no_change,
-            max_fun=self.max_fun
+            max_fun=self.max_fun,
+            random_state=self.random_state
         )
         self.estimator.fit(X, y)
         return self

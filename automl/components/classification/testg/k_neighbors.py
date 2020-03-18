@@ -25,6 +25,7 @@ class KNeighborsClassifier(PredictionAlgorithm):
         self.leaf_size = leaf_size
         self.p = p
         self.metric = metric
+        self.random_state = random_state
 
     def fit(self, X, y):
         from sklearn.neighbors import KNeighborsClassifier

@@ -8,11 +8,10 @@ from automl.util.common import check_for_bool
 
 class MultinomialNB(PredictionAlgorithm):
 
-    def __init__(self, alpha: float = 1.0, fit_prior: bool = True, random_state=None, verbose: int = 0):
+    def __init__(self, alpha: float = 1.0, fit_prior: bool = True, verbose: int = 0):
         super().__init__()
         self.alpha = alpha
         self.fit_prior = fit_prior
-        self.random_state = random_state
         self.verbose = int(verbose)
         self.classes_ = None
 

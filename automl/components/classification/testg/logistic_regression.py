@@ -20,7 +20,8 @@ class LogisticRegression(PredictionAlgorithm):
                  max_iter: int = 100,
                  multi_class: str = "ovr",
                  warm_start: bool = False,
-                 l1_ratio: float = 0.1
+                 l1_ratio: float = 0.1,
+                 random_state = None
                  ):
         super().__init__()
         self.penalty = penalty
@@ -34,6 +35,7 @@ class LogisticRegression(PredictionAlgorithm):
         self.multi_class = multi_class
         self.warm_start = warm_start
         self.l1_ratio = l1_ratio
+        self.random_state = random_state
 
     def fit(self, X, y, sample_weight=None):
         from sklearn.linear_model import LogisticRegression
@@ -49,6 +51,7 @@ class LogisticRegression(PredictionAlgorithm):
             max_iter=self.max_iter,
             multi_class=self.multi_class,
             warm_start=self.warm_start,
+            random_state=self.random_state,
             l1_ratio=self.l1_ratio)
         self.estimator.fit(X, y, sample_weight=sample_weight)
         return self

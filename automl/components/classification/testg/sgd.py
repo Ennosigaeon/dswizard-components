@@ -28,7 +28,8 @@ class SGDClassifier(PredictionAlgorithm):
                  validation_fraction: float = 0.1,
                  n_iter_no_change: int = 5,
                  warm_start: bool = False,
-                 average: bool = False
+                 average: bool = False,
+                 random_state = None
                  ):
         super().__init__()
         self.loss = loss
@@ -48,6 +49,7 @@ class SGDClassifier(PredictionAlgorithm):
         self.n_iter_no_change = n_iter_no_change
         self.warm_start = warm_start
         self.average = average
+        self.random_state = random_state
 
     def fit(self, X, y):
         from sklearn.linear_model import SGDClassifier
@@ -66,7 +68,8 @@ class SGDClassifier(PredictionAlgorithm):
             eta0=self.eta0,
             power_t=self.power_t,
             warm_start=self.warm_start,
-            average=self.average
+            average=self.average,
+            random_state=self.random_state
         )
         self.estimator.fit(X, y)
         return self

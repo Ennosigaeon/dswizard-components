@@ -19,7 +19,8 @@ class GaussianProcessClassifier(PredictionAlgorithm):
                  warm_start: bool = False,
                  copy_X_train: bool = True,
                  multi_class: str = "one_vs_rest",
-                 exponent: int = 3
+                 exponent: int = 3,
+                 random_state = None
                  ):
         super().__init__()
         self.kernel = kernel
@@ -30,6 +31,7 @@ class GaussianProcessClassifier(PredictionAlgorithm):
         self.copy_X_train = copy_X_train
         self.multi_class = multi_class
         self.exponent = exponent
+        self.random_state = random_state
 
     def fit(self, X, y):
         from sklearn.gaussian_process import GaussianProcessClassifier
@@ -66,7 +68,8 @@ class GaussianProcessClassifier(PredictionAlgorithm):
             max_iter_predict=self.max_iter_predict,
             warm_start=self.warm_start,
             copy_X_train=self.copy_X_train,
-            multi_class=self.multi_class
+            multi_class=self.multi_class,
+            random_state=self.random_state
         )
         self.estimator.fit(X, y)
         return self

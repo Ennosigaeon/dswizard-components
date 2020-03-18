@@ -5,7 +5,7 @@ from automl.components.base import PredictionAlgorithm
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
 
 
-class SVCClassifier(PredictionAlgorithm):
+class QuadraticDiscriminantAnalysis(PredictionAlgorithm):
 
     def __init__(self,
                  reg_param: float = None,
