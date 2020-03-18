@@ -1,6 +1,7 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     CategoricalHyperparameter, UnParametrizedHyperparameter, Constant
+from ConfigSpace.conditions import EqualsCondition
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.common import check_none, check_for_bool
@@ -134,5 +135,7 @@ class RandomForest(PredictionAlgorithm):
         max_samples = UniformFloatHyperparameter("max_samples", 0., 1., default_value=1.)
         cs.add_hyperparameters([n_estimators, criterion, max_features, max_depth, min_samples_split, min_samples_leaf,
                                 min_weight_fraction_leaf, max_leaf_nodes, bootstrap, min_impurity_decrease, oob_score, warm_start, ccp_alpha, max_samples])
+        oobdependsonbootstrap = EqualsCondition(oob_score, bootstrap, "true")
+        cs.add_condition(oobdependsonbootstrap)
 
         return cs

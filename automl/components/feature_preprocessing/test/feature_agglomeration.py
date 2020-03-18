@@ -70,10 +70,10 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
         distance_threshold = UniformFloatHyperparameter("distance_threshold", 0.00001, 0.75, default_value=None)
 
         cs = ConfigurationSpace()
-        cs.add_hyperparameters([n_clusters, affinity, compute_full_tree, linkage, distance_threshold])
+        cs.add_hyperparameters([n_clusters, affinity, compute_full_tree, linkage, distance_threshold,pooling_func])
 
         affinity_and_linkage = ForbiddenAndConjunction(
-            ForbiddenInClause(affinity, ["manhattan", "cosine"]),
+            ForbiddenInClause(affinity, ["l1", "l2", "manhattan", "cosine", "precomputed"]),
             ForbiddenEqualsClause(linkage, "ward"))
         cs.add_forbidden_clause(affinity_and_linkage)
 

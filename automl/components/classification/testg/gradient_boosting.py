@@ -94,7 +94,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        loss = Constant("loss", "categorical_crossentropy")
+        loss = Constant("loss", "auto")
         learning_rate = UniformFloatHyperparameter(name="learning_rate", lower=0.0, upper=1.5, default_value=0.1,
                                                    log=True)
         max_iter = UniformIntegerHyperparameter("max_iter", 0, 1000, default_value=100)

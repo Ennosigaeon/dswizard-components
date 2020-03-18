@@ -115,12 +115,17 @@ class LogisticRegression(PredictionAlgorithm):
             ForbiddenInClause(penalty, ["elasticnet", "none"]),
             ForbiddenInClause(solver, ["liblinear"])
         )
+        penaltyAndSagaaa = ForbiddenAndConjunction(
+            ForbiddenInClause(multi_class, ["multinomial"]),
+            ForbiddenInClause(solver, ["liblinear"])
+        )
 
         cs.add_forbidden_clause(penaltyAndLbfgs)
         cs.add_forbidden_clause(penaltyAndNewton)
         cs.add_forbidden_clause(penaltyAndSag)
         cs.add_forbidden_clause(penaltyAndSagaa)
         cs.add_forbidden_clause(penaltyAndSaga)
+        cs.add_forbidden_clause(penaltyAndSagaaa)
         cs.add_condition(l1_ratio_condition)
         cs.add_condition(dual_condition)
         return cs

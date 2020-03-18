@@ -24,11 +24,10 @@ class PCAComponent(PreprocessingAlgorithm):
         self.random_state = random_state
 
     def fit(self, X, Y=None):
+        num_features = X.shape[1]
+        self.n_components = max(1, int(np.round(self.n_components * num_features, 0)))
         from sklearn.decomposition import PCA
         self.whiten = check_for_bool(self.whiten)
-
-        if self.svd_solver is "randomized":
-            self.n_components = int(len(X) * self.n_components)
 
         self.preprocessor = PCA(n_components=self.n_components,
                                 whiten=self.whiten,

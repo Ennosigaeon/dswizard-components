@@ -5,6 +5,8 @@ from ConfigSpace.conditions import EqualsCondition, InCondition
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     CategoricalHyperparameter, UnParametrizedHyperparameter
+from ConfigSpace import ForbiddenAndConjunction, ForbiddenEqualsClause, ForbiddenInClause
+
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.common import check_none, check_for_bool
@@ -124,19 +126,19 @@ class LibSVM_SVC(PredictionAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
-        C = UniformFloatHyperparameter("C", 0.03125, 32768, log=True, default_value=1.0)
+        C = UniformFloatHyperparameter("C", 1e-7, 200, log=True, default_value=1.0)
         # No linear kernel here, because we have liblinear
         kernel = CategoricalHyperparameter(name="kernel", choices=["rbf", "poly", "sigmoid"], default_value="rbf")
-        degree = UniformIntegerHyperparameter("degree", 2, 5, default_value=3)
-        gamma = UniformFloatHyperparameter("gamma", 3.0517578125e-05, 8, log=True, default_value=0.1)
+        degree = UniformIntegerHyperparameter("degree", 2, 6, default_value=3)
+        gamma = UniformFloatHyperparameter("gamma", 1e-7, 70, log=True, default_value=0.1)
         # TODO this is totally ad-hoc
-        coef0 = UniformFloatHyperparameter("coef0", -1, 1, default_value=0)
+        coef0 = UniformFloatHyperparameter("coef0", -30., 30., default_value=0)
         # probability is no hyperparameter, but an argument to the SVM algo
         shrinking = CategoricalHyperparameter("shrinking", [True, False], default_value=True)
         probability = CategoricalHyperparameter("probability", [True, False], default_value=False)
-        tol = UniformFloatHyperparameter("tol", 1e-5, 1e-1, default_value=1e-3, log=True)
+        tol = UniformFloatHyperparameter("tol", 1e-7, 0.5, default_value=1e-3, log=True)
         # cache size is not a hyperparameter, but an argument to the program!
-        max_iter = UnParametrizedHyperparameter("max_iter", -1.0)
+        max_iter = UniformIntegerHyperparameter("max_iter", 10, 50000, default_value=100)
         decision_function_shape = CategoricalHyperparameter("decision_function_shape", ["ovr", "ovo"], default_value="ovr")
         break_ties = CategoricalHyperparameter("break_ties", [True,False], default_value=False)
 
@@ -149,5 +151,11 @@ class LibSVM_SVC(PredictionAlgorithm):
         cs.add_condition(degree_depends_on_poly)
         cs.add_condition(coef0_condition)
         cs.add_condition(gamma_condition)
+
+        funcshapAndBreakties = ForbiddenAndConjunction(
+            ForbiddenInClause(decision_function_shape, ["ovo"]),
+            ForbiddenInClause(break_ties, True)
+        )
+        cs.add_forbidden_clause(funcshapAndBreakties)
 
         return cs

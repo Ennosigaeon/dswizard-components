@@ -55,9 +55,6 @@ class GaussianProcessClassifier(PredictionAlgorithm):
         elif self.kernel is "product":
             from sklearn.gaussian_process.kernels import Product
             self.kernel = Product()
-        elif self.kernel is "exponentiation":
-            from sklearn.gaussian_process.kernels import Exponentiation
-            self.kernel = Exponentiation(exponent=self.exponent)
         elif self.kernel is "dot":
             from sklearn.gaussian_process.kernels import DotProduct
             self.kernel = DotProduct()
@@ -99,7 +96,7 @@ class GaussianProcessClassifier(PredictionAlgorithm):
         cs = ConfigurationSpace()
 
         kernel = CategoricalHyperparameter("kernel",
-                                           ["constant", "rbf", "matern", "rational_quadratic", "exp_sine_squared", "white", "product", "exponentiation", "dot"],
+                                           ["constant", "rbf", "matern", "rational_quadratic", "exp_sine_squared", "white", "product", "dot"],
                                            default_value="rbf")
         optimizer = Constant("optimizer", "fmin_l_bfgs_b")
         n_restarts_optimizer = UniformIntegerHyperparameter("n_restarts_optimizer", 0, 500, default_value=0)
