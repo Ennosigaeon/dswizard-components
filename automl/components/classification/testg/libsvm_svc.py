@@ -154,7 +154,7 @@ class LibSVM_SVC(PredictionAlgorithm):
 
         funcshapAndBreakties = ForbiddenAndConjunction(
             ForbiddenInClause(decision_function_shape, ["ovo"]),
-            ForbiddenInClause(break_ties, True)
+            ForbiddenInClause(break_ties, [True])
         )
         cs.add_forbidden_clause(funcshapAndBreakties)
 

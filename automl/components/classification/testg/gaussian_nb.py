@@ -7,19 +7,19 @@ from automl.components.base import PredictionAlgorithm
 
 class GaussianNB(PredictionAlgorithm):
 
-    def __init__(self, random_state=None, var_smooting: float = 1e-9, verbose: int = 0):
+    def __init__(self, random_state=None, var_smoothing: float = 1e-9, verbose: int = 0):
         super().__init__()
         self.random_state = random_state
         self.verbose = int(verbose)
         self.estimator = None
         self.classes_ = None
-        self.var_smooting = var_smooting
+        self.var_smoothing = var_smoothing
 
 
     def fit(self, X, y):
         import sklearn.naive_bayes
 
-        self.estimator = sklearn.naive_bayes.GaussianNB(var_smoothing=self.var_smooting)
+        self.estimator = sklearn.naive_bayes.GaussianNB(var_smoothing=self.var_smoothing)
         self.classes_ = np.unique(y.astype(int))
 
         # Fallback for multilabel classification
@@ -47,8 +47,8 @@ class GaussianNB(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        var_smooting = UniformFloatHyperparameter("var_smoothing", 0., 0.75, default_value=1e-9)
+        var_smoothing = UniformFloatHyperparameter("var_smoothing", 0., 0.75, default_value=1e-9)
 
-        cs.add_hyperparameter(var_smooting)
+        cs.add_hyperparameter(var_smoothing)
 
         return cs
