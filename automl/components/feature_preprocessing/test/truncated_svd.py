@@ -30,7 +30,8 @@ class TruncatedSVDComponent(PreprocessingAlgorithm):
         self.preprocessor = TruncatedSVD(n_components=self.n_components,
                                          algorithm=self.algorithm,
                                          n_iter=self.n_iter,
-                                         tol=self.tol).fit(X,Y)
+                                         tol=self.tol,
+                                         random_state=self.random_state).fit(X,Y)
         return self
 
     def transform(self, X):
