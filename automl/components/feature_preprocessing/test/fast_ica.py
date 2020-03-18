@@ -12,6 +12,7 @@ class FastICAComponent(PreprocessingAlgorithm):
                  whiten: bool = True,
                  fun: str = 'logcosh',
                  max_iter: int = 100,
+                 random_state = None,
                  tol: float = 1.):
         super().__init__()
         self.n_components = n_components
@@ -20,6 +21,7 @@ class FastICAComponent(PreprocessingAlgorithm):
         self.fun = fun
         self.max_iter = max_iter
         self.tol = tol
+        self.random_state = random_state
 
         from sklearn.decomposition import FastICA
         self.preprocessor = FastICA(n_components=n_components,
@@ -27,6 +29,7 @@ class FastICAComponent(PreprocessingAlgorithm):
                                     whiten=whiten,
                                     fun=fun,
                                     max_iter=max_iter,
+                                    random_state=self.random_state,
                                     tol=tol)
 
     @staticmethod

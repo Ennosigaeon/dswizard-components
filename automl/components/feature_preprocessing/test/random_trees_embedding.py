@@ -32,6 +32,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         self.random_state = random_state
         self.bootstrap = bootstrap
         self.sparse_output = sparse_output
+        self.random_state = random_state
 
     def _fit(self, X, Y=None):
         from sklearn.ensemble import RandomTreesEmbedding
