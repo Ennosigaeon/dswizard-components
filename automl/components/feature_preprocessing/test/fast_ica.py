@@ -33,12 +33,12 @@ class FastICAComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        n_components = UniformIntegerHyperparameter("n_components", 10, 10000, default_value=100)
+        n_components = UniformIntegerHyperparameter("n_components", 10, 2500, default_value=100)
         algorithm = CategoricalHyperparameter("algorithm", ["parallel", "deflation"], default_value="parallel")
         whiten = CategoricalHyperparameter("whiten", [True, False], default_value=True)
         fun = CategoricalHyperparameter("fun", ["logcosh", "exp", "cube"], default_value="logcosh")
         max_iter = UniformIntegerHyperparameter("max_iter", 1, 1000, default_value=100)
-        tol = UniformFloatHyperparameter("tol", 1e-5, 5., default_value=1.)
+        tol = UniformFloatHyperparameter("tol", 1e-7, 10., default_value=1.)
 
         cs.add_hyperparameters([n_components, algorithm, whiten, fun, max_iter, tol])
         return cs

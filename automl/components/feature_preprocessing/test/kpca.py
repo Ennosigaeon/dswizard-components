@@ -102,16 +102,16 @@ class KernelPCAComponent(PreprocessingAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
-        n_components = UniformIntegerHyperparameter("n_components", 10, 2000, default_value=100)
+        n_components = UniformIntegerHyperparameter("n_components", 10, 3000, default_value=100)
         kernel = CategoricalHyperparameter('kernel', ['poly', 'rbf', 'sigmoid', 'cosine'], 'rbf')
-        gamma = UniformFloatHyperparameter("gamma", 3.0517578125e-05, 8, log=True, default_value=1.0)
-        degree = UniformIntegerHyperparameter('degree', 2, 5, 3)
-        coef0 = UniformFloatHyperparameter("coef0", -1, 1, default_value=0)
-        alpha = UniformIntegerHyperparameter("alpha", 1, 10, default_value=1)
+        gamma = UniformFloatHyperparameter("gamma", 1e-09, 15., log=True, default_value=1.0)
+        degree = UniformIntegerHyperparameter('degree', 2, 6, 3)
+        coef0 = UniformFloatHyperparameter("coef0", -1., 1., default_value=0.)
+        alpha = UniformIntegerHyperparameter("alpha", 1e-9, 5., default_value=1.)
         fit_inverse_transform = CategoricalHyperparameter("fit_inverse_transform", [True, False], default_value=False)
         eigen_solver = CategoricalHyperparameter("eigen_solver", ["dense", "arpack"], default_value="dense")
         tol = UniformFloatHyperparameter("tol", 0., 2., default_value=0.)
-        max_iter = UniformIntegerHyperparameter("max_iter", 1, 10000, default_value=10000)
+        max_iter = UniformIntegerHyperparameter("max_iter", 1, 1000, default_value=10000)
         remove_zero_eigen = CategoricalHyperparameter("remove_zero_eigen", [True, False], default_value=False)
         copy_X = CategoricalHyperparameter("copy_X", [True, False], default_value=True)
 

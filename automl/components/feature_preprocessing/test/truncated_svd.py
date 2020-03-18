@@ -42,9 +42,9 @@ class TruncatedSVDComponent(PreprocessingAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
-        n_components = UniformIntegerHyperparameter(name="n_components", lower=1, upper=20, default_value=2)
-        n_iter = UniformIntegerHyperparameter(name="n_iter", lower=1, upper=20, default_value=5)
-        tol = UniformFloatHyperparameter(name="tol", lower=1e-5, upper=10, default_value=0.01)
+        n_components = UniformIntegerHyperparameter(name="n_components", lower=1, upper=400, default_value=2)
+        n_iter = UniformIntegerHyperparameter(name="n_iter", lower=1, upper=100, default_value=5)
+        tol = UniformFloatHyperparameter(name="tol", lower=1e-7, upper=5., default_value=0.01)
         algorithm = CategoricalHyperparameter(name="algorithm", choices=["arpack", "randomized"],
                                               default_value="randomized")
 

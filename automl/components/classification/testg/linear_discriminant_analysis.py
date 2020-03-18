@@ -55,9 +55,9 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
         cs = ConfigurationSpace()
         shrinkage = UniformFloatHyperparameter("shrinkage", 0., 1., default_value=0.1)  # oder float zw 1 & 0
         solver = CategoricalHyperparameter("solver", ["svd", "lsqr", "eigen"], default_value="svd")
-        n_components = UniformIntegerHyperparameter("n_components", 2, 100, default_value=10)
+        n_components = UniformIntegerHyperparameter("n_components", 2, 400, default_value=10)
         store_covariance = CategoricalHyperparameter("store_covariance", choices=[True, False], default_value=False)
-        tol = UniformFloatHyperparameter(name="tol", lower=1.0e-5, upper=100, default_value=1.0e-4, log=True)
+        tol = UniformFloatHyperparameter(name="tol", lower=1.0e-7, upper=1., default_value=1.0e-4, log=True)
 
         cs.add_hyperparameters([shrinkage, solver, store_covariance, tol, n_components])
         return cs

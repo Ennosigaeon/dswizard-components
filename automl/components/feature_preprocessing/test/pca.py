@@ -61,11 +61,11 @@ class PCAComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
 
-        keep_variance = UniformFloatHyperparameter("n_components", 0.5, 0.9999, default_value=0.9999)
+        keep_variance = UniformFloatHyperparameter("n_components", 0., 1., default_value=0.9999)
         whiten = CategoricalHyperparameter("whiten", [False, True], default_value=False)
         svd_solver = CategoricalHyperparameter("svd_solver", ["full","arpack","randomized"], default_value="full")
         tol = UniformFloatHyperparameter("tol", 0., 5., default_value= 1e-2)
-        iterated_power = UniformIntegerHyperparameter("iterated_power", 0, 10000, default_value=1000)
+        iterated_power = UniformIntegerHyperparameter("iterated_power", 0, 1000, default_value=1000)
 
         cs = ConfigurationSpace()
         cs.add_hyperparameters([keep_variance, whiten, svd_solver, tol, iterated_power])

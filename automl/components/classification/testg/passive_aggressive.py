@@ -80,13 +80,13 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        C = UniformFloatHyperparameter("C", 0.1, 5., default_value=1.)
+        C = UniformFloatHyperparameter("C", 0.1, 25., default_value=1.)
         fit_intercept = CategoricalHyperparameter("fit_intercept", [True, False], default_value=False)
-        max_iter = UniformIntegerHyperparameter("max_iter", 5, 10000, default_value=1000)
+        max_iter = UniformIntegerHyperparameter("max_iter", 5, 1000, default_value=1000)
         tol = UniformFloatHyperparameter("tol", 0., 1., default_value=1e-3)
         early_stopping = CategoricalHyperparameter("early_stopping", [True, False], False)
         validation_fraction = UniformFloatHyperparameter("validation_fraction", 0., 1., default_value=0.1)
-        n_iter_no_change = UniformIntegerHyperparameter("n_iter_no_change", 1, 100, default_value=5)
+        n_iter_no_change = UniformIntegerHyperparameter("n_iter_no_change", 1, 1000, default_value=5)
         shuffle = CategoricalHyperparameter("shuffle", [True, False], True)
         loss = CategoricalHyperparameter("loss", ["hinge", "squared_hinge"], default_value="hinge")
         warm_start = CategoricalHyperparameter("warm_start", [True, False], default_value=True)

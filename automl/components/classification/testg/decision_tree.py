@@ -50,6 +50,9 @@ class DecisionTree(PredictionAlgorithm):
         if check_none(self.max_leaf_nodes):
             self.max_leaf_nodes = None
 
+        if self.max_leaf_nodes == 1:
+            self.max_leaf_nodes = None
+
         self.estimator = DecisionTreeClassifier(
             criterion=self.criterion,
             splitter=self.splitter,
@@ -91,18 +94,18 @@ class DecisionTree(PredictionAlgorithm):
 
         criterion = CategoricalHyperparameter("criterion", ["gini", "entropy"], default_value="gini")
         splitter = CategoricalHyperparameter("splitter", ["best","random"], default_value="best")
-        max_depth_factor = UniformFloatHyperparameter('max_depth_factor', 0., 2., default_value=0.5)
-        min_samples_split = UniformIntegerHyperparameter("min_samples_split", 2, 20, default_value=2)
-        min_samples_leaf = UniformIntegerHyperparameter("min_samples_leaf", 1, 20, default_value=1)
-        min_weight_fraction_leaf = Constant("min_weight_fraction_leaf", 0.0)
-        max_features = UnParametrizedHyperparameter('max_features', 1.0)
-        max_leaf_nodes = UnParametrizedHyperparameter("max_leaf_nodes", "None")
-        min_impurity_decrease = UnParametrizedHyperparameter('min_impurity_decrease', 0.0)
-        ccp_alpha = UniformFloatHyperparameter("ccp_alpha", 0., 5., default_value=0.)
+        max_depth_factor = UniformFloatHyperparameter('max_depth_factor', 0., 5., default_value=0.5)
+        min_samples_split = UniformIntegerHyperparameter("min_samples_split", 2, 60, default_value=2)
+        min_samples_leaf = UniformIntegerHyperparameter("min_samples_leaf", 1, 60, default_value=1)
+        min_weight_fraction_leaf = UniformFloatHyperparameter("min_weight_fraction_leaf", 0., 1., default_value=0.)
+        max_features = UniformFloatHyperparameter('max_features', 0., 1., default_value=1.)
+        max_leaf_nodes = UniformIntegerHyperparameter("max_leaf_nodes", 1, 100, default_value=1)
+        min_impurity_decrease = UniformFloatHyperparameter('min_impurity_decrease', 0., 0.75, default_value=0.)
+        ccp_alpha = UniformFloatHyperparameter("ccp_alpha", 0., 1., default_value=0.)
 
         cs.add_hyperparameters([criterion, splitter, max_features, max_depth_factor,
                                 min_samples_split, min_samples_leaf,
                                 min_weight_fraction_leaf, max_leaf_nodes,
-                                min_impurity_decrease])
+                                min_impurity_decrease,ccp_alpha])
 
         return cs

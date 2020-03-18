@@ -52,9 +52,9 @@ class SVCClassifier(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        reg_param = UniformFloatHyperparameter("reg_param", 0., 10., default_value=None)
+        reg_param = UniformFloatHyperparameter("reg_param", 0., 1.5, default_value=None)
         store_covariance = CategoricalHyperparameter("store_covariance", [True, False], default_value=True)
-        tol = UniformFloatHyperparameter("tol", 1e-5, 4.0, default_value=1e-4)
+        tol = UniformFloatHyperparameter("tol", 1e-5, 10.0, default_value=1e-4)
 
         cs.add_hyperparameters(
             [reg_param, store_covariance, tol])

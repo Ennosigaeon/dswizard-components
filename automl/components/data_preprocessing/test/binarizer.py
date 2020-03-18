@@ -21,7 +21,7 @@ class BinarizerComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
         # TODO both limits are totally ad hoc. More reasonable to use fraction of data
-        threshold = UniformFloatHyperparameter('threshold', -1, 1, default_value=0.)
+        threshold = UniformFloatHyperparameter('threshold', 0., 1., default_value=0.)
         copy = CategoricalHyperparameter("copy", [True, False], default_value=True)
         cs.add_hyperparameter(threshold)
         return cs

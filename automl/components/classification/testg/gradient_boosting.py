@@ -50,6 +50,12 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         if check_none(self.scoring):
             self.scoring = None
 
+        if self.max_depth == 1:
+            self.max_depth = None
+
+        if self.max_leaf_nodes == 1:
+            self.max_leaf_nodes = None
+
         self.estimator = HistGradientBoostingClassifier(
             loss=self.loss,
             learning_rate=self.learning_rate,
@@ -89,22 +95,22 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         cs = ConfigurationSpace()
 
         loss = Constant("loss", "categorical_crossentropy")
-        learning_rate = UniformFloatHyperparameter(name="learning_rate", lower=0.01, upper=1, default_value=0.1,
+        learning_rate = UniformFloatHyperparameter(name="learning_rate", lower=0.0, upper=1.5, default_value=0.1,
                                                    log=True)
-        max_iter = UniformIntegerHyperparameter("max_iter", 32, 512, default_value=100)
-        min_samples_leaf = UniformIntegerHyperparameter(name="min_samples_leaf", lower=1, upper=200, default_value=20,
+        max_iter = UniformIntegerHyperparameter("max_iter", 0, 1000, default_value=100)
+        min_samples_leaf = UniformIntegerHyperparameter(name="min_samples_leaf", lower=1, upper=60, default_value=20,
                                                         log=True)
         max_depth = UnParametrizedHyperparameter(name="max_depth", value="None")
-        max_leaf_nodes = UniformIntegerHyperparameter(name="max_leaf_nodes", lower=3, upper=2047, default_value=31,
+        max_leaf_nodes = UniformIntegerHyperparameter(name="max_leaf_nodes", lower=1, upper=50, default_value=1,
                                                       log=True)
-        max_bins = Constant("max_bins", 255)
-        l2_regularization = UniformFloatHyperparameter(name="l2_regularization", lower=1E-10, upper=1,
-                                                       default_value=1E-10, log=True)
+        max_bins = UniformIntegerHyperparameter("max_bins", 5, 255, default_value=255)
+        l2_regularization = UniformFloatHyperparameter(name="l2_regularization", lower=0., upper=1.,
+                                                       default_value=0., log=True)
         warm_start = CategoricalHyperparameter("warm_start", [True,False], default_value=False)
-        tol = UniformFloatHyperparameter("tol", 1e-9, 0.01, default_value=1e-7)
+        tol = UniformFloatHyperparameter("tol", 0., 0.25, default_value=1e-7)
         scoring = CategoricalHyperparameter("scoring", ["accuracy", "balanced_accuracy", "average_precision", "f1", "f1_weighted", "precision", "recall", "roc_auc", "roc_auc_ovr", "roc_auc_ovo", "loss"], default_value="loss")
-        n_iter_no_change = UniformIntegerHyperparameter(name="n_iter_no_change", lower=1, upper=20, default_value=10)
-        validation_fraction = UniformFloatHyperparameter(name="validation_fraction", lower=0.01, upper=0.4,
+        n_iter_no_change = UniformIntegerHyperparameter(name="n_iter_no_change", lower=1, upper=100, default_value=10)
+        validation_fraction = UniformFloatHyperparameter(name="validation_fraction", lower=0.001, upper=0.5,
                                                          default_value=0.1)
 
         cs.add_hyperparameters(

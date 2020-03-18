@@ -53,9 +53,9 @@ class BernoulliNB(PredictionAlgorithm):
         # the smoothing parameter is a non-negative float
         # I will limit it to 1000 and put it on a logarithmic scale. (SF)
         # Please adjust that, if you know a proper range, this is just a guess.
-        alpha = UniformFloatHyperparameter(name="alpha", lower=0., upper=10, default_value=1, log=True)
-        binarize = UniformFloatHyperparameter("binarize", 0., 10., default_value=0.)
+        alpha = UniformFloatHyperparameter(name="alpha", lower=0., upper=150., default_value=1.,)
+        binarize = UniformFloatHyperparameter("binarize", 0., 1., default_value=0.)#
         fit_prior = CategoricalHyperparameter(name="fit_prior", choices=[True, False], default_value=True)
 
-        cs.add_hyperparameters([alpha, fit_prior])
+        cs.add_hyperparameters([alpha, fit_prior,binarize])
         return cs

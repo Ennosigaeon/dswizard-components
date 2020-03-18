@@ -36,7 +36,7 @@ class GenericUnivariateSelectComponent(PreprocessingAlgorithm):
         cs = ConfigurationSpace()
 
         mode = CategoricalHyperparameter("mode", ['percentile', 'k_best', 'fpr', 'fdr', 'fwe'], default_value="percentile")
-        alpha = UniformFloatHyperparameter("alpha", 0.01, 0.5, default_value=0.5)
+        alpha = UniformFloatHyperparameter("alpha", 0.0001, 0.75, default_value=0.5)
         score_func = CategoricalHyperparameter(
             name="score_func",
             choices=["chi2", "f_classif", "f_regression"],

@@ -78,12 +78,12 @@ class SVCClassifier(PredictionAlgorithm):
         penalty = CategoricalHyperparameter("penalty", ["l1", "l2"], default_value="l2")
         loss = CategoricalHyperparameter("loss", ["hinge", "squared_hinge"], default_value="squared_hinge")
         dual = CategoricalHyperparameter("dual", [True, False], default_value=True)
-        tol = UniformFloatHyperparameter("tol", 1e-5, 2., default_value=1e-4)
-        C = UniformFloatHyperparameter("C", 0., 10., default_value=1.)
+        tol = UniformFloatHyperparameter("tol", 1e-5, 120., default_value=1e-4)
+        C = UniformFloatHyperparameter("C", 0., 100., default_value=1.)
         multi_class = CategoricalHyperparameter("multi_class", ["ovr", "crammer_singer"], default_value="ovr")
         fit_intercept = CategoricalHyperparameter("fit_intercept", [True,False], default_value=True)
         intercept_scaling = UniformFloatHyperparameter("intercept_scaling", 0., 1., default_value=1.)
-        max_iter = UniformIntegerHyperparameter("max_iter", 100, 10000, default_value=1000)
+        max_iter = UniformIntegerHyperparameter("max_iter", 100, 2000, default_value=1000)
 
         cs.add_hyperparameters(
             [C, penalty, loss, dual, tol, multi_class, fit_intercept, intercept_scaling, max_iter])

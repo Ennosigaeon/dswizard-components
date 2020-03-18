@@ -102,13 +102,13 @@ class GaussianProcessClassifier(PredictionAlgorithm):
                                            ["constant", "rbf", "matern", "rational_quadratic", "exp_sine_squared", "white", "product", "exponentiation", "dot"],
                                            default_value="rbf")
         optimizer = Constant("optimizer", "fmin_l_bfgs_b")
-        n_restarts_optimizer = UniformIntegerHyperparameter("n_restarts_optimizer", 0, 1000, default_value=0)
+        n_restarts_optimizer = UniformIntegerHyperparameter("n_restarts_optimizer", 0, 500, default_value=0)
         max_iter_predict = UniformIntegerHyperparameter("max_iter_predict", 1, 1000, default_value=100)
         warm_start = CategoricalHyperparameter("warm_start", [True, False], default_value=False)
         copy_X_train = CategoricalHyperparameter("copy_X_train", [True, False], default_value=True)
         multi_class = CategoricalHyperparameter("multi_class", ["one_vs_rest", "one_vs_one"],
                                                 default_value="one_vs_rest")
-        exponent = UniformIntegerHyperparameter("exponent", 2, 4, default_value=2)
+        exponent = UniformIntegerHyperparameter("exponent", 2, 4, default_value=2)#
 
         cs.add_hyperparameters(
             [n_restarts_optimizer, max_iter_predict, warm_start, copy_X_train, multi_class, kernel, optimizer, exponent])

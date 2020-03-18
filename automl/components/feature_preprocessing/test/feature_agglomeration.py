@@ -2,6 +2,7 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.forbidden import ForbiddenAndConjunction, ForbiddenInClause, ForbiddenEqualsClause
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformIntegerHyperparameter, UniformFloatHyperparameter
+import numpy as np
 
 from automl.components.base import PreprocessingAlgorithm
 from automl.util.common import check_for_bool
@@ -12,6 +13,7 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
                  affinity: str = "euclidean",
                  compute_full_tree: str = "auto",
                  linkage: str = "ward",
+                 pooling_func: str = "mean",
                  distance_threshold: float = None):
         super().__init__()
         self.n_clusters = n_clusters
@@ -19,6 +21,14 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
         self.compute_full_tree = compute_full_tree
         self.linkage = linkage
         self.distance_threshold = distance_threshold
+        self.pooling_func = pooling_func
+
+        if self.pooling_func is "mean":
+            self.pooling_func = np.mean()
+        elif self.pooling_func is "median":
+            np.median()
+        elif self.pooling_func is "max":
+            np.max()
 
     def fit(self, X, y=None):
         from sklearn.cluster import FeatureAgglomeration
@@ -50,13 +60,14 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
-        n_clusters = UniformIntegerHyperparameter("n_clusters", 2, 10, default_value=2)
+        n_clusters = UniformIntegerHyperparameter("n_clusters", 2, 600, default_value=2)
         affinity = CategoricalHyperparameter("affinity",
                                              ["euclidean", "l1", "l2", "manhattan", "cosine", "precomputed"],
                                              default_value="euclidean")
-        compute_full_tree = CategoricalHyperparameter("compute_full_tree", [True, False, 'auto'], default_value="auto")
+        compute_full_tree = CategoricalHyperparameter("compute_full_tree", [True, False], default_value=True)
         linkage = CategoricalHyperparameter("linkage", ["ward", "complete", "average", "single"], default_value="ward")
-        distance_threshold = UniformFloatHyperparameter("distance_threshold", 0.001, 0.5, default_value=None)
+        pooling_func = CategoricalHyperparameter("pooling_func", ["mean", "median", "max"], default_value="mean")
+        distance_threshold = UniformFloatHyperparameter("distance_threshold", 0.00001, 0.75, default_value=None)
 
         cs = ConfigurationSpace()
         cs.add_hyperparameters([n_clusters, affinity, compute_full_tree, linkage, distance_threshold])

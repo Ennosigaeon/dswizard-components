@@ -117,15 +117,15 @@ class MLPClassifier(PredictionAlgorithm):
         activation = CategoricalHyperparameter("activation", ["identity", "logistic", "tanh", "relu"],
                                                default_value="relu")
         solver = CategoricalHyperparameter("solver", ["lbfgs", "sgd", "adam"], default_value="adam")
-        alpha = UniformFloatHyperparameter("alpha", 0.00001, 0.1, default_value=0.0001)
-        batch_size = UniformIntegerHyperparameter("batch_size", 5, 1000, default_value=200)
+        alpha = UniformFloatHyperparameter("alpha", 0.00001, 2., default_value=0.0001)
+        batch_size = UniformIntegerHyperparameter("batch_size", 5, 200, default_value=200)
         learning_rate = CategoricalHyperparameter("learning_rate", ["constant", "invscaling", "adaptive"],
                                                   default_value="constant")
-        learning_rate_init = UniformFloatHyperparameter("learning_rate_init", 0.0001, 0.1, default_value=0.001)
-        power_t = UniformFloatHyperparameter("power_t", 0.01, 3, default_value=0.5)
-        max_iter = UniformIntegerHyperparameter("max_iter", 5, 10000, default_value=200)
+        learning_rate_init = UniformFloatHyperparameter("learning_rate_init", 0.0001, 1., default_value=0.001)
+        power_t = UniformFloatHyperparameter("power_t", 0.01, 0.99, default_value=0.5)
+        max_iter = UniformIntegerHyperparameter("max_iter", 5, 1000, default_value=200)
         shuffle = CategoricalHyperparameter("shuffle", [True, False], default_value=True)
-        tol = UniformFloatHyperparameter("tol", 1e-6, 1, default_value=1e-4)
+        tol = UniformFloatHyperparameter("tol", 1e-6, 1., default_value=1e-4)
         warm_start = CategoricalHyperparameter("warm_start", [True, False], default_value=True)
         momentum = UniformFloatHyperparameter("momentum", 0., 1., default_value=0.9)
         nesterovs_momentum = CategoricalHyperparameter("nesterovs_momentum", [True, False], default_value=True)
@@ -135,7 +135,7 @@ class MLPClassifier(PredictionAlgorithm):
         beta_2 = UniformFloatHyperparameter("beta_2", 0., 0.9999, default_value=0.999)
         epsilon = UniformFloatHyperparameter("epsilon", 0., 1., default_value=1e-8)
         n_iter_no_change = UniformIntegerHyperparameter("n_iter_no_change", 1, 1000, default_value=10)
-        max_fun = UniformIntegerHyperparameter("max_fun", 20, 100000, default_value=15000)
+        max_fun = UniformIntegerHyperparameter("max_fun", 200, 100000, default_value=15000)
 
         cs.add_hyperparameters(
             [layer_1_size, layer_2_size, activation, solver, alpha, batch_size, learning_rate, learning_rate_init,

@@ -23,7 +23,7 @@ class QuantileTransformerComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        n_quantiles = UniformIntegerHyperparameter("n_quantiles", 10, 10000, default_value=1000)
+        n_quantiles = UniformIntegerHyperparameter("n_quantiles", 10, 2500, default_value=1000)
         output_distribution = CategoricalHyperparameter("output_distribution", ["uniform", "normal"],
                                                         default_value="uniform")
         ignore_implicit_zeros = CategoricalHyperparameter("ignore_implicit_zeros", [True, False], default_value=False)

@@ -13,6 +13,11 @@ class RobustScalerComponent(PreprocessingAlgorithm):
         self.q_min = q_min
         self.q_max = q_max
 
+        if self.q_max < self.q_min:
+            help = self.q_max
+            self.q_max = self.q_min
+            self.q_min = help
+
     def fit(self, X, y=None):
         from sklearn.preprocessing import RobustScaler
         self.preprocessor = RobustScaler(quantile_range=(self.q_min, self.q_max), copy=self.copy, with_centering=self.with_centering, with_scaling=self.with_scaling)
@@ -40,7 +45,7 @@ class RobustScalerComponent(PreprocessingAlgorithm):
         with_centering = CategoricalHyperparameter("with_centering", [True,False], default_value=True)
         with_scaling = CategoricalHyperparameter("with_scaling", [True,False], default_value=True)
         copy = CategoricalHyperparameter("copy", [True,False], default_value=True)
-        q_min = UniformFloatHyperparameter('q_min', 0.001, 0.3, default_value=0.25)
-        q_max = UniformFloatHyperparameter('q_max', 0.7, 0.999, default_value=0.75)
+        q_min = UniformFloatHyperparameter('q_min', 0., 100., default_value=25.)
+        q_max = UniformFloatHyperparameter('q_max', 0., 100., default_value=75.)
         cs.add_hyperparameters([q_min, q_max, with_centering,with_scaling,copy])
         return cs
