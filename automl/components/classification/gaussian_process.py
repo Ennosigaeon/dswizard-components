@@ -18,7 +18,6 @@ class GaussianProcessClassifier(PredictionAlgorithm):
                  warm_start: bool = False,
                  copy_X_train: bool = True,
                  multi_class: str = "one_vs_rest",
-                 exponent: int = 3,
                  random_state = None
                  ):
         super().__init__()
@@ -29,7 +28,6 @@ class GaussianProcessClassifier(PredictionAlgorithm):
         self.warm_start = warm_start
         self.copy_X_train = copy_X_train
         self.multi_class = multi_class
-        self.exponent = exponent
         self.random_state = random_state
 
     def fit(self, X, y):
@@ -107,12 +105,8 @@ class GaussianProcessClassifier(PredictionAlgorithm):
         copy_X_train = CategoricalHyperparameter("copy_X_train", [True, False], default_value=True)
         multi_class = CategoricalHyperparameter("multi_class", ["one_vs_rest", "one_vs_one"],
                                                 default_value="one_vs_rest")
-        exponent = UniformIntegerHyperparameter("exponent", 2, 4, default_value=2)
 
         cs.add_hyperparameters([n_restarts_optimizer, max_iter_predict, warm_start, copy_X_train, multi_class, kernel,
-                                optimizer, exponent])
-
-        beta_1_condition = EqualsCondition(exponent, kernel, "exponentiation")
-        cs.add_condition(beta_1_condition)
+                                optimizer])
 
         return cs

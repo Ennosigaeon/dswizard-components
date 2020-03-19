@@ -125,7 +125,7 @@ class RandomForest(PredictionAlgorithm):
         max_depth = UniformIntegerHyperparameter("max_depth", 1, 50, default_value=10)
         min_samples_split = UniformIntegerHyperparameter("min_samples_split", 2, 60, default_value=2)
         min_samples_leaf = UniformIntegerHyperparameter("min_samples_leaf", 1, 60, default_value=1)
-        min_weight_fraction_leaf = UniformFloatHyperparameter("min_weight_fraction_leaf", 0., 1., default_value=0.)
+        min_weight_fraction_leaf = UniformFloatHyperparameter("min_weight_fraction_leaf", 0., 0.5, default_value=0.)
         max_leaf_nodes = UniformIntegerHyperparameter("max_leaf_nodes", 1, 100, default_value=10)
         min_impurity_decrease = UniformFloatHyperparameter('min_impurity_decrease', 0., 0.75, default_value=0.)
         bootstrap = CategoricalHyperparameter("bootstrap", [True, False], default_value=True)
