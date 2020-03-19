@@ -13,7 +13,8 @@ class KNeighborsClassifier(PredictionAlgorithm):
                  algorithm: str = "auto",
                  leaf_size: int = 30,
                  p: int = 2,
-                 metric: str = "minkowski"
+                 metric: str = "minkowski",
+                 random_state=None
                  ):
         super().__init__()
         self.n_neighbors = n_neighbors
@@ -67,9 +68,9 @@ class KNeighborsClassifier(PredictionAlgorithm):
         algorithm = CategoricalHyperparameter("algorithm", ["auto", "ball_tree", "kd_tree", "brute"], default_value="auto")
         leaf_size = UniformIntegerHyperparameter("leaf_size", 1, 100, default_value=30)
         p = UniformIntegerHyperparameter("p", 1, 5, default_value=2)
-        metric = CategoricalHyperparameter("metric", ["minkowski", "euclidean", "manhattan", "chebyshev", "wminkowski", "seuclidean", "mahalanobis"], default_value="minkowski")
+        metric = CategoricalHyperparameter("metric", ["minkowski", "euclidean", "manhattan", "chebyshev", "wminkowski",
+                                                      "seuclidean", "mahalanobis"], default_value="minkowski")
 
-        cs.add_hyperparameters(
-            [n_neighbors,weights,algorithm,leaf_size,p,metric])
+        cs.add_hyperparameters([n_neighbors, weights, algorithm, leaf_size, p, metric])
 
         return cs
