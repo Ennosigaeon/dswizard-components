@@ -2,7 +2,7 @@ import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
 
-from automl.components.classification.testg.logistic_regression import LogisticRegression
+from automl.components.classification.logistic_regression import LogisticRegression
 from tests import base_test
 
 

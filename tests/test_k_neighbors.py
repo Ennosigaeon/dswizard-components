@@ -2,7 +2,7 @@ import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
 
-from automl.components.classification.testg.k_neighbors import KNeighborsClassifier
+from automl.components.classification.k_neighbors import KNeighborsClassifier
 from tests import base_test
 
 

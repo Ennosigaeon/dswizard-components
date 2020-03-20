@@ -2,7 +2,7 @@ import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
 
-from automl.components.classification.testg.mlp_classifier import MLPClassifier
+from automl.components.classification.mlp_classifier import MLPClassifier
 from tests import base_test
 
 

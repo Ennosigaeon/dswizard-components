@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn
 
-from automl.components.feature_preprocessing.test.label_encoder import LabelEncoderComponent
+from automl.components.feature_preprocessing.label_encoder import LabelEncoderComponent
 from tests import base_test
 
 

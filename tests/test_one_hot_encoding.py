@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn
 
-from automl.components.feature_preprocessing.test.one_hot_encoding import OneHotEncoderComponent
+from automl.components.feature_preprocessing.one_hot_encoding import OneHotEncoderComponent
 from tests import base_test
 
 

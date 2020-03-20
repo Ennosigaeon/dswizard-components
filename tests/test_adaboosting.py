@@ -2,7 +2,7 @@ import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
 
-from automl.components.classification.testg.ada_boosting import AdaBoostingClassifier
+from automl.components.classification.ada_boosting import AdaBoostingClassifier
 from tests import base_test
 
 

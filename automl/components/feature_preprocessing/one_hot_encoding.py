@@ -22,6 +22,7 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
         return self
 
     def transform(self, X: np.ndarray):
+        # TODO OHE can not handle missing values
 
         categorical = []
         numeric = []

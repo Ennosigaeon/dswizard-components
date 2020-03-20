@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn
 
-from automl.components.data_preprocessing.test.quantile_transformer import QuantileTransformerComponent
+from automl.components.data_preprocessing.quantile_transformer import QuantileTransformerComponent
 from tests import base_test
 
 

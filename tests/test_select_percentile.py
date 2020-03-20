@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn
 
-from automl.components.feature_preprocessing.test.select_percentile import SelectPercentileClassification
+from automl.components.feature_preprocessing.select_percentile import SelectPercentileClassification
 from tests import base_test
 
 

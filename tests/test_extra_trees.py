@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn.tree
 
-from automl.components.classification.testg.extra_trees import ExtraTreesClassifier
+from automl.components.classification.extra_trees import ExtraTreesClassifier
 from tests import base_test
 
 
