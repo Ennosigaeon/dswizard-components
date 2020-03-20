@@ -7,6 +7,7 @@ from collections import OrderedDict
 from typing import Type, Dict, Any, Optional
 
 import numpy as np
+import pandas as pd
 from ConfigSpace import ConfigurationSpace
 from sklearn.base import BaseEstimator
 from sklearn.utils import check_random_state, check_array
@@ -114,7 +115,7 @@ class PredictionMixin:
 # noinspection PyPep8Naming
 class EstimatorComponent(BaseEstimator, MetaData, ABC):
 
-    def fit(self, X: np.ndarray, y: np.ndarray) -> 'EstimatorComponent':
+    def fit(self, X: pd.DataFrame, y: pd.Series) -> 'EstimatorComponent':
         """The fit function calls the fit function of the underlying
         scikit-learn model and returns `self`.
 
@@ -137,7 +138,7 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
         -learn-objects>`_ for further information."""
         return self
 
-    def transform(self, X: np.ndarray) -> np.ndarray:
+    def transform(self, X: pd.DataFrame) -> np.ndarray:
         """The transform function calls the transform function of the
         underlying scikit-learn model and returns the transformed array.
 
