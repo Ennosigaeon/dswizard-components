@@ -2,7 +2,7 @@ import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
 
-from automl.components.classification.testg.passive_aggressive import PassiveAggressiveClassifier
+from automl.components.classification.passive_aggressive import PassiveAggressiveClassifier
 from tests import base_test
 
 

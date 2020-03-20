@@ -2,7 +2,7 @@ import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
 
-from automl.components.classification.testg.mlp_classifier import MLPClassifier
+from automl.components.classification.mlp_classifier import MLPClassifier
 from tests import base_test
 
 
@@ -27,10 +27,14 @@ class TestMLPClassifier(base_test.BaseComponentTest):
 
         actual = MLPClassifier(random_state=42)
         config: dict = self.get_config(actual)
-
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
+
+        config['hidden_layer_sizes'] = (config['layer_1_size'], config['layer_2_size'])
+        del config['layer_1_size']
+        del config['layer_2_size']
+        print(config)
 
         expected = sklearn.neural_network.MLPClassifier(**config, random_state=42)
         expected.fit(X_train, y_train)

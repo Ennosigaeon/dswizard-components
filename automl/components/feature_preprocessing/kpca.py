@@ -42,7 +42,8 @@ class KernelPCAComponent(PreprocessingAlgorithm):
         import scipy.sparse
         from sklearn.decomposition import KernelPCA
 
-        self.n_components = int(self.n_components)
+        if self.n_components is not None:
+            self.n_components = int(self.n_components)
         self.degree = int(self.degree)
         self.gamma = float(self.gamma)
         self.coef0 = float(self.coef0)

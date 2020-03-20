@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn
 
-from automl.components.feature_preprocessing.test.random_trees_embedding import RandomTreesEmbeddingComponent
+from automl.components.feature_preprocessing.random_trees_embedding import RandomTreesEmbeddingComponent
 from tests import base_test
 
 

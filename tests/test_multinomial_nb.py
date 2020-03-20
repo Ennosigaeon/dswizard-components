@@ -2,7 +2,7 @@ import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
 
-from automl.components.classification.testg.multinomial_nb import MultinomialNB
+from automl.components.classification.multinomial_nb import MultinomialNB
 from tests import base_test
 
 

@@ -1,14 +1,15 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, CategoricalHyperparameter
+from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, CategoricalHyperparameter, UniformFloatHyperparameter
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
+import numpy as np
 
 
 class KNeighborsClassifier(PredictionAlgorithm):
 
     def __init__(self,
-                 n_neighbors: int = 5,
+                 n_neighbors: int = 0.1,
                  weights: str = "uniform",
                  algorithm: str = "auto",
                  leaf_size: int = 30,
@@ -27,7 +28,6 @@ class KNeighborsClassifier(PredictionAlgorithm):
 
     def fit(self, X, y):
         from sklearn.neighbors import KNeighborsClassifier
-
         self.estimator = KNeighborsClassifier(
             algorithm=self.algorithm,
             weights=self.weights,
@@ -63,7 +63,7 @@ class KNeighborsClassifier(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        n_neighbors = UniformIntegerHyperparameter("n_neighbors", 1, 200, default_value=5)
+        n_neighbors = UniformIntegerHyperparameter("n_neighbors", 1, 70, default_value=10)
         weights = CategoricalHyperparameter("weights", ["uniform", "distance"], default_value="uniform")
         algorithm = CategoricalHyperparameter("algorithm", ["auto", "ball_tree", "kd_tree", "brute"], default_value="auto")
         leaf_size = UniformIntegerHyperparameter("leaf_size", 1, 100, default_value=30)

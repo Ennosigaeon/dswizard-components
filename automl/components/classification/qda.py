@@ -8,7 +8,7 @@ from automl.util.util import convert_multioutput_multiclass_to_multilabel
 class QuadraticDiscriminantAnalysis(PredictionAlgorithm):
 
     def __init__(self,
-                 reg_param: float = None,
+                 reg_param: float = 1.,
                  store_covariance: bool = True,
                  tol: float = 1e-4
                  ):
@@ -52,7 +52,7 @@ class QuadraticDiscriminantAnalysis(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        reg_param = UniformFloatHyperparameter("reg_param", 0., 1.5, default_value=None)
+        reg_param = UniformFloatHyperparameter("reg_param", 0., 1.5, default_value=1.)
         store_covariance = CategoricalHyperparameter("store_covariance", [True, False], default_value=True)
         tol = UniformFloatHyperparameter("tol", 1e-5, 10.0, default_value=1e-4)
 

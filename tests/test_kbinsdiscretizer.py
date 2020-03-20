@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn
 
-from automl.components.data_preprocessing.test.kbinsdiscretizer import KBinsDiscretizer
+from automl.components.data_preprocessing.kbinsdiscretizer import KBinsDiscretizer
 from tests import base_test
 
 

@@ -1,5 +1,6 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.forbidden import ForbiddenAndConjunction, ForbiddenInClause, ForbiddenEqualsClause
+from ConfigSpace.conditions import EqualsCondition
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformIntegerHyperparameter, UniformFloatHyperparameter
 import numpy as np
@@ -29,6 +30,9 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
             np.median
         elif self.pooling_func is "max":
             np.max
+
+        if self.n_clusters == 1:
+            self.n_clusters = None
 
     def fit(self, X, y=None):
         from sklearn.cluster import FeatureAgglomeration
@@ -60,21 +64,29 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
-        n_clusters = UniformIntegerHyperparameter("n_clusters", 2, 600, default_value=2)
+        n_clusters = UniformIntegerHyperparameter("n_clusters", 1, 600, default_value=2)
         affinity = CategoricalHyperparameter("affinity",
                                              ["euclidean", "l1", "l2", "manhattan", "cosine", "precomputed"],
                                              default_value="euclidean")
         compute_full_tree = CategoricalHyperparameter("compute_full_tree", [True, False], default_value=True)
         linkage = CategoricalHyperparameter("linkage", ["ward", "complete", "average", "single"], default_value="ward")
         pooling_func = CategoricalHyperparameter("pooling_func", ["mean", "median", "max"], default_value="mean")
-        distance_threshold = UniformFloatHyperparameter("distance_threshold", 0.00001, 0.75, default_value=None)
+        distance_threshold = UniformFloatHyperparameter("distance_threshold", 0., 0.75, default_value=None)
 
         cs = ConfigurationSpace()
         cs.add_hyperparameters([n_clusters, affinity, compute_full_tree, linkage, distance_threshold,pooling_func])
+
+        distance_thresholdAndNClustersCondition = EqualsCondition(distance_threshold,n_clusters, 1)
+        cs.add_condition(distance_thresholdAndNClustersCondition)
 
         affinity_and_linkage = ForbiddenAndConjunction(
             ForbiddenInClause(affinity, ["l1", "l2", "manhattan", "cosine", "precomputed"]),
             ForbiddenEqualsClause(linkage, "ward"))
         cs.add_forbidden_clause(affinity_and_linkage)
+
+        affinity_and_linkagee = ForbiddenAndConjunction(
+            ForbiddenEqualsClause(compute_full_tree, False),
+            ForbiddenEqualsClause(n_clusters, 1))
+        cs.add_forbidden_clause(affinity_and_linkagee)
 
         return cs

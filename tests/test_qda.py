@@ -2,7 +2,7 @@ import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
 
-from automl.components.classification.testg.qda import QuadraticDiscriminantAnalysis
+from automl.components.classification.qda import QuadraticDiscriminantAnalysis
 from tests import base_test
 
 

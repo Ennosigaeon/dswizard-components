@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn.tree
 
-from automl.components.classification.testg.extra_trees import ExtraTreesClassifier
+from automl.components.classification.extra_trees import ExtraTreesClassifier
 from tests import base_test
 
 
@@ -31,8 +31,8 @@ class TestExtraTreesClassifier(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
 
-        config['max_depth'] = int(np.round(config['max_depth_factor'] * X_train.shape[1], 0))
-        del config['max_depth_factor']
+        # config['max_depth'] = int(np.round(config['max_depth'] * X_train.shape[1], 0))
+        # del config['max_depth_factor']
 
         expected = sklearn.ensemble.ExtraTreesClassifier(**config, random_state=42)
         expected.fit(X_train, y_train)

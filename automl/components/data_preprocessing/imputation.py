@@ -2,19 +2,21 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
+import numpy as np
 
 
 class ImputationComponent(PreprocessingAlgorithm):
-    def __init__(self, strategy: str = 'mean', copy: bool = True, add_indicator: bool = False):
+    def __init__(self, missing_values=np.nan, strategy: str = 'mean', copy: bool = True, add_indicator: bool = False):
         super().__init__()
         self.strategy = strategy
         self.copy = copy
         self.add_indicator = add_indicator
+        self.missing_values = missing_values
 
     def fit(self, X, y=None):
         from sklearn.impute import SimpleImputer
 
-        self.preprocessor = SimpleImputer(strategy=self.strategy, add_indicator=self.add_indicator, copy=False)
+        self.preprocessor = SimpleImputer(missing_values=self.missing_values, strategy=self.strategy, add_indicator=self.add_indicator, copy=False)
         self.preprocessor = self.preprocessor.fit(X)
         return self
 

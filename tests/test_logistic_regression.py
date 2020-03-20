@@ -2,7 +2,7 @@ import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
 
-from automl.components.classification.testg.logistic_regression import LogisticRegression
+from automl.components.classification.logistic_regression import LogisticRegression
 from tests import base_test
 
 
@@ -27,6 +27,9 @@ class TestLogisticRegression(base_test.BaseComponentTest):
 
         actual = LogisticRegression(random_state=42)
         config: dict = self.get_config(actual)
+
+        if config['penalty'] is None:
+            config['penalty'] = None
 
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)

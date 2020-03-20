@@ -2,6 +2,7 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     CategoricalHyperparameter
 
+from ConfigSpace.conditions import InCondition
 from automl.components.base import PredictionAlgorithm
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
 
@@ -16,7 +17,7 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
                  ):
         super().__init__()
         self.solver = solver
-        self.shrikage = shrinkage
+        self.shrinkage = shrinkage
         self.store_covariance = store_covariance
         self.tol = tol
         self.n_components = n_components
@@ -26,7 +27,7 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
 
         # initial fit of only increment trees
         self.estimator = LinearDiscriminantAnalysis(solver=self.solver,
-                                                    shrinkage=self.shrikage,
+                                                    shrinkage=self.shrinkage,
                                                     store_covariance=self.store_covariance,
                                                     tol=self.tol,
                                                     n_components=self.n_components)
@@ -63,4 +64,8 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
         tol = UniformFloatHyperparameter(name="tol", lower=1.0e-7, upper=1., default_value=1.0e-4, log=True)
 
         cs.add_hyperparameters([shrinkage, solver, store_covariance, tol, n_components])
+
+        shrinkage_condition = InCondition(shrinkage, solver, ["lsqr", "eigen"])
+        cs.add_condition(shrinkage_condition)
+
         return cs

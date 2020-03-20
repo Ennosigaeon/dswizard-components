@@ -23,7 +23,7 @@ class RandomForest(PredictionAlgorithm):
                  oob_score: bool = False,
                  warm_start: bool = False,
                  ccp_alpha: float = 0.1,
-                 max_samples: float = 1.,
+                 max_samples: float = 0.99,
                  random_state=None,
                  class_weight=None):
         super().__init__()
@@ -132,13 +132,13 @@ class RandomForest(PredictionAlgorithm):
         oob_score = CategoricalHyperparameter("oob_score", [True,False], default_value=False)
         warm_start = CategoricalHyperparameter("warm_start", [True,False], default_value=False)
         ccp_alpha = UniformFloatHyperparameter("ccp_alpha", 0., 1., default_value=0.1)
-        max_samples = UniformFloatHyperparameter("max_samples", 0., 1., default_value=1.)
+        max_samples = UniformFloatHyperparameter("max_samples", 1e-2, 0.99, default_value=0.99)
 
         cs.add_hyperparameters([n_estimators, criterion, max_features, max_depth, min_samples_split, min_samples_leaf,
                                 min_weight_fraction_leaf, max_leaf_nodes, bootstrap, min_impurity_decrease, oob_score,
                                 warm_start, ccp_alpha, max_samples])
 
-        oobdependsonbootstrap = EqualsCondition(oob_score, bootstrap, "true")
+        oobdependsonbootstrap = EqualsCondition(oob_score, bootstrap, True)
         cs.add_condition(oobdependsonbootstrap)
 
         return cs

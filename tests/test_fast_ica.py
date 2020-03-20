@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn
 
-from automl.components.feature_preprocessing.test.fast_ica import FastICAComponent
+from automl.components.feature_preprocessing.fast_ica import FastICAComponent
 from tests import base_test
 
 

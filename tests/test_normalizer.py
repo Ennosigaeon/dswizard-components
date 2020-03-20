@@ -14,7 +14,7 @@ class TestNormalizer(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = Normalizer(copy=False)
+        expected = Normalizer()
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
@@ -31,7 +31,7 @@ class TestNormalizer(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = Normalizer(**config, copy=False)
+        expected = Normalizer(**config)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 

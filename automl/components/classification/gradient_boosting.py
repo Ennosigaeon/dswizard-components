@@ -105,7 +105,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
                                                       log=True)
         max_bins = UniformIntegerHyperparameter("max_bins", 5, 255, default_value=255)
         l2_regularization = UniformFloatHyperparameter(name="l2_regularization", lower=1e-7, upper=1.,
-                                                       default_value=0., log=True)
+                                                       default_value=1e-7, log=True)
         warm_start = CategoricalHyperparameter("warm_start", [True, False], default_value=False)
         tol = UniformFloatHyperparameter("tol", 0., 0.25, default_value=1e-7)
         scoring = CategoricalHyperparameter("scoring", ["accuracy", "balanced_accuracy", "average_precision", "f1",

@@ -11,7 +11,7 @@ class MLPClassifier(PredictionAlgorithm):
 
     def __init__(self,
                  activation: str = "relu",
-                 solver: str = "relu",
+                 solver: str = "adam",
                  alpha: float = 0.0001,
                  batch_size: int = 200,
                  learning_rate: str = "constant",

@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn
 
-from automl.components.feature_preprocessing.test.kpca import KernelPCAComponent
+from automl.components.feature_preprocessing.kpca import KernelPCAComponent
 from tests import base_test
 
 

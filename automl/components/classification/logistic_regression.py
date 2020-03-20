@@ -20,7 +20,7 @@ class LogisticRegression(PredictionAlgorithm):
                  max_iter: int = 100,
                  multi_class: str = "ovr",
                  warm_start: bool = False,
-                 l1_ratio: float = 0.1,
+                 l1_ratio: float = None,
                  random_state = None
                  ):
         super().__init__()
@@ -88,7 +88,7 @@ class LogisticRegression(PredictionAlgorithm):
         fit_intercept = CategoricalHyperparameter("fit_intercept", choices=[True, False], default_value=True)
         intercept_scaling = UniformFloatHyperparameter("intercept_scaling", lower=0.0001, upper=2.0, default_value=1.0,
                                                        log=True)
-        max_iter = UniformIntegerHyperparameter("max_iter", lower=50, upper=500, default_value=100)
+        max_iter = UniformIntegerHyperparameter("max_iter", lower=50, upper=10000, default_value=100)
         multi_class = CategoricalHyperparameter("multi_class", ["ovr", "multinomial"], default_value="ovr")
         warm_start = CategoricalHyperparameter("warm_start", [True, False], default_value=False)
         l1_ratio = UniformFloatHyperparameter("l1_ratio", lower=0., upper=1., default_value=0.1)

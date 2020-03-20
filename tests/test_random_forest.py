@@ -2,7 +2,7 @@ import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
 
-from automl.components.classification.testg.random_forest import RandomForest
+from automl.components.classification.random_forest import RandomForest
 from tests import base_test
 
 

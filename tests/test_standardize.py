@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 
-from automl.components.data_preprocessing.test.standard_scaler import StandardScalerComponent
+from automl.components.data_preprocessing.standard_scaler import StandardScalerComponent
 from tests import base_test
 
 
@@ -14,7 +14,7 @@ class TestStandardScaler(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = StandardScaler(copy=False)
+        expected = StandardScaler()
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
@@ -31,7 +31,7 @@ class TestStandardScaler(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = StandardScaler(**config, copy=False)
+        expected = StandardScaler(**config)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
