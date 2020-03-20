@@ -12,38 +12,35 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
         super().__init__()
         self.sparse = sparse
         self.drop = drop
-        self.categories = categories  # TODO testen ob es immernoch funktioniert wenn man OHE categories übergibt
+        self.categories = categories
 
     def fit(self, X, y=None):
         from sklearn.preprocessing import OneHotEncoder
-        self.preprocessor = OneHotEncoder(categories=self.categories, sparse=self.sparse,drop=self.drop)
+        self.preprocessor = OneHotEncoder(categories=self.categories, sparse=self.sparse, drop=self.drop)
 
         self.preprocessor.fit(X)
         return self
 
-    def transform(self, X: np.ndarray):
+    def transform(self, X: pd.DataFrame):
+        # TODO OHE can not handle missing values
 
-        categorical = []
-        numeric = []
+        categorical = {}
 
         for i in range(X.shape[1]):
             try:
                 X.iloc[:, i].values.astype(float)
-                numeric.append(i)
+                categorical[X.columns[i]] = False
             except ValueError:
-                categorical.append(i)
+                categorical[X.columns[i]] = True
 
-        if len(categorical) == 0:
-            df = pd.DataFrame(X)
-            return df.to_numpy()
+        if not np.any(categorical.values()):
+            return X.to_numpy()
 
-        df = pd.DataFrame.from_records(X.iloc[:, categorical].values)
-        cat = X.columns[categorical].values.tolist()
-        df = pd.get_dummies(df, prefix=[cat[i] for i in range(len(cat))])
+        for colname, col in X.iteritems():
+            if categorical[colname]:
+               X = pd.get_dummies(X, prefix=colname)
 
-        for i in numeric:
-            df[len(df.columns)] = X.iloc[:, i].values.astype(float)
-        return df.to_numpy()
+        return X.to_numpy()
 
     @staticmethod
     def get_properties(dataset_properties=None):
