@@ -2,6 +2,7 @@ from automl.components.base import PreprocessingAlgorithm
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter
 
+
 class MinMaxScalerComponent(PreprocessingAlgorithm):
 
     def __init__(self, copy: bool = True):

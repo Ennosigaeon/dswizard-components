@@ -3,6 +3,7 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter, \
     UniformIntegerHyperparameter
 
+
 class QuantileTransformerComponent(PreprocessingAlgorithm):
 
     def __init__(self, n_quantiles: int = 1000, output_distribution: str = "uniform", ignore_implicit_zeros: bool = False, subsample: int = 1e5, copy: bool = True, random_state=None):
@@ -18,7 +19,7 @@ class QuantileTransformerComponent(PreprocessingAlgorithm):
                                                 n_quantiles=self.n_quantiles,
                                                 output_distribution=self.output_distribution,
                                                 ignore_implicit_zeros=self.ignore_implicit_zeros,
-                                                subsample=self.subsample,random_state=self.random_state)
+                                                subsample=self.subsample, random_state=self.random_state)
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

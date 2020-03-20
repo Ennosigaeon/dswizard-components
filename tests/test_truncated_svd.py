@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn
 
-from automl.components.feature_preprocessing.test.truncated_svd import TruncatedSVDComponent
+from automl.components.feature_preprocessing.truncated_svd import TruncatedSVDComponent
 from tests import base_test
 
 
