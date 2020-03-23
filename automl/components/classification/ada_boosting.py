@@ -49,7 +49,7 @@ class AdaBoostingClassifier(PredictionAlgorithm):
         cs = ConfigurationSpace()
         learning_rate = UniformFloatHyperparameter(name="learning_rate", lower=1e-6, upper=15., default_value=1.0)
         n_estimators = UniformIntegerHyperparameter("n_estimators", 10, 1500, default_value=50)
-        algorithm = CategoricalHyperparameter("algorithm", ["SAMME", "SAMME.R"], default_value="SAMME")
+        algorithm = CategoricalHyperparameter("algorithm", ["SAMME", "SAMME.R"], default_value="SAMME.R")
 
         cs.add_hyperparameters(
             [learning_rate, n_estimators, algorithm])

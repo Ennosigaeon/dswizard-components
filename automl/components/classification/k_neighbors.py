@@ -65,7 +65,7 @@ class KNeighborsClassifier(PredictionAlgorithm):
 
         n_neighbors = UniformIntegerHyperparameter("n_neighbors", 1, 70, default_value=5)
         weights = CategoricalHyperparameter("weights", ["uniform", "distance"], default_value="uniform")
-        algorithm = CategoricalHyperparameter("algorithm", ["auto", "ball_tree", "kd_tree", "brute"], default_value="auto")
+        algorithm = CategoricalHyperparameter("algorithm", ["ball_tree", "kd_tree", "brute"], default_value="ball_tree")
         leaf_size = UniformIntegerHyperparameter("leaf_size", 1, 100, default_value=30)
         p = UniformIntegerHyperparameter("p", 1, 5, default_value=2)
         metric = CategoricalHyperparameter("metric", ["minkowski", "euclidean", "manhattan", "chebyshev"],
