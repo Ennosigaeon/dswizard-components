@@ -6,14 +6,13 @@ from automl.components.base import PreprocessingAlgorithm
 
 class BinarizerComponent(PreprocessingAlgorithm):
 
-    def __init__(self, threshold: float = 0., copy: bool = True):
+    def __init__(self, threshold: float = 0.):
         super().__init__()
         self.threshold = threshold
-        self.copy = copy
 
     def fit(self, X, y=None):
         from sklearn.preprocessing import Binarizer
-        self.preprocessor = Binarizer(threshold=self.threshold, copy=self.copy)
+        self.preprocessor = Binarizer(threshold=self.threshold)
         self.preprocessor = self.preprocessor.fit(X)
         return self
 
@@ -22,7 +21,6 @@ class BinarizerComponent(PreprocessingAlgorithm):
         cs = ConfigurationSpace()
         # TODO both limits are totally ad hoc. More reasonable to use fraction of data
         threshold = UniformFloatHyperparameter('threshold', 0., 1., default_value=0.)
-        copy = CategoricalHyperparameter("copy", [True, False], default_value=True)
         cs.add_hyperparameter(threshold)
         return cs
 

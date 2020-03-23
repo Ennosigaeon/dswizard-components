@@ -15,7 +15,7 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
     def fit(self, X, y=None):
         return self  # not relevant here
 
-    def transform(self, X):
+    def transform(self, X: pd.DataFrame):
         """
         Transforms columns of X specified in self.columns using
         LabelEncoder(). If no columns specified, transforms all
@@ -30,15 +30,12 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
                 categorical[X.columns[i]] = False
             except ValueError:
                 categorical[X.columns[i]] = True
-
         if not np.any(categorical.values()):
             return X.to_numpy()
-
         else:
             for colname, col in X.iteritems():
                 if categorical[colname]:
                     X[colname] = self.preprocessor.fit_transform(col)
-
         return X.to_numpy()
 
     def fit_transform(self, X, y=None):

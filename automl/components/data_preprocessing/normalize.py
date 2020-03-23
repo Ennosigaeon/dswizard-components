@@ -5,24 +5,19 @@ from automl.components.base import PreprocessingAlgorithm
 
 
 class NormalizerComponent(PreprocessingAlgorithm):
-    def __init__(self, norm: str = 'l2', copy: bool = True):
+    def __init__(self, norm: str = 'l2'):
         super().__init__()
         self.norm = norm
-        self.copy = copy
 
     def fit(self, X, y=None):
         from sklearn.preprocessing import Normalizer
-        self.preprocessor = Normalizer(norm=self.norm, copy=self.copy)
+        self.preprocessor = Normalizer(norm=self.norm)
         return self
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
-
-
-
         norm = CategoricalHyperparameter('norm', ['l1', 'l2', 'max'], default_value='l2')
-        copy = CategoricalHyperparameter("copy", [True,False], default_value=True)
         cs.add_hyperparameter(norm)
         return cs
 

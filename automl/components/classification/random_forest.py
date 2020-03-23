@@ -21,7 +21,6 @@ class RandomForest(PredictionAlgorithm):
                  max_leaf_nodes: int = None,
                  min_impurity_decrease: float = 0.,
                  oob_score: bool = False,
-                 warm_start: bool = False,
                  ccp_alpha: float = 0.0,
                  max_samples: float = None,
                  random_state=None,
@@ -40,7 +39,6 @@ class RandomForest(PredictionAlgorithm):
         self.random_state = random_state
         self.class_weight = class_weight
         self.oob_score = oob_score
-        self.warm_start = warm_start
         self.ccp_alpha = ccp_alpha
         self.max_samples = max_samples
 
@@ -85,7 +83,6 @@ class RandomForest(PredictionAlgorithm):
             random_state=self.random_state,
             class_weight=self.class_weight,
             oob_score=self.oob_score,
-            warm_start=self.warm_start,
             max_samples=self.max_samples,
             ccp_alpha=self.ccp_alpha)
         self.estimator.fit(X, y, sample_weight=sample_weight)
@@ -130,13 +127,12 @@ class RandomForest(PredictionAlgorithm):
         min_impurity_decrease = UniformFloatHyperparameter('min_impurity_decrease', 0., 0.75, default_value=0.)
         bootstrap = CategoricalHyperparameter("bootstrap", [True, False], default_value=True)
         oob_score = CategoricalHyperparameter("oob_score", [True,False], default_value=False)
-        warm_start = CategoricalHyperparameter("warm_start", [True,False], default_value=False)
         ccp_alpha = UniformFloatHyperparameter("ccp_alpha", 0., 1., default_value=0.1)
         max_samples = UniformFloatHyperparameter("max_samples", 1e-2, 0.99, default_value=0.99)
 
         cs.add_hyperparameters([n_estimators, criterion, max_features, max_depth, min_samples_split, min_samples_leaf,
                                 min_weight_fraction_leaf, max_leaf_nodes, bootstrap, min_impurity_decrease, oob_score,
-                                warm_start, ccp_alpha, max_samples])
+                                ccp_alpha, max_samples])
 
         oobdependsonbootstrap = EqualsCondition(oob_score, bootstrap, True)
         cs.add_condition(oobdependsonbootstrap)

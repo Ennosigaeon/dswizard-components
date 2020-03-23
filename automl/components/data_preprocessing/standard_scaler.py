@@ -6,15 +6,14 @@ from automl.components.base import PreprocessingAlgorithm
 
 class StandardScalerComponent(PreprocessingAlgorithm):
 
-    def __init__(self, with_mean: bool = True, with_std: bool = True, copy: bool = True):
+    def __init__(self, with_mean: bool = True, with_std: bool = True):
         super().__init__()
         self.with_mean = with_mean
         self.with_std = with_std
-        self.copy = copy
 
     def fit(self, X, y=None):
         from sklearn.preprocessing import StandardScaler
-        self.preprocessor = StandardScaler(copy=self.copy, with_std=self.with_std, with_mean=self.with_mean)
+        self.preprocessor = StandardScaler(with_std=self.with_std, with_mean=self.with_mean, copy=False)
         self.preprocessor.fit(X)
         return self
 
@@ -24,9 +23,8 @@ class StandardScalerComponent(PreprocessingAlgorithm):
 
         with_mean = CategoricalHyperparameter("with_mean", [True, False], default_value=True)
         with_std = CategoricalHyperparameter("with_std", [True, False], default_value=True)
-        copy = CategoricalHyperparameter("copy", [True, False], default_value=True)
 
-        cs.add_hyperparameters([with_mean, with_std, copy])
+        cs.add_hyperparameters([with_mean, with_std])
         return cs
 
     @staticmethod

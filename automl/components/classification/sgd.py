@@ -1,11 +1,9 @@
-import numpy as np
+from ConfigSpace.conditions import InCondition, EqualsCondition
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
-    CategoricalHyperparameter, UnParametrizedHyperparameter, Constant
-from ConfigSpace.conditions import EqualsCondition, InCondition
+    CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
-from automl.util.common import check_none
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
 
 
@@ -27,7 +25,6 @@ class SGDClassifier(PredictionAlgorithm):
                  early_stopping: bool = False,
                  validation_fraction: float = 0.1,
                  n_iter_no_change: int = 5,
-                 warm_start: bool = False,
                  average: bool = False,
                  random_state = None
                  ):
@@ -47,7 +44,6 @@ class SGDClassifier(PredictionAlgorithm):
         self.early_stopping = early_stopping
         self.validation_fraction = validation_fraction
         self.n_iter_no_change = n_iter_no_change
-        self.warm_start = warm_start
         self.average = average
         self.random_state = random_state
 
@@ -70,7 +66,6 @@ class SGDClassifier(PredictionAlgorithm):
             early_stopping=self.early_stopping,
             validation_fraction=self.validation_fraction,
             n_iter_no_change=self.n_iter_no_change,
-            warm_start=self.warm_start,
             average=self.average,
             random_state=self.random_state
         )
@@ -119,12 +114,11 @@ class SGDClassifier(PredictionAlgorithm):
         early_stopping = CategoricalHyperparameter("early_stopping", [True, False], default_value=False)
         validation_fraction = UniformFloatHyperparameter("validation_fraction", 0., 1., default_value=0.1)
         n_iter_no_change = UniformIntegerHyperparameter("n_iter_no_change", 1, 100, default_value=5)
-        warm_start = CategoricalHyperparameter("warm_start", [True, False], default_value=False)
         average = CategoricalHyperparameter("average", [True, False], default_value=False)
 
         cs.add_hyperparameters(
             [loss, penaly, alpha, l1_ratio, fit_intercept, max_iter, tol, shuffle, epsilon, learning_rate, eta0,
-             power_t, early_stopping, validation_fraction, n_iter_no_change, warm_start, average])
+             power_t, early_stopping, validation_fraction, n_iter_no_change, average])
 
         eta0_condition = InCondition(eta0, learning_rate, ["constant", "invscaling", "adaptive"])
         validation_fraction_condition = EqualsCondition(validation_fraction, early_stopping, True)

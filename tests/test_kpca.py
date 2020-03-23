@@ -15,7 +15,7 @@ class TestKernelPCAComponent(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = sklearn.decomposition.KernelPCA(random_state=42)
+        expected = sklearn.decomposition.KernelPCA(copy_X=False, random_state=42)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
@@ -33,7 +33,7 @@ class TestKernelPCAComponent(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = sklearn.decomposition.KernelPCA(**config, random_state=42)
+        expected = sklearn.decomposition.KernelPCA(**config, copy_X=False, random_state=42)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 

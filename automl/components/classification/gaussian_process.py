@@ -15,8 +15,6 @@ class GaussianProcessClassifier(PredictionAlgorithm):
                  optimizer: str = "fmin_l_bfgs_b",
                  n_restarts_optimizer: int = 0,
                  max_iter_predict: int = 100,
-                 warm_start: bool = False,
-                 copy_X_train: bool = True,
                  multi_class: str = "one_vs_rest",
                  random_state = None
                  ):
@@ -25,8 +23,6 @@ class GaussianProcessClassifier(PredictionAlgorithm):
         self.optimizer = optimizer
         self.n_restarts_optimizer = n_restarts_optimizer
         self.max_iter_predict = max_iter_predict
-        self.warm_start = warm_start
-        self.copy_X_train = copy_X_train
         self.multi_class = multi_class
         self.random_state = random_state
 
@@ -60,8 +56,6 @@ class GaussianProcessClassifier(PredictionAlgorithm):
             optimizer=self.optimizer,
             n_restarts_optimizer=self.n_restarts_optimizer,
             max_iter_predict=self.max_iter_predict,
-            warm_start=self.warm_start,
-            copy_X_train=self.copy_X_train,
             multi_class=self.multi_class,
             random_state=self.random_state
         )
@@ -98,12 +92,9 @@ class GaussianProcessClassifier(PredictionAlgorithm):
         optimizer = Constant("optimizer", "fmin_l_bfgs_b")
         n_restarts_optimizer = UniformIntegerHyperparameter("n_restarts_optimizer", 0, 500, default_value=0)
         max_iter_predict = UniformIntegerHyperparameter("max_iter_predict", 1, 1000, default_value=100)
-        warm_start = CategoricalHyperparameter("warm_start", [True, False], default_value=False)
-        copy_X_train = CategoricalHyperparameter("copy_X_train", [True, False], default_value=True)
         multi_class = CategoricalHyperparameter("multi_class", ["one_vs_rest", "one_vs_one"],
                                                 default_value="one_vs_rest")
 
-        cs.add_hyperparameters([n_restarts_optimizer, max_iter_predict, warm_start, copy_X_train, multi_class, kernel,
-                                optimizer])
+        cs.add_hyperparameters([n_restarts_optimizer, max_iter_predict, multi_class, kernel, optimizer])
 
         return cs

@@ -21,7 +21,6 @@ class KernelPCAComponent(PreprocessingAlgorithm):
                  tol: float = 0,
                  max_iter: int = None,
                  remove_zero_eig: bool = False,
-                 copy_X: bool = True,
                  random_state=None):
         super().__init__()
         self.n_components = n_components
@@ -35,7 +34,6 @@ class KernelPCAComponent(PreprocessingAlgorithm):
         self.tol = tol
         self.max_iter = max_iter
         self.remove_zero_eig = remove_zero_eig
-        self.copy_X = copy_X
         self.random_state = random_state
 
     def fit(self, X, Y=None):
@@ -55,7 +53,7 @@ class KernelPCAComponent(PreprocessingAlgorithm):
             tol=self.tol,
             max_iter=self.max_iter,
             remove_zero_eig=self.remove_zero_eig,
-            copy_X=self.copy_X)
+            copy_X=False)
 
         if scipy.sparse.issparse(X):
             X = X.astype(np.float64)
@@ -108,12 +106,11 @@ class KernelPCAComponent(PreprocessingAlgorithm):
         tol = UniformFloatHyperparameter("tol", 0., 2., default_value=0.)
         max_iter = UniformIntegerHyperparameter("max_iter", 1, 1000, default_value=100)
         remove_zero_eig = CategoricalHyperparameter("remove_zero_eig", [True, False], default_value=False)
-        copy_X = CategoricalHyperparameter("copy_X", [True, False], default_value=True)
 
         cs = ConfigurationSpace()
         cs.add_hyperparameters(
             [n_components, kernel, degree, gamma, coef0, alpha, fit_inverse_transform, eigen_solver, tol, max_iter,
-             remove_zero_eig, copy_X])
+             remove_zero_eig])
 
         degree_depends_on_poly = EqualsCondition(degree, kernel, "poly")
         coef0_condition = InCondition(coef0, kernel, ["poly", "sigmoid"])

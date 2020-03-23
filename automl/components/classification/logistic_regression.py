@@ -19,7 +19,6 @@ class LogisticRegression(PredictionAlgorithm):
                  intercept_scaling: float = 1,
                  max_iter: int = 100,
                  multi_class: str = "auto",
-                 warm_start: bool = False,
                  l1_ratio: float = None,
                  random_state=None
                  ):
@@ -33,7 +32,6 @@ class LogisticRegression(PredictionAlgorithm):
         self.intercept_scaling = intercept_scaling
         self.max_iter = max_iter
         self.multi_class = multi_class
-        self.warm_start = warm_start
         self.l1_ratio = l1_ratio
         self.random_state = random_state
 
@@ -50,7 +48,6 @@ class LogisticRegression(PredictionAlgorithm):
             intercept_scaling=self.intercept_scaling,
             max_iter=self.max_iter,
             multi_class=self.multi_class,
-            warm_start=self.warm_start,
             random_state=self.random_state,
             l1_ratio=self.l1_ratio)
         self.estimator.fit(X, y, sample_weight=sample_weight)
@@ -90,13 +87,12 @@ class LogisticRegression(PredictionAlgorithm):
                                                        log=True)
         max_iter = UniformIntegerHyperparameter("max_iter", lower=50, upper=10000, default_value=100)
         multi_class = CategoricalHyperparameter("multi_class", ["ovr", "multinomial"], default_value="ovr")
-        warm_start = CategoricalHyperparameter("warm_start", [True, False], default_value=False)
         l1_ratio = UniformFloatHyperparameter("l1_ratio", lower=0., upper=1., default_value=0.1)
 
         l1_ratio_condition = InCondition(l1_ratio, penalty, ["elasticnet"])
         dual_condition = AndConjunction(InCondition(dual, penalty, ["l2"]), InCondition(dual, solver, ["liblinear"]))
         cs.add_hyperparameters([penalty, solver, dual, tol, C, fit_intercept, intercept_scaling, max_iter, multi_class,
-                                warm_start, l1_ratio])
+                                l1_ratio])
 
         penaltyAndLbfgs = ForbiddenAndConjunction(
             ForbiddenEqualsClause(solver, "lbfgs"),
