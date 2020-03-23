@@ -7,17 +7,10 @@ from automl.components.base import PreprocessingAlgorithm
 
 
 class OneHotEncoderComponent(PreprocessingAlgorithm):
-    def __init__(self, categories: str = 'auto', sparse: bool = False, drop: str = None):
+    def __init__(self):
         super().__init__()
-        self.sparse = sparse
-        self.drop = drop
-        self.categories = categories
 
     def fit(self, X, y=None):
-        from sklearn.preprocessing import OneHotEncoder
-        self.preprocessor = OneHotEncoder(categories=self.categories, sparse=self.sparse, drop=self.drop)
-
-        self.preprocessor.fit(X)
         return self
 
     def transform(self, X: pd.DataFrame):
@@ -37,7 +30,7 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
 
         for colname, col in X.iteritems():
             if categorical[colname]:
-                X = pd.get_dummies(X, prefix=colname)
+                X = pd.get_dummies(X, prefix=colname, sparse=False)
 
         return X.to_numpy()
 
@@ -54,13 +47,3 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
                 'handles_dense': True, }
         # 'input': (DENSE, SPARSE, UNSIGNED_DATA),
         # 'output': (INPUT,), }
-
-    @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
-        cs = ConfigurationSpace()
-
-        sparse = Constant("sparse", False)
-        drop = CategoricalHyperparameter("drop", [None, "first"], default_value="first")
-        cs.add_hyperparameters([drop, sparse])
-
-        return cs

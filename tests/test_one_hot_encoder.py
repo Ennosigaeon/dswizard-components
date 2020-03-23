@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 import sklearn
+import pandas as pd
 
 from automl.components.feature_preprocessing.one_hot_encoding import OneHotEncoderComponent
 from tests import base_test
@@ -18,11 +19,8 @@ class TestOneHotEncoderComponent(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(X_test.copy())
 
-        expected = sklearn.preprocessing.OneHotEncoder(sparse=False)
-        expected.fit(X_train, y_train)
-        X_expected = expected.transform(X_test)
+        X_expected = pd.get_dummies(X_test, sparse=False)
 
-        assert repr(actual.preprocessor) == repr(expected)
         assert np.allclose(X_actual, X_expected)
 
     @pytest.mark.skip
@@ -33,12 +31,8 @@ class TestOneHotEncoderComponent(base_test.BaseComponentTest):
         config: dict = self.get_config(actual)
 
         actual.set_hyperparameters(config)
-        actual.fit(X_train, y_train)
         X_actual = actual.transform(X_test.copy())
 
-        expected = sklearn.preprocessing.OneHotEncoder(**config)
-        expected.fit(X_train, y_train)
-        X_expected = expected.transform(X_test)
+        X_expected = pd.get_dummies(X_test, **config)
 
-        assert repr(actual.preprocessor) == repr(expected)
         assert np.allclose(X_actual, X_expected)
