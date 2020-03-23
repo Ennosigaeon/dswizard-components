@@ -1,5 +1,6 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
+
 from automl.components.base import PreprocessingAlgorithm
 
 
@@ -44,7 +45,7 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_properties(dataset_properties=None):
         return {'shortname': 'MultiColumnLabelEncoder',
-                'name': 'MultiColumnLabelEncoder',
+                'name': 'Multi Column Label Encoder',
                 'handles_missing_values': False,
                 'handles_nominal_values': False,
                 'handles_numerical_features': True,

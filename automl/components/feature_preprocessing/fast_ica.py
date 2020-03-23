@@ -1,3 +1,4 @@
+from scipy import sparse
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, \
     UniformIntegerHyperparameter
@@ -7,13 +8,13 @@ from automl.components.base import PreprocessingAlgorithm
 
 class FastICAComponent(PreprocessingAlgorithm):
     def __init__(self,
-                 n_components: int = None,
+                 n_components: int = 100,
                  algorithm: str = 'parallel',
                  whiten: bool = True,
                  fun: str = 'logcosh',
-                 max_iter: int = 200,
+                 max_iter: int = 100,
                  random_state=None,
-                 tol: float = 0.0001):
+                 tol: float = 1.):
         super().__init__()
         self.n_components = n_components
         self.algorithm = algorithm

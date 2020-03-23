@@ -13,7 +13,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
                  min_samples_split: int = 2,
                  min_samples_leaf: int = 1,
                  min_weight_fraction_leaf: float = 0.,
-                 max_leaf_nodes: int = None,
+                 max_leaf_nodes: int = 1,
                  min_impurity_decrease: float = 0.,
                  random_state=None,
                  n_jobs: int = None,

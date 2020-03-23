@@ -1,9 +1,7 @@
+from ConfigSpace.conditions import InCondition
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, \
     UniformIntegerHyperparameter
-from ConfigSpace.conditions import InCondition
-
-from scipy import sparse
 
 from automl.components.base import PreprocessingAlgorithm
 
@@ -13,7 +11,7 @@ class TruncatedSVDComponent(PreprocessingAlgorithm):
                  n_components: float = 0.5,
                  algorithm: str = 'randomized',
                  n_iter: int = 5,
-                 tol: float = 0.,
+                 tol: float = 0.01,
                  random_state: int = None):
         super().__init__()
         self.n_components = n_components

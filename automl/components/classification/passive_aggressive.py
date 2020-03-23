@@ -11,7 +11,7 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
 
     def __init__(self,
                  C: float = 1.0,
-                 fit_intercept: bool = True,
+                 fit_intercept: bool = False,
                  max_iter: int = 1000,
                  tol: float = 1e-3,
                  early_stopping: bool = False,
@@ -19,7 +19,7 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
                  n_iter_no_change: int = 5,
                  shuffle: bool = True,
                  loss: str = "hinge",
-                 average: int = False,
+                 average: int = 1,
                  random_state=None
                  ):
         super().__init__()

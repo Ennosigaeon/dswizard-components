@@ -13,7 +13,7 @@ class MLPClassifier(PredictionAlgorithm):
                  activation: str = "relu",
                  solver: str = "adam",
                  alpha: float = 0.0001,
-                 batch_size: int = "auto",
+                 batch_size: int = 200,
                  learning_rate: str = "constant",
                  learning_rate_init: float = 0.001,
                  power_t: float = 0.5,
@@ -29,8 +29,8 @@ class MLPClassifier(PredictionAlgorithm):
                  epsilon: float = 1e-8,
                  n_iter_no_change: int = 10,
                  max_fun: int = 15000,
-                 layer_1_size: int = 100,
-                 layer_2_size: int = None,
+                 layer_1_size: int = 3,
+                 layer_2_size: int = 150,
                  random_state=None
                  ):
         super().__init__()
@@ -98,7 +98,7 @@ class MLPClassifier(PredictionAlgorithm):
     @staticmethod
     def get_properties(dataset_properties=None):
         return {'shortname': 'MLP',
-                'name': 'MLP Classifier',
+                'name': 'Multi-layer Perceptron Classifier',
                 'handles_regression': False,
                 'handles_classification': True,
                 'handles_multiclass': True,

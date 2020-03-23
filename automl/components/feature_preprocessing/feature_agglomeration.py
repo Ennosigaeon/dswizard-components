@@ -11,10 +11,10 @@ from automl.components.base import PreprocessingAlgorithm
 class FeatureAgglomerationComponent(PreprocessingAlgorithm):
     def __init__(self, n_clusters: int = 2,
                  affinity: str = "euclidean",
-                 compute_full_tree: str = "auto",
+                 compute_full_tree: bool = True,
                  linkage: str = "ward",
                  pooling_func: str = "mean",
-                 distance_threshold: float = None):
+                 distance_threshold: float = 0.75):
         super().__init__()
         self.n_clusters = n_clusters
         self.affinity = affinity
