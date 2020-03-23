@@ -11,12 +11,12 @@ from automl.util.util import convert_multioutput_multiclass_to_multilabel
 class GaussianProcessClassifier(PredictionAlgorithm):
 
     def __init__(self,
-                 kernel: str = None,
+                 kernel: str = 'rbf',
                  optimizer: str = "fmin_l_bfgs_b",
                  n_restarts_optimizer: int = 0,
                  max_iter_predict: int = 100,
                  multi_class: str = "one_vs_rest",
-                 random_state = None
+                 random_state=None
                  ):
         super().__init__()
         self.kernel = kernel

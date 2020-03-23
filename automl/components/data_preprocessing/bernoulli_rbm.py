@@ -5,7 +5,10 @@ from automl.components.base import PreprocessingAlgorithm
 
 
 class BernoulliRBM(PreprocessingAlgorithm):
-    def __init__(self, n_components: int = 256, learning_rate: float = 0.1, n_iter: int = 10, random_state = None):
+    def __init__(self, n_components: int = 256,
+                 learning_rate: float = 0.1,
+                 n_iter: int = 100,
+                 random_state=None):
         super().__init__()
         self.n_components = n_components
         self.learning_rate = learning_rate

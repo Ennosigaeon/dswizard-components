@@ -10,7 +10,7 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
 
     def __init__(self,
                  percentile: float = 10,
-                 score_func: str = "f_classif",
+                 score_func: str = "chi2",
                  random_state=None):
         """ Parameters:
         random state : ignored

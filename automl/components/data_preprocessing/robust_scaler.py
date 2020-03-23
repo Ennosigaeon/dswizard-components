@@ -5,7 +5,9 @@ from automl.components.base import PreprocessingAlgorithm
 
 
 class RobustScalerComponent(PreprocessingAlgorithm):
-    def __init__(self, q_min: float = 25.0, q_max: float = 75.0, with_centering: bool = True,
+    def __init__(self, q_min: float = 25.0,
+                 q_max: float = 75.0,
+                 with_centering: bool = True,
                  with_scaling: bool = True):
         super().__init__()
         self.with_centering = with_centering

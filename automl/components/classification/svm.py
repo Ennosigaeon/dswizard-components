@@ -19,7 +19,7 @@ class SVCClassifier(PredictionAlgorithm):
                  multi_class: str = "ovr",
                  C: float = 1.,
                  fit_intercept: bool = True,
-                 intercept_scaling: float = 1,
+                 intercept_scaling: float = 1.,
                  max_iter: int = 1000,
                  random_state=None
                  ):
