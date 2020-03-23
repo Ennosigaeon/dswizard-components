@@ -119,15 +119,15 @@ class RandomForest(PredictionAlgorithm):
         # The default is 0.5, which yields sqrt(m) features as max_features in the estimator. This
         # corresponds with Geurts' heuristic.
         max_features = UniformFloatHyperparameter("max_features", 0., 1., default_value=0.5)
-        max_depth = UniformIntegerHyperparameter("max_depth", 1, 50, default_value=10)
+        max_depth = UniformIntegerHyperparameter("max_depth", 1, 50, default_value=1)
         min_samples_split = UniformIntegerHyperparameter("min_samples_split", 2, 60, default_value=2)
         min_samples_leaf = UniformIntegerHyperparameter("min_samples_leaf", 1, 60, default_value=1)
         min_weight_fraction_leaf = UniformFloatHyperparameter("min_weight_fraction_leaf", 0., 0.5, default_value=0.)
-        max_leaf_nodes = UniformIntegerHyperparameter("max_leaf_nodes", 1, 100, default_value=10)
+        max_leaf_nodes = UniformIntegerHyperparameter("max_leaf_nodes", 1, 100, default_value=1)
         min_impurity_decrease = UniformFloatHyperparameter('min_impurity_decrease', 0., 0.75, default_value=0.)
         bootstrap = CategoricalHyperparameter("bootstrap", [True, False], default_value=True)
         oob_score = CategoricalHyperparameter("oob_score", [True,False], default_value=False)
-        ccp_alpha = UniformFloatHyperparameter("ccp_alpha", 0., 1., default_value=0.1)
+        ccp_alpha = UniformFloatHyperparameter("ccp_alpha", 0., 1., default_value=0.)
         max_samples = UniformFloatHyperparameter("max_samples", 1e-2, 0.99, default_value=0.99)
 
         cs.add_hyperparameters([n_estimators, criterion, max_features, max_depth, min_samples_split, min_samples_leaf,

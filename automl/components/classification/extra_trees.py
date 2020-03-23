@@ -111,7 +111,7 @@ class ExtraTreesClassifier(PredictionAlgorithm):
         min_weight_fraction_leaf = UniformFloatHyperparameter("min_weight_fraction_leaf", 0., 0.5, default_value=0.)
         max_leaf_nodes = UniformIntegerHyperparameter("max_leaf_nodes", 1, 100, default_value=1)
         min_impurity_decrease = UniformFloatHyperparameter('min_impurity_decrease', 0., 0.75, default_value=0.)
-        bootstrap = CategoricalHyperparameter("bootstrap", [True, False], default_value=True)
+        bootstrap = CategoricalHyperparameter("bootstrap", [True, False], default_value=False)
         cs.add_hyperparameters([n_estimators, criterion, max_features, max_depth, min_samples_split, min_samples_leaf,
                                 min_weight_fraction_leaf, max_leaf_nodes, bootstrap, min_impurity_decrease])
         return cs

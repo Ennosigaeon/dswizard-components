@@ -71,7 +71,7 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
         compute_full_tree = CategoricalHyperparameter("compute_full_tree", [True, False], default_value=True)
         linkage = CategoricalHyperparameter("linkage", ["ward", "complete", "average", "single"], default_value="ward")
         pooling_func = CategoricalHyperparameter("pooling_func", ["mean", "median", "max"], default_value="mean")
-        distance_threshold = UniformFloatHyperparameter("distance_threshold", 0., 0.75, default_value=None)
+        distance_threshold = UniformFloatHyperparameter("distance_threshold", 0., 0.75, default_value=0.75)
 
         cs = ConfigurationSpace()
         cs.add_hyperparameters([n_clusters, affinity, compute_full_tree, linkage, distance_threshold, pooling_func])

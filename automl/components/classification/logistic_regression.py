@@ -85,9 +85,9 @@ class LogisticRegression(PredictionAlgorithm):
         fit_intercept = CategoricalHyperparameter("fit_intercept", choices=[True, False], default_value=True)
         intercept_scaling = UniformFloatHyperparameter("intercept_scaling", lower=0.0001, upper=2.0, default_value=1.0,
                                                        log=True)
-        max_iter = UniformIntegerHyperparameter("max_iter", lower=50, upper=10000, default_value=100)
+        max_iter = UniformIntegerHyperparameter("max_iter", lower=50, upper=10000, default_value=500)
         multi_class = CategoricalHyperparameter("multi_class", ["ovr", "multinomial"], default_value="ovr")
-        l1_ratio = UniformFloatHyperparameter("l1_ratio", lower=0., upper=1., default_value=0.1)
+        l1_ratio = UniformFloatHyperparameter("l1_ratio", lower=0., upper=1., default_value=0.)
 
         l1_ratio_condition = InCondition(l1_ratio, penalty, ["elasticnet"])
         dual_condition = AndConjunction(InCondition(dual, penalty, ["l2"]), InCondition(dual, solver, ["liblinear"]))

@@ -93,7 +93,7 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
-        percentile = UniformFloatHyperparameter(name="percentile", lower=1, upper=99, default_value=50)
+        percentile = UniformFloatHyperparameter(name="percentile", lower=1, upper=99, default_value=10)
 
         score_func = CategoricalHyperparameter(name="score_func", choices=["chi2", "f_classif", "mutual_info"],
                                                default_value="chi2")

@@ -95,7 +95,7 @@ class DecisionTree(PredictionAlgorithm):
 
         criterion = CategoricalHyperparameter("criterion", ["gini", "entropy"], default_value="gini")
         splitter = CategoricalHyperparameter("splitter", ["best","random"], default_value="best")
-        max_depth_factor = UniformFloatHyperparameter('max_depth_factor', 0.001, 5., default_value=0.5)
+        max_depth_factor = UniformFloatHyperparameter('max_depth_factor', 0.001, 5., default_value=5.)
         min_samples_split = UniformIntegerHyperparameter("min_samples_split", 2, 60, default_value=2)
         min_samples_leaf = UniformIntegerHyperparameter("min_samples_leaf", 1, 60, default_value=1)
         min_weight_fraction_leaf = UniformFloatHyperparameter("min_weight_fraction_leaf", 0., 0.5, default_value=0.)

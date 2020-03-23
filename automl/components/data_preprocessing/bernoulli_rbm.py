@@ -50,7 +50,7 @@ class BernoulliRBM(PreprocessingAlgorithm):
 
         n_components = UniformIntegerHyperparameter("n_components", 1, 2000, default_value=256)
         learning_rate = UniformFloatHyperparameter("learning_rate", 10e-7, 25., default_value=0.1)
-        n_iter = UniformIntegerHyperparameter("n_iter", 2, 2000, default_value=10)
+        n_iter = UniformIntegerHyperparameter("n_iter", 2, 2000, default_value=100)
 
         cs = ConfigurationSpace()
         cs.add_hyperparameters([n_components,n_iter,learning_rate])
