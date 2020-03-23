@@ -5,21 +5,10 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter
 
 class MinMaxScalerComponent(PreprocessingAlgorithm):
 
-    def __init__(self, copy: bool = True):
+    def __init__(self):
         super().__init__()
-        self.copy = copy
         from sklearn.preprocessing import MinMaxScaler
-        self.preprocessor = MinMaxScaler(copy=self.copy)
-
-    @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
-        cs = ConfigurationSpace()
-
-        # Feature Range?
-        copy = CategoricalHyperparameter("copy", [True,False], default_value=True)
-
-        cs.add_hyperparameter(copy)
-        return cs
+        self.preprocessor = MinMaxScaler()
 
     @staticmethod
     def get_properties(dataset_properties=None):

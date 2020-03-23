@@ -6,17 +6,16 @@ import numpy as np
 
 
 class ImputationComponent(PreprocessingAlgorithm):
-    def __init__(self, missing_values=np.nan, strategy: str = 'mean', copy: bool = True, add_indicator: bool = False):
+    def __init__(self, missing_values=np.nan, strategy: str = 'mean', add_indicator: bool = False):
         super().__init__()
         self.strategy = strategy
-        self.copy = copy
         self.add_indicator = add_indicator
         self.missing_values = missing_values
 
     def fit(self, X, y=None):
         from sklearn.impute import SimpleImputer
 
-        self.preprocessor = SimpleImputer(missing_values=self.missing_values, strategy=self.strategy, add_indicator=self.add_indicator, copy=False)
+        self.preprocessor = SimpleImputer(missing_values=self.missing_values, strategy=self.strategy, add_indicator=self.add_indicator)
         self.preprocessor = self.preprocessor.fit(X)
         return self
 
@@ -50,7 +49,6 @@ class ImputationComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         # TODO add replace by zero!
         strategy = CategoricalHyperparameter("strategy", ["mean", "median", "most_frequent"], default_value="mean")
-        copy = CategoricalHyperparameter("copy", [True, False], default_value=True)
         add_indicator = CategoricalHyperparameter("add_indicator", [True, False], default_value=False)
 
         cs = ConfigurationSpace()

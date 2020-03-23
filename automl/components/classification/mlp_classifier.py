@@ -20,7 +20,6 @@ class MLPClassifier(PredictionAlgorithm):
                  max_iter: int = 200,
                  shuffle: bool = True,
                  tol: float = 1e-4,
-                 warm_start: bool = True,
                  momentum: float = 0.9,
                  nesterovs_momentum: bool = True,
                  early_stopping: bool = True,
@@ -47,7 +46,6 @@ class MLPClassifier(PredictionAlgorithm):
         self.max_iter = max_iter
         self.shuffle = shuffle
         self.tol = tol
-        self.warm_start = warm_start
         self.momentum = momentum
         self.nesterovs_momentum = nesterovs_momentum
         self.early_stopping = early_stopping
@@ -127,7 +125,6 @@ class MLPClassifier(PredictionAlgorithm):
         max_iter = UniformIntegerHyperparameter("max_iter", 5, 1000, default_value=200)
         shuffle = CategoricalHyperparameter("shuffle", [True, False], default_value=True)
         tol = UniformFloatHyperparameter("tol", 1e-6, 1., default_value=1e-4)
-        warm_start = CategoricalHyperparameter("warm_start", [True, False], default_value=True)
         momentum = UniformFloatHyperparameter("momentum", 0., 1., default_value=0.9)
         nesterovs_momentum = CategoricalHyperparameter("nesterovs_momentum", [True, False], default_value=True)
         early_stopping = CategoricalHyperparameter("early_stopping", [True, False], default_value=True)
@@ -140,7 +137,7 @@ class MLPClassifier(PredictionAlgorithm):
 
         cs.add_hyperparameters(
             [layer_1_size, layer_2_size, activation, solver, alpha, batch_size, learning_rate, learning_rate_init,
-             power_t, max_iter, shuffle, tol, warm_start, momentum, nesterovs_momentum, early_stopping,
+             power_t, max_iter, shuffle, tol, momentum, nesterovs_momentum, early_stopping,
              validation_fraction, beta_1, beta_2, epsilon, n_iter_no_change, max_fun])
 
         learning_rate_init_condition = InCondition(learning_rate_init, solver, ["sgd", "adam"])

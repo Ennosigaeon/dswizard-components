@@ -17,8 +17,6 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
     def fit(self, X, y=None):
         from sklearn.preprocessing import OneHotEncoder
         self.preprocessor = OneHotEncoder(categories=self.categories, sparse=self.sparse, drop=self.drop)
-
-        self.preprocessor.fit(X)
         return self
 
     def transform(self, X: pd.DataFrame):
@@ -38,9 +36,11 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
 
         for colname, col in X.iteritems():
             if categorical[colname]:
-               X = pd.get_dummies(X, prefix=colname)
-
+                X[colname] = self.preprocessor.fit_transform(col)
         return X.to_numpy()
+
+    def fit_transform(self, X, y=None):
+        return self.fit(X, y).transform(X)
 
     @staticmethod
     def get_properties(dataset_properties=None):

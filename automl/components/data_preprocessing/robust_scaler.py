@@ -5,11 +5,10 @@ from automl.components.base import PreprocessingAlgorithm
 
 
 class RobustScalerComponent(PreprocessingAlgorithm):
-    def __init__(self, q_min: float = 25.0, q_max: float = 75.0, with_centering: bool = True, with_scaling: bool = True, copy: bool = True):
+    def __init__(self, q_min: float = 25.0, q_max: float = 75.0, with_centering: bool = True, with_scaling: bool = True):
         super().__init__()
         self.with_centering = with_centering
         self.with_scaling = with_scaling
-        self.copy = copy
         self.q_min = q_min
         self.q_max = q_max
 
@@ -20,7 +19,7 @@ class RobustScalerComponent(PreprocessingAlgorithm):
 
     def fit(self, X, y=None):
         from sklearn.preprocessing import RobustScaler
-        self.preprocessor = RobustScaler(quantile_range=(self.q_min, self.q_max), copy=self.copy, with_centering=self.with_centering, with_scaling=self.with_scaling)
+        self.preprocessor = RobustScaler(quantile_range=(self.q_min, self.q_max), with_centering=self.with_centering, with_scaling=self.with_scaling)
         return super().fit(X, y)
 
     @staticmethod
@@ -44,7 +43,6 @@ class RobustScalerComponent(PreprocessingAlgorithm):
         cs = ConfigurationSpace()
         with_centering = CategoricalHyperparameter("with_centering", [True,False], default_value=True)
         with_scaling = CategoricalHyperparameter("with_scaling", [True,False], default_value=True)
-        copy = CategoricalHyperparameter("copy", [True,False], default_value=True)
         q_min = UniformFloatHyperparameter('q_min', 0., 100., default_value=25.)
         q_max = UniformFloatHyperparameter('q_max', 0., 100., default_value=75.)
         cs.add_hyperparameters([q_min, q_max, with_centering,with_scaling,copy])

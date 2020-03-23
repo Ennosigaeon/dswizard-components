@@ -21,7 +21,6 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
                  n_iter_no_change: int = 5,
                  shuffle: bool = True,
                  loss: str = "hinge",
-                 warm_start: bool = True,
                  average: int = 1,
                  random_state = None
                  ):
@@ -35,7 +34,6 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
         self.n_iter_no_change = n_iter_no_change
         self.shuffle = shuffle
         self.loss = loss
-        self.warm_start = warm_start
         self.average = average
         self.random_state =random_state
 
@@ -92,11 +90,10 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
         n_iter_no_change = UniformIntegerHyperparameter("n_iter_no_change", 1, 1000, default_value=5)
         shuffle = CategoricalHyperparameter("shuffle", [True, False], True)
         loss = CategoricalHyperparameter("loss", ["hinge", "squared_hinge"], default_value="hinge")
-        warm_start = CategoricalHyperparameter("warm_start", [True, False], default_value=True)
         average = UniformIntegerHyperparameter("average", 1, 100, default_value=1)
 
         cs.add_hyperparameters([C, fit_intercept, max_iter, tol, early_stopping, validation_fraction, n_iter_no_change,
-                                shuffle, loss, warm_start, average])
+                                shuffle, loss, average])
 
         validation_fraction_condition = EqualsCondition(validation_fraction, early_stopping, True)
         cs.add_condition(validation_fraction_condition)
