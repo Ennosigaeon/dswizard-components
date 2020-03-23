@@ -1,17 +1,14 @@
-from sklearn.preprocessing.imputation import Imputer, _get_mask
-from sklearn.feature_selection.variance_threshold import VarianceThreshold
-from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter, \
-    UniformIntegerHyperparameter
-
 import warnings
+
 import math
 import numpy as np
+from ConfigSpace.configuration_space import ConfigurationSpace
+from ConfigSpace.hyperparameters import CategoricalHyperparameter
 from scipy import sparse
-
+from sklearn.preprocessing.imputation import Imputer, _get_mask
 from sklearn.utils import check_array
-from sklearn.utils.validation import check_is_fitted
 from sklearn.utils.validation import FLOAT_DTYPES
+from sklearn.utils.validation import check_is_fitted
 
 
 class ConditionalImputer(Imputer):
@@ -206,8 +203,7 @@ class ConditionalImputer(Imputer):
             indexes = np.repeat(np.arange(len(X.indptr) - 1, dtype=np.int),
                                 np.diff(X.indptr))[mask]
 
-            X.data[mask] = astype(valid_statistics[indexes], X.dtype,
-                                  copy=False)
+            X.data[mask] = valid_statistics[indexes].astype(X.dtype, copy=False)
         else:
             if sparse.issparse(X):
                 X = X.toarray()
