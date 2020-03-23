@@ -112,7 +112,7 @@ class MLPClassifier(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        layer_1_size = UniformIntegerHyperparameter("layer_1_size", 1, 10, default_value=3)
+        layer_1_size = UniformIntegerHyperparameter("layer_1_size", 1, 5, default_value=3)
         layer_2_size = UniformIntegerHyperparameter("layer_2_size", 1, 500, default_value=150)
         activation = CategoricalHyperparameter("activation", ["identity", "logistic", "tanh", "relu"],
                                                default_value="relu")
@@ -128,9 +128,9 @@ class MLPClassifier(PredictionAlgorithm):
         tol = UniformFloatHyperparameter("tol", 1e-6, 1., default_value=1e-4)
         momentum = UniformFloatHyperparameter("momentum", 0., 1., default_value=0.9)
         nesterovs_momentum = CategoricalHyperparameter("nesterovs_momentum", [True, False], default_value=True)
-        early_stopping = CategoricalHyperparameter("early_stopping", [True, False], default_value=False)
+        early_stopping = CategoricalHyperparameter("early_stopping", [True, False], default_value=True)
         validation_fraction = UniformFloatHyperparameter("validation_fraction", 0., 1., default_value=0.1)
-        beta_1 = UniformFloatHyperparameter("beta_1", 0., 0.9999, default_value=0.9)
+        beta_1 = UniformFloatHyperparameter("beta_1", 0., 0.9999, default_value=0.1)
         beta_2 = UniformFloatHyperparameter("beta_2", 0., 0.9999, default_value=0.999)
         epsilon = UniformFloatHyperparameter("epsilon", 0., 1., default_value=1e-8)
         n_iter_no_change = UniformIntegerHyperparameter("n_iter_no_change", 1, 1000, default_value=10)
