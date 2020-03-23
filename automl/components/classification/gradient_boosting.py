@@ -12,13 +12,13 @@ class GradientBoostingClassifier(PredictionAlgorithm):
                  learning_rate: float = 0.1,
                  max_iter: int = 100,
                  min_samples_leaf: int = 20,
-                 max_depth: int = 1,
-                 max_leaf_nodes: int = 1,
+                 max_depth: int = None,
+                 max_leaf_nodes: int = 31,
                  max_bins: int = 255,
-                 l2_regularization: float = 1e-7,
+                 l2_regularization: float = 0.,
                  tol: float = 1e-7,
-                 scoring: str = 'loss',
-                 n_iter_no_change: int = 10,
+                 scoring: str = None,
+                 n_iter_no_change: int = None,
                  validation_fraction: float = 0.1,
                  random_state=None):
         super().__init__()

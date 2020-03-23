@@ -10,16 +10,16 @@ from automl.components.base import PreprocessingAlgorithm
 
 
 class KernelPCAComponent(PreprocessingAlgorithm):
-    def __init__(self, n_components: int = 100,
-                 kernel: str = 'rbf',
+    def __init__(self, n_components: int = None,
+                 kernel: str = 'linear',
                  degree: int = 3,
-                 gamma: float = 1.,
-                 coef0: float = 0.,
+                 gamma: float = None,
+                 coef0: float = 1,
                  alpha: int = 1.,
                  fit_inverse_transform: bool = False,
-                 eigen_solver: str = "dense",
-                 tol: float = 0.,
-                 max_iter: int = 100,
+                 eigen_solver: str = "auto",
+                 tol: float = 0,
+                 max_iter: int = None,
                  remove_zero_eig: bool = False,
                  random_state=None):
         super().__init__()

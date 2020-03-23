@@ -20,13 +20,13 @@ class SGDClassifier(PredictionAlgorithm):
                  shuffle: bool = True,
                  epsilon: float = 0.1,
                  learning_rate: str = "optimal",
-                 eta0: float = 1e-9,
+                 eta0: float = 0.,
                  power_t: float = 0.5,
                  early_stopping: bool = False,
                  validation_fraction: float = 0.1,
                  n_iter_no_change: int = 5,
                  average: bool = False,
-                 random_state=None
+                 random_state = None
                  ):
         super().__init__()
         self.loss = loss

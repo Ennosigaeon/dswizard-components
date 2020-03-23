@@ -6,9 +6,7 @@ from automl.components.base import PreprocessingAlgorithm
 
 
 class ImputationComponent(PreprocessingAlgorithm):
-    def __init__(self, missing_values=np.nan,
-                 strategy: str = 'mean',
-                 add_indicator: bool = False):
+    def __init__(self, missing_values=np.nan, strategy: str = 'mean', add_indicator: bool = False):
         super().__init__()
         self.strategy = strategy
         self.add_indicator = add_indicator

@@ -1,14 +1,11 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, UniformFloatHyperparameter
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntegerHyperparameter, UniformFloatHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
 
 
 class BernoulliRBM(PreprocessingAlgorithm):
-    def __init__(self, n_components: int = 256,
-                 learning_rate: float = 0.1,
-                 n_iter: int = 100,
-                 random_state=None):
+    def __init__(self, n_components: int = 256, learning_rate: float = 0.1, n_iter: int = 10, random_state = None):
         super().__init__()
         self.n_components = n_components
         self.learning_rate = learning_rate
@@ -18,13 +15,8 @@ class BernoulliRBM(PreprocessingAlgorithm):
     def fit(self, X, y=None):
         from sklearn.neural_network import BernoulliRBM
 
-        self.preprocessor = BernoulliRBM(n_components=self.n_components,
-                                         learning_rate=self.learning_rate,
-                                         n_iter=self.n_iter,
-                                         random_state=self.random_state)
-
+        self.preprocessor = BernoulliRBM(n_components=self.n_components, learning_rate=self.learning_rate, n_iter=self.n_iter, random_state=self.random_state)
         self.preprocessor = self.preprocessor.fit(X)
-
         return self
 
     def transform(self, X):
@@ -34,8 +26,8 @@ class BernoulliRBM(PreprocessingAlgorithm):
 
     @staticmethod
     def get_properties(dataset_properties=None):
-        return {'shortname': 'BRBM',
-                'name': 'Bernoulli Restricted Boltzmann Machine ',
+        return {'shortname': 'Imputation',
+                'name': 'Imputation',
                 'handles_missing_values': True,
                 'handles_nominal_values': True,
                 'handles_numerical_features': True,
@@ -61,5 +53,5 @@ class BernoulliRBM(PreprocessingAlgorithm):
         n_iter = UniformIntegerHyperparameter("n_iter", 2, 2000, default_value=100)
 
         cs = ConfigurationSpace()
-        cs.add_hyperparameters([n_components, n_iter, learning_rate])
+        cs.add_hyperparameters([n_components,n_iter,learning_rate])
         return cs
