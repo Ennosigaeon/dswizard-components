@@ -19,8 +19,8 @@ class TestRandomForest(base_test.BaseComponentTest):
         expected.fit(X_train, y_train)
         y_expected = expected.predict(X_test)
 
-        assert np.allclose(y_actual, y_expected)
         assert repr(actual.estimator) == repr(expected)
+        assert np.allclose(y_actual, y_expected)
 
     def test_configured(self):
         X_train, X_test, y_train, y_test = self.load_data()
@@ -32,9 +32,11 @@ class TestRandomForest(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
 
+        config['max_features'] = int(X_train.shape[1] ** float(config['max_features']))
+
         expected = sklearn.ensemble.RandomForestClassifier(**config, random_state=42)
         expected.fit(X_train, y_train)
         y_expected = expected.predict(X_test)
 
-        assert np.allclose(y_actual, y_expected)
         assert repr(actual.estimator) == repr(expected)
+        assert np.allclose(y_actual, y_expected)

@@ -100,7 +100,6 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         max_iter = UniformIntegerHyperparameter("max_iter", 0, 1000, default_value=100)
         min_samples_leaf = UniformIntegerHyperparameter(name="min_samples_leaf", lower=1, upper=60, default_value=20,
                                                         log=True)
-        max_depth = UnParametrizedHyperparameter(name="max_depth", value="None")
         max_leaf_nodes = UniformIntegerHyperparameter(name="max_leaf_nodes", lower=1, upper=50, default_value=1,
                                                       log=True)
         max_bins = UniformIntegerHyperparameter("max_bins", 5, 255, default_value=255)
@@ -115,7 +114,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         validation_fraction = UniformFloatHyperparameter(name="validation_fraction", lower=0.001, upper=0.5,
                                                          default_value=0.1)
 
-        cs.add_hyperparameters([loss, learning_rate, max_iter, min_samples_leaf, max_depth, max_leaf_nodes, max_bins,
+        cs.add_hyperparameters([loss, learning_rate, max_iter, min_samples_leaf, max_leaf_nodes, max_bins,
                                 l2_regularization, tol, scoring, n_iter_no_change, validation_fraction, warm_start])
 
         return cs

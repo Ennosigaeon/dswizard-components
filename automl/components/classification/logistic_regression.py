@@ -18,10 +18,10 @@ class LogisticRegression(PredictionAlgorithm):
                  fit_intercept: bool = True,
                  intercept_scaling: float = 1,
                  max_iter: int = 100,
-                 multi_class: str = "ovr",
+                 multi_class: str = "auto",
                  warm_start: bool = False,
                  l1_ratio: float = None,
-                 random_state = None
+                 random_state=None
                  ):
         super().__init__()
         self.penalty = penalty

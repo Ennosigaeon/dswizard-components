@@ -1,19 +1,19 @@
-from scipy import sparse
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, UniformIntegerHyperparameter
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, \
+    UniformIntegerHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
 
 
 class FastICAComponent(PreprocessingAlgorithm):
     def __init__(self,
-                 n_components: int = 100,
+                 n_components: int = None,
                  algorithm: str = 'parallel',
                  whiten: bool = True,
                  fun: str = 'logcosh',
-                 max_iter: int = 100,
-                 random_state = None,
-                 tol: float = 1.):
+                 max_iter: int = 200,
+                 random_state=None,
+                 tol: float = 0.0001):
         super().__init__()
         self.n_components = n_components
         self.algorithm = algorithm
@@ -23,14 +23,17 @@ class FastICAComponent(PreprocessingAlgorithm):
         self.tol = tol
         self.random_state = random_state
 
+    def fit(self, X, y=None):
         from sklearn.decomposition import FastICA
-        self.preprocessor = FastICA(n_components=n_components,
-                                    algorithm=algorithm,
-                                    whiten=whiten,
-                                    fun=fun,
-                                    max_iter=max_iter,
+        self.preprocessor = FastICA(n_components=self.n_components,
+                                    algorithm=self.algorithm,
+                                    whiten=self.whiten,
+                                    fun=self.fun,
+                                    max_iter=self.max_iter,
                                     random_state=self.random_state,
-                                    tol=tol)
+                                    tol=self.tol)
+        self.preprocessor.fit(X)
+        return self
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

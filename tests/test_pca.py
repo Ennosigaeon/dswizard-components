@@ -18,8 +18,8 @@ class TestPCA(base_test.BaseComponentTest):
         expected.fit(np.copy(X_train), np.copy(y_train))
         X_expected = expected.transform(np.copy(X_test))
 
-        assert np.allclose(X_actual, X_expected)
         assert repr(actual.preprocessor) == repr(expected)
+        assert np.allclose(X_actual, X_expected)
 
     def test_configured(self):
         X_train, X_test, y_train, y_test = self.load_data()
@@ -31,9 +31,11 @@ class TestPCA(base_test.BaseComponentTest):
         actual.fit(np.copy(X_train), np.copy(y_train))
         X_actual = actual.transform(np.copy(X_test))
 
+        config['n_components'] = max(1, int(np.round(config['n_components'] * X_train.shape[1], 0)))
+
         expected = PCA(**config, copy=False, random_state=42)
         expected.fit(np.copy(X_train), np.copy(y_train))
         X_expected = expected.transform(X_test)
 
-        assert np.allclose(X_actual, X_expected)
         assert repr(actual.preprocessor) == repr(expected)
+        assert np.allclose(X_actual, X_expected)

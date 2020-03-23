@@ -18,11 +18,11 @@ class TestGradientBoosting(base_test.BaseComponentTest):
         expected.fit(X_train, y_train)
         y_expected = expected.predict(X_test)
 
-        assert np.allclose(y_actual, y_expected)
         assert repr(actual.estimator) == repr(expected)
+        assert np.allclose(y_actual, y_expected)
 
     def test_configured(self):
-        X_train, X_test, y_train, y_test = self.load_data()
+        X_train, X_test, y_train, y_test = self.load_data(multiclass=False)
 
         actual = GradientBoostingClassifier(random_state=42)
         config: dict = self.get_config(actual)
@@ -31,9 +31,12 @@ class TestGradientBoosting(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
 
+        if config['max_leaf_nodes'] == 1:
+            config['max_leaf_nodes'] = None
+
         expected = HistGradientBoostingClassifier(**config, random_state=42)
         expected.fit(X_train, y_train)
         y_expected = expected.predict(X_test)
 
-        assert np.allclose(y_actual, y_expected)
         assert repr(actual.estimator) == repr(expected)
+        assert np.allclose(y_actual, y_expected)

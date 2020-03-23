@@ -18,8 +18,8 @@ class TestDecisionTree(base_test.BaseComponentTest):
         expected.fit(X_train, y_train)
         y_expected = expected.predict(X_test)
 
+        assert repr(actual.estimator) == repr(expected)
         assert np.allclose(y_actual, y_expected)
-        # assert repr(actual.estimator) == repr(expected)
 
     def test_configured(self):
         X_train, X_test, y_train, y_test = self.load_data()
@@ -38,5 +38,5 @@ class TestDecisionTree(base_test.BaseComponentTest):
         expected.fit(X_train, y_train)
         y_expected = expected.predict(X_test)
 
+        assert repr(actual.estimator) == repr(expected)
         assert np.allclose(y_actual, y_expected)
-        # assert repr(actual.estimator) == repr(expected)

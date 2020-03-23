@@ -1,12 +1,11 @@
+import numpy as np
+from ConfigSpace.conditions import EqualsCondition
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.forbidden import ForbiddenAndConjunction, ForbiddenInClause, ForbiddenEqualsClause
-from ConfigSpace.conditions import EqualsCondition
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformIntegerHyperparameter, UniformFloatHyperparameter
-import numpy as np
 
 from automl.components.base import PreprocessingAlgorithm
-from automl.util.common import check_for_bool
 
 
 class FeatureAgglomerationComponent(PreprocessingAlgorithm):
@@ -24,18 +23,18 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
         self.distance_threshold = distance_threshold
         self.pooling_func = pooling_func
 
+    def fit(self, X, y=None):
+        from sklearn.cluster import FeatureAgglomeration
+
         if self.pooling_func is "mean":
-            self.pooling_func = np.mean
+            pooling_func = np.mean
         elif self.pooling_func is "median":
-            np.median
+            pooling_func = np.median
         elif self.pooling_func is "max":
-            np.max
+            pooling_func = np.max
 
         if self.n_clusters == 1:
             self.n_clusters = None
-
-    def fit(self, X, y=None):
-        from sklearn.cluster import FeatureAgglomeration
 
         if self.distance_threshold is not None:
             self.n_clusters = None
@@ -45,7 +44,8 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
                                                  affinity=self.affinity,
                                                  compute_full_tree=self.compute_full_tree,
                                                  linkage=self.linkage,
-                                                 distance_threshold=self.distance_threshold)
+                                                 distance_threshold=self.distance_threshold,
+                                                 pooling_func=pooling_func)
         self.preprocessor.fit(X, y)
         return self
 
@@ -74,9 +74,9 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
         distance_threshold = UniformFloatHyperparameter("distance_threshold", 0., 0.75, default_value=None)
 
         cs = ConfigurationSpace()
-        cs.add_hyperparameters([n_clusters, affinity, compute_full_tree, linkage, distance_threshold,pooling_func])
+        cs.add_hyperparameters([n_clusters, affinity, compute_full_tree, linkage, distance_threshold, pooling_func])
 
-        distance_thresholdAndNClustersCondition = EqualsCondition(distance_threshold,n_clusters, 1)
+        distance_thresholdAndNClustersCondition = EqualsCondition(distance_threshold, n_clusters, 1)
         cs.add_condition(distance_thresholdAndNClustersCondition)
 
         affinity_and_linkage = ForbiddenAndConjunction(

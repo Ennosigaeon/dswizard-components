@@ -14,12 +14,12 @@ class TestImputation(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = SimpleImputer()
+        expected = SimpleImputer(copy=False)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
-        assert np.allclose(X_actual, X_expected)
         assert repr(actual.preprocessor) == repr(expected)
+        assert np.allclose(X_actual, X_expected)
 
     def test_configured(self):
         X_train, X_test, y_train, y_test = self.load_data()
@@ -31,9 +31,9 @@ class TestImputation(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = SimpleImputer(**config)
+        expected = SimpleImputer(**config, copy=False)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
-        assert np.allclose(X_actual, X_expected)
         assert repr(actual.preprocessor) == repr(expected)
+        assert np.allclose(X_actual, X_expected)

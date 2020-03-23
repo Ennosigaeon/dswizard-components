@@ -13,7 +13,7 @@ class TruncatedSVDComponent(PreprocessingAlgorithm):
                  n_components: float = 0.5,
                  algorithm: str = 'randomized',
                  n_iter: int = 5,
-                 tol: float = None,
+                 tol: float = 0.,
                  random_state: int = None):
         super().__init__()
         self.n_components = n_components
@@ -31,7 +31,7 @@ class TruncatedSVDComponent(PreprocessingAlgorithm):
                                          algorithm=self.algorithm,
                                          n_iter=self.n_iter,
                                          tol=self.tol,
-                                         random_state=self.random_state).fit(X,Y)
+                                         random_state=self.random_state).fit(X, Y)
         return self
 
     def transform(self, X):

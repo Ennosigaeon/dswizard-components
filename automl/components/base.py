@@ -252,10 +252,6 @@ class PreprocessingAlgorithm(EstimatorComponent, ABC):
         """
         return self.preprocessor
 
-    def fit(self, X, y=None):
-        self.preprocessor.fit(X)
-        return self
-
     def transform(self, X):
         if self.preprocessor is None:
             raise ValueError()

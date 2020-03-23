@@ -9,14 +9,14 @@ from automl.util.util import convert_multioutput_multiclass_to_multilabel
 
 class ExtraTreesClassifier(PredictionAlgorithm):
     def __init__(self,
-                 n_estimators: int = 10,
+                 n_estimators: int = 100,
                  criterion: str = 'gini',
                  max_features: int = 'auto',
                  max_depth: int = None,
                  min_samples_split: int = 2,
                  min_samples_leaf: int = 1,
                  min_weight_fraction_leaf: float = 0.,
-                 bootstrap: bool = True,
+                 bootstrap: bool = False,
                  max_leaf_nodes: int = None,
                  min_impurity_decrease: float = 0.,
                  random_state=None,
@@ -49,11 +49,6 @@ class ExtraTreesClassifier(PredictionAlgorithm):
         if self.max_leaf_nodes == 1:
             self.max_leaf_nodes = None
 
-        if self.max_features not in ("sqrt", "log2", "auto"):
-            max_features = int(X.shape[1] ** float(self.max_features))
-        else:
-            max_features = self.max_features
-
         self.bootstrap = check_for_bool(self.bootstrap)
 
         if check_none(self.max_leaf_nodes):
@@ -65,7 +60,7 @@ class ExtraTreesClassifier(PredictionAlgorithm):
         self.estimator = ExtraTreesClassifier(
             n_estimators=self.n_estimators,
             criterion=self.criterion,
-            max_features=max_features,
+            max_features=self.max_features,
             max_depth=self.max_depth,
             min_samples_split=self.min_samples_split,
             min_samples_leaf=self.min_samples_leaf,
@@ -74,8 +69,7 @@ class ExtraTreesClassifier(PredictionAlgorithm):
             max_leaf_nodes=self.max_leaf_nodes,
             min_impurity_decrease=self.min_impurity_decrease,
             random_state=self.random_state,
-            class_weight=self.class_weight,
-            warm_start=True)
+            class_weight=self.class_weight)
         self.estimator.fit(X, y, sample_weight=sample_weight)
         return self
 

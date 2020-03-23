@@ -8,8 +8,8 @@ from automl.util.util import convert_multioutput_multiclass_to_multilabel
 class QuadraticDiscriminantAnalysis(PredictionAlgorithm):
 
     def __init__(self,
-                 reg_param: float = 1.,
-                 store_covariance: bool = True,
+                 reg_param: float = 0.,
+                 store_covariance: bool = False,
                  tol: float = 1e-4
                  ):
         super().__init__()

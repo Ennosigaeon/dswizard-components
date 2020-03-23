@@ -14,7 +14,7 @@ class SGDClassifier(PredictionAlgorithm):
     def __init__(self,
                  loss: str = "hinge",
                  penalty: str = "l2",
-                 alpha: float = 0.001,
+                 alpha: float = 0.0001,
                  l1_ratio: float = 0.15,
                  fit_intercept: bool = True,
                  max_iter: int = 1000,
@@ -67,6 +67,9 @@ class SGDClassifier(PredictionAlgorithm):
             learning_rate=self.learning_rate,
             eta0=self.eta0,
             power_t=self.power_t,
+            early_stopping=self.early_stopping,
+            validation_fraction=self.validation_fraction,
+            n_iter_no_change=self.n_iter_no_change,
             warm_start=self.warm_start,
             average=self.average,
             random_state=self.random_state

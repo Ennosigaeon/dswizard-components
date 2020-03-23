@@ -6,20 +6,24 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatH
 
 class QuantileTransformerComponent(PreprocessingAlgorithm):
 
-    def __init__(self, n_quantiles: int = 1000, output_distribution: str = "uniform", ignore_implicit_zeros: bool = False, subsample: int = 1e5, copy: bool = True, random_state=None):
+    def __init__(self, n_quantiles: int = 1000, output_distribution: str = "uniform",
+                 ignore_implicit_zeros: bool = False, subsample: int = int(1e5), random_state=None):
         super().__init__()
         self.n_quantiles = n_quantiles
         self.output_distribution = output_distribution
         self.ignore_implicit_zeros = ignore_implicit_zeros
         self.subsample = subsample
-        self.copy = copy
         self.random_state = random_state
+
+    def fit(self, X, y=None):
         from sklearn.preprocessing import QuantileTransformer
-        self.preprocessor = QuantileTransformer(copy=self.copy,
+        self.preprocessor = QuantileTransformer(copy=False,
                                                 n_quantiles=self.n_quantiles,
                                                 output_distribution=self.output_distribution,
                                                 ignore_implicit_zeros=self.ignore_implicit_zeros,
                                                 subsample=self.subsample, random_state=self.random_state)
+        self.preprocessor.fit(X)
+        return self
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
@@ -30,9 +34,8 @@ class QuantileTransformerComponent(PreprocessingAlgorithm):
                                                         default_value="uniform")
         ignore_implicit_zeros = CategoricalHyperparameter("ignore_implicit_zeros", [True, False], default_value=False)
         subsample = UniformIntegerHyperparameter("subsample", 1e3, 1e8, default_value=1e5)
-        copy = CategoricalHyperparameter("copy", [True, False], default_value=True)
 
-        cs.add_hyperparameters([n_quantiles, output_distribution, ignore_implicit_zeros, subsample, copy])
+        cs.add_hyperparameters([n_quantiles, output_distribution, ignore_implicit_zeros, subsample])
         return cs
 
     @staticmethod

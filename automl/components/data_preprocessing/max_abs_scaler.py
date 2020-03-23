@@ -5,19 +5,18 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter
 
 class MaxAbsScalerComponent(PreprocessingAlgorithm):
 
-    def __init__(self, copy: bool = True):
+    def __init__(self):
         super().__init__()
-        self.copy = copy
+
+    def fit(self, X, y=None):
         from sklearn.preprocessing import MaxAbsScaler
-        self.preprocessor = MaxAbsScaler(copy=self.copy)
+        self.preprocessor = MaxAbsScaler(copy=False)
+        self.preprocessor.fit(X)
+        return self
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
-
-        copy = CategoricalHyperparameter("copy", [True,False], default_value=True)
-
-        cs.add_hyperparameter(copy)
         return cs
 
     @staticmethod

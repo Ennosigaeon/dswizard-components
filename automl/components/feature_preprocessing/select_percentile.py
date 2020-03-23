@@ -5,13 +5,12 @@ from automl.components.base import PreprocessingAlgorithm
 
 
 class SelectPercentileClassification(PreprocessingAlgorithm):
-
     """SelectPercentile removes all but a user-specified highest scoring percentage of features. It provides an
         automatic procedure for keeping only a certain percentage of the best, associated features."""
 
     def __init__(self,
                  percentile: float = 10,
-                 score_func: str = "chi2",
+                 score_func: str = "f_classif",
                  random_state=None):
         """ Parameters:
         random state : ignored
@@ -19,26 +18,27 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
         score_func : callable, Function taking two arrays X and y, and
                      returning a pair of arrays (scores, pvalues).
         """
-        import sklearn.feature_selection
+
         super().__init__()
 
         self.random_state = random_state  # We don't use this
         self.percentile = percentile
-        if score_func == "chi2":
-            self.score_func = sklearn.feature_selection.chi2
-        elif score_func == "f_classif":
-            self.score_func = sklearn.feature_selection.f_classif
-        elif score_func == "mutual_info":
-            self.score_func = sklearn.feature_selection.mutual_info_classif
-        else:
-            raise ValueError("score_func must be in ('chi2, 'f_classif', 'mutual_info'), "
-                             "but is: %s" % score_func)
+        self.score_func = score_func
 
-    def fit(self, X, y):
+    def fit(self, X, y=None):
         import scipy.sparse
-        from sklearn.feature_selection import SelectPercentile, chi2
+        from sklearn.feature_selection import SelectPercentile, chi2, f_classif, mutual_info_classif
 
-        self.preprocessor = SelectPercentile(score_func=self.score_func,
+        if self.score_func == "chi2":
+            score_func = chi2
+        elif self.score_func == "f_classif":
+            score_func = f_classif
+        elif self.score_func == "mutual_info":
+            score_func = mutual_info_classif
+        else:
+            raise ValueError("score_func must be in ('chi2, 'f_classif', 'mutual_info'), but is: %s" % self.score_func)
+
+        self.preprocessor = SelectPercentile(score_func=score_func,
                                              percentile=self.percentile)
 
         # Because the pipeline guarantees that each feature is positive,
@@ -56,6 +56,7 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
         import scipy.sparse
         import sklearn.feature_selection
 
+        # TODO really? I assume only copied from auto-sklearn
         # Because the pipeline guarantees that each feature is positive,
         # clip all values below zero to zero
         if self.score_func == sklearn.feature_selection.chi2:

@@ -9,7 +9,7 @@ import numpy as np
 class KNeighborsClassifier(PredictionAlgorithm):
 
     def __init__(self,
-                 n_neighbors: int = 0.1,
+                 n_neighbors: int = 5,
                  weights: str = "uniform",
                  algorithm: str = "auto",
                  leaf_size: int = 30,
@@ -63,13 +63,13 @@ class KNeighborsClassifier(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        n_neighbors = UniformIntegerHyperparameter("n_neighbors", 1, 70, default_value=10)
+        n_neighbors = UniformIntegerHyperparameter("n_neighbors", 1, 70, default_value=5)
         weights = CategoricalHyperparameter("weights", ["uniform", "distance"], default_value="uniform")
         algorithm = CategoricalHyperparameter("algorithm", ["auto", "ball_tree", "kd_tree", "brute"], default_value="auto")
         leaf_size = UniformIntegerHyperparameter("leaf_size", 1, 100, default_value=30)
         p = UniformIntegerHyperparameter("p", 1, 5, default_value=2)
-        metric = CategoricalHyperparameter("metric", ["minkowski", "euclidean", "manhattan", "chebyshev", "minkowski",
-                                                      "euclidean"], default_value="minkowski")
+        metric = CategoricalHyperparameter("metric", ["minkowski", "euclidean", "manhattan", "chebyshev"],
+                                           default_value="minkowski")
 
         cs.add_hyperparameters([n_neighbors, weights, algorithm, leaf_size, p, metric])
 

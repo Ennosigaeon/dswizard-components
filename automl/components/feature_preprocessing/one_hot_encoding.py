@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter, \
-    UniformIntegerHyperparameter
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, Constant
 
 from automl.components.base import PreprocessingAlgorithm
 
@@ -38,7 +37,7 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
 
         for colname, col in X.iteritems():
             if categorical[colname]:
-               X = pd.get_dummies(X, prefix=colname)
+                X = pd.get_dummies(X, prefix=colname)
 
         return X.to_numpy()
 
@@ -60,7 +59,8 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
+        sparse = Constant("sparse", False)
         drop = CategoricalHyperparameter("drop", [None, "first"], default_value="first")
-        cs.add_hyperparameters([drop])
+        cs.add_hyperparameters([drop, sparse])
 
         return cs

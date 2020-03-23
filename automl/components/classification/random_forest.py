@@ -10,7 +10,7 @@ from automl.util.util import convert_multioutput_multiclass_to_multilabel
 
 class RandomForest(PredictionAlgorithm):
     def __init__(self,
-                 n_estimators: int = 10,
+                 n_estimators: int = 100,
                  criterion: str = 'gini',
                  max_features: int = 'auto',
                  max_depth: int = None,
@@ -22,8 +22,8 @@ class RandomForest(PredictionAlgorithm):
                  min_impurity_decrease: float = 0.,
                  oob_score: bool = False,
                  warm_start: bool = False,
-                 ccp_alpha: float = 0.1,
-                 max_samples: float = 0.99,
+                 ccp_alpha: float = 0.0,
+                 max_samples: float = None,
                  random_state=None,
                  class_weight=None):
         super().__init__()

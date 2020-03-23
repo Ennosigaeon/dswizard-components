@@ -1,7 +1,8 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
+from ConfigSpace.hyperparameters import CategoricalHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, UniformIntegerHyperparameter
+
 
 class StandardScalerComponent(PreprocessingAlgorithm):
 
@@ -10,8 +11,12 @@ class StandardScalerComponent(PreprocessingAlgorithm):
         self.with_mean = with_mean
         self.with_std = with_std
         self.copy = copy
+
+    def fit(self, X, y=None):
         from sklearn.preprocessing import StandardScaler
         self.preprocessor = StandardScaler(copy=self.copy, with_std=self.with_std, with_mean=self.with_mean)
+        self.preprocessor.fit(X)
+        return self
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

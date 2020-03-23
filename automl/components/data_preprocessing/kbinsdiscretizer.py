@@ -1,6 +1,8 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     CategoricalHyperparameter
+import scipy
+from scipy.sparse import csr_matrix
 
 from automl.components.base import PreprocessingAlgorithm
 
@@ -20,6 +22,17 @@ class KBinsDiscretizer(PreprocessingAlgorithm):
         self.preprocessor = KBinsDiscretizer(n_bins=self.n_bins, encode=self.encode, strategy=self.strategy)
         self.preprocessor = self.preprocessor.fit(X)
         return self
+
+    def transform(self, X):
+        if self.preprocessor is None:
+            raise ValueError()
+        Xt = self.preprocessor.transform(X)
+
+        # TODO sparse matrix currently not supported
+        if isinstance(Xt, csr_matrix):
+            return Xt.todense()
+        else:
+            return Xt
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

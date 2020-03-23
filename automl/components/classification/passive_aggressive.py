@@ -13,7 +13,7 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
 
     def __init__(self,
                  C: float = 1.0,
-                 fit_intercept: bool = False,
+                 fit_intercept: bool = True,
                  max_iter: int = 1000,
                  tol: float = 1e-3,
                  early_stopping: bool = False,
@@ -21,9 +21,9 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
                  n_iter_no_change: int = 5,
                  shuffle: bool = True,
                  loss: str = "hinge",
-                 warm_start: bool = True,
-                 average: int = 1,
-                 random_state = None
+                 warm_start: bool = False,
+                 average: int = False,
+                 random_state=None
                  ):
         super().__init__()
         self.C = C
@@ -37,7 +37,7 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
         self.loss = loss
         self.warm_start = warm_start
         self.average = average
-        self.random_state =random_state
+        self.random_state = random_state
 
     def fit(self, X, y):
         from sklearn.linear_model import PassiveAggressiveClassifier

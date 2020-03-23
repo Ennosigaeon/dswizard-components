@@ -10,8 +10,8 @@ class GenericUnivariateSelectComponent(PreprocessingAlgorithm):
     Features with a training-set variance lower than this threshold will be removed. The default is to keep all
     features with non-zero variance, i.e. remove the features that have the same value in all samples."""
 
-    def __init__(self, param: float = 0.5,
-                 score_func: str = "chi2",
+    def __init__(self, param: float = 1e-05,
+                 score_func: str = "f_classif",
                  mode: str = "percentile"):
         super().__init__()
         self.param = param
@@ -26,8 +26,7 @@ class GenericUnivariateSelectComponent(PreprocessingAlgorithm):
         elif score_func == "f_regression":
             self.score_func = sklearn.feature_selection.f_regression
         else:
-            raise ValueError("score_func must be in ('chi2, 'f_classif', 'mutual_info'), "
-                             "but is: %s" % score_func)
+            raise ValueError("score_func must be in ('chi2, 'f_classif', 'mutual_info'), but is: %s" % score_func)
 
     def fit(self, X, y=None):
         from sklearn.feature_selection import GenericUnivariateSelect

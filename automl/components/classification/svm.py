@@ -19,9 +19,9 @@ class SVCClassifier(PredictionAlgorithm):
                  multi_class: str = "ovr",
                  C: float = 1.,
                  fit_intercept: bool = True,
-                 intercept_scaling: float = 1.,
+                 intercept_scaling: float = 1,
                  max_iter: int = 1000,
-                 random_state = None
+                 random_state=None
                  ):
         super().__init__()
         self.penalty = penalty
@@ -34,7 +34,6 @@ class SVCClassifier(PredictionAlgorithm):
         self.intercept_scaling = intercept_scaling
         self.max_iter = max_iter
         self.random_state = random_state
-
 
     def fit(self, X, y):
         from sklearn.svm import LinearSVC
@@ -84,7 +83,7 @@ class SVCClassifier(PredictionAlgorithm):
         tol = UniformFloatHyperparameter("tol", 1e-5, 120., default_value=1e-4)
         C = UniformFloatHyperparameter("C", 1e-7, 100., default_value=1.)
         multi_class = CategoricalHyperparameter("multi_class", ["ovr", "crammer_singer"], default_value="ovr")
-        fit_intercept = CategoricalHyperparameter("fit_intercept", [True,False], default_value=True)
+        fit_intercept = CategoricalHyperparameter("fit_intercept", [True, False], default_value=True)
         intercept_scaling = UniformFloatHyperparameter("intercept_scaling", 0., 1., default_value=1.)
         max_iter = UniformIntegerHyperparameter("max_iter", 100, 2000, default_value=1000)
 
