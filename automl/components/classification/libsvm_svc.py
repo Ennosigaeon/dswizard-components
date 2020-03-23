@@ -132,13 +132,13 @@ class LibSVM_SVC(PredictionAlgorithm):
         degree = UniformIntegerHyperparameter("degree", 2, 6, default_value=3)
         gamma = UniformFloatHyperparameter("gamma", 1e-7, 70, log=True, default_value=0.1)
         # TODO this is totally ad-hoc
-        coef0 = UniformFloatHyperparameter("coef0", -30., 30., default_value=0.)
+        coef0 = UniformFloatHyperparameter("coef0", -30., 30., default_value=0)
         # probability is no hyperparameter, but an argument to the SVM algo
         shrinking = CategoricalHyperparameter("shrinking", [True, False], default_value=True)
         probability = CategoricalHyperparameter("probability", [True, False], default_value=False)
         tol = UniformFloatHyperparameter("tol", 1e-7, 0.5, default_value=1e-3, log=True)
         # cache size is not a hyperparameter, but an argument to the program!
-        max_iter = UniformIntegerHyperparameter("max_iter", 10, 50000, default_value=500)
+        max_iter = UniformIntegerHyperparameter("max_iter", 10, 50000, default_value=100)
         decision_function_shape = CategoricalHyperparameter("decision_function_shape", ["ovr", "ovo"],
                                                             default_value="ovr")
         break_ties = CategoricalHyperparameter("break_ties", [True, False], default_value=False)

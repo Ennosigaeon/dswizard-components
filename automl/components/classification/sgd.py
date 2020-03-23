@@ -99,8 +99,8 @@ class SGDClassifier(PredictionAlgorithm):
         loss = CategoricalHyperparameter("loss", ["hinge", "log", "modified_huber", "squared_hinge", "perceptron",
                                                   "squared_loss", "huber", "epsilon_insensitive",
                                                   "squared_epsilon_insensitive"], default_value="hinge")
-        penalty = CategoricalHyperparameter("penalty", ["l2", "l1", "elasticnet"], default_value="l2")
-        alpha = UniformFloatHyperparameter("alpha", 1e-7, 50., default_value=0.0001)
+        penaly = CategoricalHyperparameter("penalty", ["l2", "l1", "elasticnet"], default_value="l2")
+        alpha = UniformFloatHyperparameter("alpha", 1e-7, 50., default_value=0.001)
         l1_ratio = UniformFloatHyperparameter("l1_ratio", 1e-7, 1., default_value=0.15)
         fit_intercept = CategoricalHyperparameter("fit_intercept", [True, False], default_value=True)
         max_iter = UniformIntegerHyperparameter("max_iter", 20, 1000, default_value=1000)
@@ -117,7 +117,7 @@ class SGDClassifier(PredictionAlgorithm):
         average = CategoricalHyperparameter("average", [True, False], default_value=False)
 
         cs.add_hyperparameters(
-            [loss, penalty, alpha, l1_ratio, fit_intercept, max_iter, tol, shuffle, epsilon, learning_rate, eta0,
+            [loss, penaly, alpha, l1_ratio, fit_intercept, max_iter, tol, shuffle, epsilon, learning_rate, eta0,
              power_t, early_stopping, validation_fraction, n_iter_no_change, average])
 
         eta0_condition = InCondition(eta0, learning_rate, ["constant", "invscaling", "adaptive"])

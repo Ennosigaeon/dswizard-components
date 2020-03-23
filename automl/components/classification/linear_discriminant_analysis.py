@@ -57,7 +57,7 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
-        shrinkage = UniformFloatHyperparameter("shrinkage", 0., 1., default_value=0.)  # oder float zw 1 & 0
+        shrinkage = UniformFloatHyperparameter("shrinkage", 0., 1., default_value=0.1)  # oder float zw 1 & 0
         solver = CategoricalHyperparameter("solver", ["svd", "lsqr", "eigen"], default_value="svd")
         n_components = UniformIntegerHyperparameter("n_components", 2, 400, default_value=10)
         store_covariance = CategoricalHyperparameter("store_covariance", choices=[True, False], default_value=False)
