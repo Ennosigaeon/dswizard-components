@@ -9,11 +9,11 @@ from automl.components.base import PreprocessingAlgorithm
 
 class PCAComponent(PreprocessingAlgorithm):
     def __init__(self,
-                 n_components: float = 0.9999,
+                 n_components: float = None,
                  whiten: bool = False,
-                 svd_solver: str = "full",
-                 tol: float = 1e-2,
-                 iterated_power: int = 1000,
+                 svd_solver: str = "auto",
+                 tol: float = 0.,
+                 iterated_power: int = "auto",
                  random_state=None):
         super().__init__()
         self.n_components = n_components

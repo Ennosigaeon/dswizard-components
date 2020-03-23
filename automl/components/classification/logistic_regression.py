@@ -16,10 +16,10 @@ class LogisticRegression(PredictionAlgorithm):
                  tol: float = 1e-4,
                  C: float = 1.0,
                  fit_intercept: bool = True,
-                 intercept_scaling: float = 1.,
-                 max_iter: int = 500,
-                 multi_class: str = "ovr",
-                 l1_ratio: float = 0.,
+                 intercept_scaling: float = 1,
+                 max_iter: int = 100,
+                 multi_class: str = "auto",
+                 l1_ratio: float = None,
                  random_state=None
                  ):
         super().__init__()

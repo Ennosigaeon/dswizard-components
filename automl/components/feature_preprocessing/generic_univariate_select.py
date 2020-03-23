@@ -1,5 +1,5 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, Constant
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, UniformIntegerHyperparameter, Constant
 
 from automl.components.base import PreprocessingAlgorithm
 
@@ -10,8 +10,8 @@ class GenericUnivariateSelectComponent(PreprocessingAlgorithm):
     Features with a training-set variance lower than this threshold will be removed. The default is to keep all
     features with non-zero variance, i.e. remove the features that have the same value in all samples."""
 
-    def __init__(self, param: float = 0.5,
-                 score_func: str = "chi2",
+    def __init__(self, param: float = 1e-05,
+                 score_func: str = "f_classif",
                  mode: str = "percentile"):
         super().__init__()
         self.param = param
@@ -42,12 +42,12 @@ class GenericUnivariateSelectComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        mode = CategoricalHyperparameter("mode", ['percentile', 'k_best', 'fpr', 'fdr', 'fwe'],
-                                         default_value="percentile")
+        mode = CategoricalHyperparameter("mode", ['percentile', 'k_best', 'fpr', 'fdr', 'fwe'], default_value="percentile")
         param = UniformFloatHyperparameter("param", 0.0001, 0.75, default_value=0.5)
-        score_func = CategoricalHyperparameter(name="score_func", choices=["chi2", "f_classif", "f_regression"],
-                                               default_value="chi2")
-
+        score_func = CategoricalHyperparameter(
+            name="score_func",
+            choices=["chi2", "f_classif", "f_regression"],
+            default_value="chi2")
         if dataset_properties is not None:
             # Chi2 can handle sparse data, so we respect this
             if 'sparse' in dataset_properties and dataset_properties['sparse']:

@@ -10,10 +10,10 @@ from automl.util.util import convert_multioutput_multiclass_to_multilabel
 class LinearDiscriminantAnalysis(PredictionAlgorithm):
     def __init__(self,
                  solver: str = 'svd',
-                 shrinkage: str = 0.,
+                 shrinkage: str = None,
                  store_covariance: bool = False,
                  tol: float = 1.0e-4,
-                 n_components: int = 10
+                 n_components: int = None
                  ):
         super().__init__()
         self.solver = solver
@@ -43,8 +43,8 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
 
     @staticmethod
     def get_properties(dataset_properties=None):
-        return {'shortname': 'LDA',
-                'name': 'Linear Discriminant Analysis',
+        return {'shortname': 'LR',
+                'name': 'Logistic Regression',
                 'handles_regression': False,
                 'handles_classification': True,
                 'handles_multiclass': True,

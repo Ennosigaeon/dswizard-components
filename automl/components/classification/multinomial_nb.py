@@ -37,7 +37,7 @@ class MultinomialNB(PredictionAlgorithm):
     @staticmethod
     def get_properties(dataset_properties=None):
         return {'shortname': 'MultinomialNB',
-                'name': 'Multinomial Naive Bayes Classifier',
+                'name': 'Multinomial Naive Bayes classifier',
                 'handles_regression': False,
                 'handles_classification': True,
                 'handles_multiclass': True,

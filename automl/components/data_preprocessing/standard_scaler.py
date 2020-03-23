@@ -6,8 +6,7 @@ from automl.components.base import PreprocessingAlgorithm
 
 class StandardScalerComponent(PreprocessingAlgorithm):
 
-    def __init__(self, with_mean: bool = True,
-                 with_std: bool = True):
+    def __init__(self, with_mean: bool = True, with_std: bool = True):
         super().__init__()
         self.with_mean = with_mean
         self.with_std = with_std
