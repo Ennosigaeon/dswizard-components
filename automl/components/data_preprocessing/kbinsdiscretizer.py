@@ -1,5 +1,5 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
+from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
     CategoricalHyperparameter
 import scipy
 from scipy.sparse import csr_matrix

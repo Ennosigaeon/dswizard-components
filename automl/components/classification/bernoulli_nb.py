@@ -40,7 +40,7 @@ class BernoulliNB(PredictionAlgorithm):
     @staticmethod
     def get_properties(dataset_properties=None):
         return {'shortname': 'BernoulliNB',
-                'name': 'Bernoulli Naive Bayes classifier',
+                'name': 'Bernoulli Naive Bayes Classifier',
                 'handles_regression': False,
                 'handles_classification': True,
                 'handles_multiclass': True,

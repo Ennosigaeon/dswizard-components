@@ -1,13 +1,15 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
-    UniformIntegerHyperparameter
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntegerHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
 from automl.util.common import check_for_bool
 
 
 class PolynomialFeaturesComponent(PreprocessingAlgorithm):
-    def __init__(self, degree: int = 2, interaction_only: bool = False, include_bias: bool = True, order: str = "C"):
+    def __init__(self, degree: int = 2,
+                 interaction_only: bool = False,
+                 include_bias: bool = True,
+                 order: str = "C"):
         super().__init__()
         self.degree = degree
         self.interaction_only = interaction_only
@@ -30,7 +32,7 @@ class PolynomialFeaturesComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_properties(dataset_properties=None):
         return {'shortname': 'PolynomialFeatures',
-                'name': 'PolynomialFeatures',
+                'name': 'Polynomial Features',
                 'handles_regression': True,
                 'handles_classification': True,
                 'handles_multiclass': True,

@@ -14,7 +14,6 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
         return self
 
     def transform(self, X: pd.DataFrame):
-        # TODO OHE can not handle missing values
 
         categorical = {}
 

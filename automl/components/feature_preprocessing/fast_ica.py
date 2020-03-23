@@ -1,3 +1,4 @@
+from scipy import sparse
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, \
     UniformIntegerHyperparameter

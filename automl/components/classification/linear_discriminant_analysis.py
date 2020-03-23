@@ -43,8 +43,8 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
 
     @staticmethod
     def get_properties(dataset_properties=None):
-        return {'shortname': 'LR',
-                'name': 'Logistic Regression',
+        return {'shortname': 'LDA',
+                'name': 'Linear Discriminant Analysis',
                 'handles_regression': False,
                 'handles_classification': True,
                 'handles_multiclass': True,
