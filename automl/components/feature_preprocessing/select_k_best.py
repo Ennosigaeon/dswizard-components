@@ -1,0 +1,76 @@
+from ConfigSpace.configuration_space import ConfigurationSpace
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, \
+    UniformIntegerHyperparameter
+
+from automl.components.base import PreprocessingAlgorithm
+
+
+class SelectKBestComponent(PreprocessingAlgorithm):
+    def __init__(self,
+                 score_func: str = "f_classif",
+                 k: int = 10):
+        super().__init__()
+        self.score_func = score_func
+        self.k = k
+
+    def fit(self, X, y=None):
+        from sklearn.feature_selection import chi2, f_classif, mutual_info_classif
+        if self.score_func == "chi2":
+            score_func = chi2
+        elif self.score_func == "f_classif":
+            score_func = f_classif
+        elif self.score_func == "mutual_info":
+            score_func = mutual_info_classif
+        else:
+            raise ValueError("score_func must be in ('chi2, 'f_classif', 'mutual_info'), but is: %s" % self.score_func)
+
+        from sklearn.feature_selection import SelectKBest
+        self.preprocessor = SelectKBest(score_func=score_func,
+                                        k=self.k)
+        self.preprocessor.fit(X, y)
+        return self
+
+    def transform(self, X):
+        import scipy.sparse
+        import sklearn.feature_selection
+
+        # TODO really? I assume only copied from auto-sklearn
+        # Because the pipeline guarantees that each feature is positive,
+        # clip all values below zero to zero
+        if self.score_func == sklearn.feature_selection.chi2:
+            if scipy.sparse.issparse(X):
+                X.data[X.data < 0] = 0.0
+            else:
+                X[X < 0] = 0.0
+
+        if self.preprocessor is None:
+            raise NotImplementedError()
+        Xt = self.preprocessor.transform(X)
+        if Xt.shape[1] == 0:
+            raise ValueError(
+                "%s removed all features." % self.__class__.__name__)
+        return Xt
+
+    @staticmethod
+    def get_hyperparameter_search_space(dataset_properties=None):
+        cs = ConfigurationSpace()
+
+        k = UniformIntegerHyperparameter("k", 2, 20, default_value=10)
+        score_func = CategoricalHyperparameter(name="score_func", choices=["chi2", "f_classif", "mutual_info"],
+                                               default_value="f_classif")
+
+        cs.add_hyperparameters([score_func, k])
+        return cs
+
+    @staticmethod
+    def get_properties(dataset_properties=None):
+        return {'shortname': 'FastICA',
+                'name': 'Fast Independent Component Analysis',
+                'handles_regression': True,
+                'handles_classification': True,
+                'handles_multiclass': True,
+                'handles_multilabel': True,
+                'is_deterministic': False,
+                # 'input': (DENSE, UNSIGNED_DATA),
+                # 'output': (INPUT, UNSIGNED_DATA)
+                }
