@@ -49,12 +49,6 @@ class DecisionTree(PredictionAlgorithm):
         # Heuristic to set the tree width
         max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, X.shape[0])
 
-        if check_none(self.max_leaf_nodes):
-            self.max_leaf_nodes = None
-
-        if self.max_leaf_nodes == 1:
-            self.max_leaf_nodes = None
-
         self.estimator = DecisionTreeClassifier(
             criterion=self.criterion,
             splitter=self.splitter,
