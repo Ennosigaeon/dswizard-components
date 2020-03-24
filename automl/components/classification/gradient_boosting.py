@@ -6,6 +6,8 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformInteg
 from automl.components.base import PredictionAlgorithm
 from automl.util.common import check_none
 
+from util.common import resolve_factor
+
 
 class GradientBoostingClassifier(PredictionAlgorithm):
     def __init__(self,
@@ -13,8 +15,8 @@ class GradientBoostingClassifier(PredictionAlgorithm):
                  learning_rate: float = 0.1,
                  max_iter: int = 100,
                  min_samples_leaf: int = 20,
-                 max_depth: int = None,
-                 max_leaf_nodes: int = 31,
+                 max_depth_factor: int = None,
+                 max_leaf_nodes_factor: int = 31,
                  max_bins: int = 255,
                  l2_regularization: float = 0.,
                  tol: float = 1e-7,
@@ -27,12 +29,11 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         self.learning_rate = learning_rate
         self.max_iter = max_iter
         self.min_samples_leaf = min_samples_leaf
-        self.max_depth = max_depth
-        self.max_leaf_nodes = max_leaf_nodes
+        self.max_depth_factor = max_depth_factor
+        self.max_leaf_nodes_factor = max_leaf_nodes_factor
         self.max_bins = max_bins
         self.l2_regularization = l2_regularization
         self.tol = tol
-        self.max_depth = max_depth
         self.scoring = scoring
         self.n_iter_no_change = n_iter_no_change
         self.validation_fraction = validation_fraction
@@ -41,26 +42,22 @@ class GradientBoostingClassifier(PredictionAlgorithm):
     def fit(self, X, Y):
         from sklearn.ensemble._hist_gradient_boosting.gradient_boosting import HistGradientBoostingClassifier
 
-        if check_none(self.max_depth):
-            self.max_depth = None
-        if check_none(self.max_leaf_nodes):
-            self.max_leaf_nodes = None
         if check_none(self.scoring):
             self.scoring = None
 
-        if self.max_depth == 1:
-            self.max_depth = None
+        # Heuristic to set the tree depth
+        max_depth = resolve_factor(self.max_depth_factor, X.shape[1])
 
-        if self.max_leaf_nodes == 1:
-            self.max_leaf_nodes = None
+        # Heuristic to set the tree width
+        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, X.shape[0])
 
         self.estimator = HistGradientBoostingClassifier(
             loss=self.loss,
             learning_rate=self.learning_rate,
             max_iter=self.max_iter,
             min_samples_leaf=self.min_samples_leaf,
-            max_depth=self.max_depth,
-            max_leaf_nodes=self.max_leaf_nodes,
+            max_depth=max_depth,
+            max_leaf_nodes=max_leaf_nodes,
             max_bins=self.max_bins,
             l2_regularization=self.l2_regularization,
             tol=self.tol,
@@ -90,20 +87,16 @@ class GradientBoostingClassifier(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        # TODO check max_depth and max_leaf_nodes
-
         loss = Constant("loss", "auto")
         learning_rate = UniformFloatHyperparameter(name="learning_rate", lower=1e-6, upper=1.5, default_value=0.1,
                                                    log=True)
-        max_depth = UniformIntegerHyperparameter("max_depth", 1, 50, default_value=1)
+        max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 1., default_value=1.)
         max_iter = UniformIntegerHyperparameter("max_iter", 0, 1000, default_value=100)
-        max_leaf_nodes = UniformIntegerHyperparameter(name="max_leaf_nodes", lower=2, upper=250, default_value=31,
-                                                      log=True)
+        max_leaf_nodes_factor = UniformFloatHyperparameter("max_leaf_nodes_factor", 1e-5, 1., default_value=1.)
         min_samples_leaf = UniformIntegerHyperparameter(name="min_samples_leaf", lower=1, upper=60, default_value=20)
         l2_regularization = UniformFloatHyperparameter(name="l2_regularization", lower=1e-7, upper=1.,
                                                        default_value=1e-7, log=True)
         max_bins = UniformIntegerHyperparameter("max_bins", 5, 255, default_value=255)
-
         tol = UniformFloatHyperparameter("tol", 0., 0.25, default_value=1e-7)
         scoring = CategoricalHyperparameter("scoring", ["accuracy", "balanced_accuracy", "average_precision", "f1",
                                                         "f1_weighted", "precision", "recall", "roc_auc", "roc_auc_ovr",
@@ -112,7 +105,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         validation_fraction = UniformFloatHyperparameter(name="validation_fraction", lower=0.001, upper=0.5,
                                                          default_value=0.1)
 
-        cs.add_hyperparameters([loss, learning_rate, max_iter, min_samples_leaf, max_leaf_nodes, max_bins,
-                                l2_regularization, tol, scoring, n_iter_no_change, validation_fraction, max_depth])
+        cs.add_hyperparameters([loss, learning_rate, max_iter, min_samples_leaf, max_leaf_nodes_factor, max_bins,
+                                l2_regularization, tol, scoring, n_iter_no_change, validation_fraction, max_depth_factor])
 
         return cs
