@@ -1,9 +1,10 @@
+import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
-from automl.util.common import check_none, check_for_bool
+from automl.util.common import check_none
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
 
 
@@ -19,6 +20,7 @@ class ExtraTreesClassifier(PredictionAlgorithm):
                  bootstrap: bool = False,
                  max_leaf_nodes: int = None,
                  min_impurity_decrease: float = 0.,
+                 ccp_alpha: float = 0.,
                  random_state=None,
                  class_weight=None):
         super().__init__()
@@ -32,6 +34,7 @@ class ExtraTreesClassifier(PredictionAlgorithm):
         self.bootstrap = bootstrap
         self.max_leaf_nodes = max_leaf_nodes
         self.min_impurity_decrease = min_impurity_decrease
+        self.ccp_alpha = ccp_alpha
         self.random_state = random_state
         self.class_weight = class_weight
 
@@ -42,19 +45,6 @@ class ExtraTreesClassifier(PredictionAlgorithm):
             self.max_depth = None
         else:
             self.max_depth = int(self.max_depth)
-
-        if self.max_depth == 1:
-            self.max_depth = None
-
-        if self.max_leaf_nodes == 1:
-            self.max_leaf_nodes = None
-
-        self.bootstrap = check_for_bool(self.bootstrap)
-
-        if check_none(self.max_leaf_nodes):
-            self.max_leaf_nodes = None
-        else:
-            self.max_leaf_nodes = int(self.max_leaf_nodes)
 
         # initial fit of only increment trees
         self.estimator = ExtraTreesClassifier(
@@ -68,6 +58,7 @@ class ExtraTreesClassifier(PredictionAlgorithm):
             bootstrap=self.bootstrap,
             max_leaf_nodes=self.max_leaf_nodes,
             min_impurity_decrease=self.min_impurity_decrease,
+            ccp_alpha=self.ccp_alpha,
             random_state=self.random_state,
             class_weight=self.class_weight)
         self.estimator.fit(X, y, sample_weight=sample_weight)
@@ -95,8 +86,10 @@ class ExtraTreesClassifier(PredictionAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
+        # TODO check max_depth and max_leaf_nodes
+
         cs = ConfigurationSpace()
-        n_estimators = UniformIntegerHyperparameter("n_estimators", 10, 4000, default_value=100)
+        n_estimators = UniformIntegerHyperparameter("n_estimators", 10, 500, default_value=100)
         criterion = CategoricalHyperparameter("criterion", ["gini", "entropy"], default_value="gini")
 
         # The maximum number of features used in the forest is calculated as m^max_features, where
@@ -106,12 +99,14 @@ class ExtraTreesClassifier(PredictionAlgorithm):
         max_features = UniformFloatHyperparameter("max_features", 0., 1., default_value=0.5)
 
         max_depth = UniformIntegerHyperparameter("max_depth", 1, 50, default_value=1)
-        min_samples_split = UniformIntegerHyperparameter("min_samples_split", 2, 60, default_value=2)
-        min_samples_leaf = UniformIntegerHyperparameter("min_samples_leaf", 1, 60, default_value=1)
+        min_samples_split = UniformFloatHyperparameter("min_samples_split", 0.0001, 0.5, default_value=0.0001)
+        min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf", 0.0001, 0.5, default_value=0.0001)
         min_weight_fraction_leaf = UniformFloatHyperparameter("min_weight_fraction_leaf", 0., 0.5, default_value=0.)
         max_leaf_nodes = UniformIntegerHyperparameter("max_leaf_nodes", 1, 100, default_value=1)
-        min_impurity_decrease = UniformFloatHyperparameter('min_impurity_decrease', 0., 0.75, default_value=0.)
+        min_impurity_decrease = UniformFloatHyperparameter('min_impurity_decrease', 0., 0.2, default_value=0.)
         bootstrap = CategoricalHyperparameter("bootstrap", [True, False], default_value=False)
+        ccp_alpha = UniformFloatHyperparameter("ccp_alpha", 0., 1., default_value=0.)
+
         cs.add_hyperparameters([n_estimators, criterion, max_features, max_depth, min_samples_split, min_samples_leaf,
-                                min_weight_fraction_leaf, max_leaf_nodes, bootstrap, min_impurity_decrease])
+                                min_weight_fraction_leaf, max_leaf_nodes, bootstrap, min_impurity_decrease, ccp_alpha])
         return cs

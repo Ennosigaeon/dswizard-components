@@ -1,5 +1,3 @@
-from ConfigSpace.conditions import EqualsCondition
-from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
     CategoricalHyperparameter, Constant
@@ -16,7 +14,7 @@ class GaussianProcessClassifier(PredictionAlgorithm):
                  n_restarts_optimizer: int = 0,
                  max_iter_predict: int = 100,
                  multi_class: str = "one_vs_rest",
-                 random_state = None
+                 random_state=None
                  ):
         super().__init__()
         self.kernel = kernel

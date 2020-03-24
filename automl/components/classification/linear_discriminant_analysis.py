@@ -11,14 +11,12 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
     def __init__(self,
                  solver: str = 'svd',
                  shrinkage: str = None,
-                 store_covariance: bool = False,
                  tol: float = 1.0e-4,
                  n_components: int = None
                  ):
         super().__init__()
         self.solver = solver
         self.shrinkage = shrinkage
-        self.store_covariance = store_covariance
         self.tol = tol
         self.n_components = n_components
 
@@ -28,7 +26,6 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
         # initial fit of only increment trees
         self.estimator = LinearDiscriminantAnalysis(solver=self.solver,
                                                     shrinkage=self.shrinkage,
-                                                    store_covariance=self.store_covariance,
                                                     tol=self.tol,
                                                     n_components=self.n_components)
         self.estimator.fit(X, y)
@@ -57,13 +54,12 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
-        shrinkage = UniformFloatHyperparameter("shrinkage", 0., 1., default_value=0.1)  # oder float zw 1 & 0
         solver = CategoricalHyperparameter("solver", ["svd", "lsqr", "eigen"], default_value="svd")
+        shrinkage = UniformFloatHyperparameter("shrinkage", 0., 1., default_value=0.1)
         n_components = UniformIntegerHyperparameter("n_components", 2, 400, default_value=10)
-        store_covariance = CategoricalHyperparameter("store_covariance", choices=[True, False], default_value=False)
         tol = UniformFloatHyperparameter(name="tol", lower=1.0e-7, upper=1., default_value=1.0e-4, log=True)
 
-        cs.add_hyperparameters([shrinkage, solver, store_covariance, tol, n_components])
+        cs.add_hyperparameters([shrinkage, solver, tol, n_components])
 
         shrinkage_condition = InCondition(shrinkage, solver, ["lsqr", "eigen"])
         cs.add_condition(shrinkage_condition)

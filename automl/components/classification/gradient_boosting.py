@@ -1,3 +1,4 @@
+import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     UnParametrizedHyperparameter, Constant, CategoricalHyperparameter
@@ -89,23 +90,25 @@ class GradientBoostingClassifier(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
+        # TODO check max_depth and max_leaf_nodes
+
         loss = Constant("loss", "auto")
         learning_rate = UniformFloatHyperparameter(name="learning_rate", lower=1e-6, upper=1.5, default_value=0.1,
                                                    log=True)
         max_depth = UniformIntegerHyperparameter("max_depth", 1, 50, default_value=1)
         max_iter = UniformIntegerHyperparameter("max_iter", 0, 1000, default_value=100)
-        min_samples_leaf = UniformIntegerHyperparameter(name="min_samples_leaf", lower=1, upper=60, default_value=20,
-                                                        log=True)
-        max_leaf_nodes = UniformIntegerHyperparameter(name="max_leaf_nodes", lower=1, upper=50, default_value=1,
+        max_leaf_nodes = UniformIntegerHyperparameter(name="max_leaf_nodes", lower=2, upper=250, default_value=31,
                                                       log=True)
-        max_bins = UniformIntegerHyperparameter("max_bins", 5, 255, default_value=255)
+        min_samples_leaf = UniformIntegerHyperparameter(name="min_samples_leaf", lower=1, upper=60, default_value=20)
         l2_regularization = UniformFloatHyperparameter(name="l2_regularization", lower=1e-7, upper=1.,
                                                        default_value=1e-7, log=True)
+        max_bins = UniformIntegerHyperparameter("max_bins", 5, 255, default_value=255)
+
         tol = UniformFloatHyperparameter("tol", 0., 0.25, default_value=1e-7)
         scoring = CategoricalHyperparameter("scoring", ["accuracy", "balanced_accuracy", "average_precision", "f1",
                                                         "f1_weighted", "precision", "recall", "roc_auc", "roc_auc_ovr",
                                                         "roc_auc_ovo", "loss"], default_value="loss")
-        n_iter_no_change = UniformIntegerHyperparameter(name="n_iter_no_change", lower=1, upper=100, default_value=10)
+        n_iter_no_change = UniformIntegerHyperparameter(name="n_iter_no_change", lower=0, upper=100, default_value=0)
         validation_fraction = UniformFloatHyperparameter(name="validation_fraction", lower=0.001, upper=0.5,
                                                          default_value=0.1)
 

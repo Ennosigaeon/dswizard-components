@@ -22,7 +22,6 @@ class LibSVM_SVC(PredictionAlgorithm):
                  coef0: float = 0.0,
                  shrinking: bool = True,
                  tol: float = 1e-3,
-                 max_iter: int = -1,
                  class_weight=None,
                  random_state=None,
                  decision_function_shape: str = "ovr",
@@ -38,7 +37,6 @@ class LibSVM_SVC(PredictionAlgorithm):
         self.shrinking = shrinking
         self.tol = tol
         self.class_weight = class_weight
-        self.max_iter = max_iter
         self.random_state = random_state
         self.decision_function_shape = decision_function_shape
         self.probability = probability
@@ -95,7 +93,6 @@ class LibSVM_SVC(PredictionAlgorithm):
                              shrinking=self.shrinking,
                              tol=self.tol,
                              class_weight=self.class_weight,
-                             max_iter=self.max_iter,
                              random_state=self.random_state,
                              cache_size=cache_size,
                              probability=self.probability,
@@ -126,25 +123,23 @@ class LibSVM_SVC(PredictionAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
-        C = UniformFloatHyperparameter("C", 1e-7, 200, log=True, default_value=1.0)
+        C = UniformFloatHyperparameter("C", 1e-7, 200, default_value=1.0, log=True)
         # No linear kernel here, because we have liblinear
-        kernel = CategoricalHyperparameter(name="kernel", choices=["rbf", "poly", "sigmoid"], default_value="rbf")
+        kernel = CategoricalHyperparameter(name="kernel", choices=["linear", "rbf", "poly", "sigmoid"], default_value="rbf")
         degree = UniformIntegerHyperparameter("degree", 2, 6, default_value=3)
-        gamma = UniformFloatHyperparameter("gamma", 1e-7, 70, log=True, default_value=0.1)
-        # TODO this is totally ad-hoc
+        gamma = UniformFloatHyperparameter("gamma", 1e-7, 1, log=True, default_value=0.1)
         coef0 = UniformFloatHyperparameter("coef0", -30., 30., default_value=0.)
         # probability is no hyperparameter, but an argument to the SVM algo
         shrinking = CategoricalHyperparameter("shrinking", [True, False], default_value=True)
         probability = CategoricalHyperparameter("probability", [True, False], default_value=False)
         tol = UniformFloatHyperparameter("tol", 1e-7, 0.5, default_value=1e-3, log=True)
         # cache size is not a hyperparameter, but an argument to the program!
-        max_iter = UniformIntegerHyperparameter("max_iter", 10, 50000, default_value=100)
         decision_function_shape = CategoricalHyperparameter("decision_function_shape", ["ovr", "ovo"],
                                                             default_value="ovr")
         break_ties = CategoricalHyperparameter("break_ties", [True, False], default_value=False)
 
         cs = ConfigurationSpace()
-        cs.add_hyperparameters([C, kernel, degree, gamma, coef0, shrinking, tol, max_iter, probability,
+        cs.add_hyperparameters([C, kernel, degree, gamma, coef0, shrinking, tol, probability,
                                 decision_function_shape, break_ties])
 
         degree_depends_on_poly = EqualsCondition(degree, kernel, "poly")

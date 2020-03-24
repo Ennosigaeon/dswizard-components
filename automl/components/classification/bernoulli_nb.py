@@ -10,13 +10,11 @@ class BernoulliNB(PredictionAlgorithm):
 
     def __init__(self, alpha: float = 1.0,
                  fit_prior: bool = True,
-                 binarize: float = 0.,
                  random_state=None,
                  verbose: int = 0):
         super().__init__()
         self.alpha = alpha
         self.fit_prior = fit_prior
-        self.binarize = binarize
         self.random_state = random_state
         self.verbose = int(verbose)
         self.classes_ = None
@@ -25,7 +23,7 @@ class BernoulliNB(PredictionAlgorithm):
         from sklearn.naive_bayes import BernoulliNB
 
         self.fit_prior = check_for_bool(self.fit_prior)
-        self.estimator = BernoulliNB(alpha=self.alpha, binarize=self.binarize, fit_prior=self.fit_prior)
+        self.estimator = BernoulliNB(alpha=self.alpha, fit_prior=self.fit_prior)
         self.classes_ = np.unique(y.astype(int))
 
         # Fallback for multilabel classification
@@ -57,9 +55,8 @@ class BernoulliNB(PredictionAlgorithm):
         # the smoothing parameter is a non-negative float
         # I will limit it to 1000 and put it on a logarithmic scale. (SF)
         # Please adjust that, if you know a proper range, this is just a guess.
-        alpha = UniformFloatHyperparameter(name="alpha", lower=0., upper=150., default_value=1.,)
-        binarize = UniformFloatHyperparameter("binarize", 0., 1., default_value=0.)
+        alpha = UniformFloatHyperparameter(name="alpha", lower=0., upper=150., default_value=1.)
         fit_prior = CategoricalHyperparameter(name="fit_prior", choices=[True, False], default_value=True)
 
-        cs.add_hyperparameters([alpha, fit_prior, binarize])
+        cs.add_hyperparameters([alpha, fit_prior])
         return cs

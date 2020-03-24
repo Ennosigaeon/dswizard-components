@@ -48,7 +48,7 @@ class GaussianNB(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        var_smoothing = UniformFloatHyperparameter("var_smoothing", 0., 0.75, default_value=1e-9)
+        var_smoothing = UniformFloatHyperparameter("var_smoothing", 0., 0.25, default_value=1e-9)
 
         cs.add_hyperparameter(var_smoothing)
 

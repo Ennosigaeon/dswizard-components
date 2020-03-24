@@ -1,13 +1,15 @@
 # -*- encoding: utf-8 -*-
 
-import os
-import warnings
+from typing import Optional
+
+import numpy as np
 
 __all__ = [
     'check_none',
     'check_for_bool',
     'check_false',
-    'check_true'
+    'check_true',
+    'resolve_factor'
 ]
 
 
@@ -36,3 +38,10 @@ def check_for_bool(p):
         return True
     else:
         raise ValueError("%s is not a bool" % str(p))
+
+
+def resolve_factor(value: Optional[float], n: float) -> Optional[int]:
+    if check_none(value):
+        return None
+    else:
+        return max(1, int(np.round(value * n, 0)))
