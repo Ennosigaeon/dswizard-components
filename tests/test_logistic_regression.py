@@ -1,8 +1,8 @@
 import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
+from automl.components.classification.excluded.logistic_regression import LogisticRegression
 
-from components.classification.excluded.logistic_regression import LogisticRegression
 from tests import base_test
 
 

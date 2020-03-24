@@ -3,7 +3,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalH
     UniformIntegerHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from util.common import resolve_factor
+from automl.util.common import resolve_factor
 
 
 class FastICAComponent(PreprocessingAlgorithm):

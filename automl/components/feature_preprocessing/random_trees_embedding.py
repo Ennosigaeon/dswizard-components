@@ -5,15 +5,15 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
 from automl.components.base import PreprocessingAlgorithm
 from automl.util.common import check_none, check_for_bool
 
-from util.common import resolve_factor
+from automl.util.common import resolve_factor
 
 
 class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
     def __init__(self,
                  n_estimators: int = 100,
                  max_depth_factor: int = 5,
-                 min_samples_split: int = 2,
-                 min_samples_leaf: int = 1,
+                 min_samples_split_factor: int = 2,
+                 min_samples_leaf_factor: int = 1,
                  min_weight_fraction_leaf: float = 0.,
                  max_leaf_nodes_factor: int = None,
                  min_impurity_decrease: float = 0.,
@@ -24,8 +24,8 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         super().__init__()
         self.n_estimators = n_estimators
         self.max_depth_factor = max_depth_factor
-        self.min_samples_split = min_samples_split
-        self.min_samples_leaf = min_samples_leaf
+        self.min_samples_split_factor = min_samples_split_factor
+        self.min_samples_leaf_factor = min_samples_leaf_factor
         self.min_weight_fraction_leaf = min_weight_fraction_leaf
         self.max_leaf_nodes_factor = max_leaf_nodes_factor
         self.min_impurity_decrease = min_impurity_decrease
@@ -38,8 +38,6 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         from sklearn.ensemble import RandomTreesEmbedding
 
         self.n_estimators = int(self.n_estimators)
-        self.min_samples_split = int(self.min_samples_split)
-        self.min_samples_leaf = int(self.min_samples_leaf)
         self.min_weight_fraction_leaf = float(self.min_weight_fraction_leaf)
         self.bootstrap = check_for_bool(self.bootstrap)
 
@@ -49,11 +47,17 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         # Heuristic to set the tree width
         max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, X.shape[0])
 
+        # Heuristic to set the tree width
+        min_samples_leaf= resolve_factor(self.min_samples_leaf_factor, X.shape[0])
+
+        # Heuristic to set the tree width
+        min_samples_split = resolve_factor(self.min_samples_split_factor, X.shape[0])
+
         self.preprocessor = RandomTreesEmbedding(
             n_estimators=self.n_estimators,
             max_depth=max_depth,
-            min_samples_split=self.min_samples_split,
-            min_samples_leaf=self.min_samples_leaf,
+            min_samples_split=min_samples_split,
+            min_samples_leaf=min_samples_leaf,
             max_leaf_nodes=max_leaf_nodes,
             min_weight_fraction_leaf=self.min_weight_fraction_leaf,
             min_impurity_decrease=self.min_impurity_decrease,
@@ -109,12 +113,12 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
 
         n_estimators = UniformIntegerHyperparameter(name="n_estimators", lower=10, upper=400, default_value=10)
         max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 1., default_value=1.)
-        min_samples_split = UniformFloatHyperparameter("min_samples_split", 0.0001, 0.5, default_value=0.0001)
-        min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf", 0.0001, 0.5, default_value=0.0001)
+        min_samples_split_factor = UniformFloatHyperparameter("min_samples_split_factor", 0.0001, 0.5, default_value=0.0001)
+        min_samples_leaf_factor = UniformFloatHyperparameter("min_samples_leaf_factor", 0.0001, 0.5, default_value=0.0001)
         min_weight_fraction_leaf = UniformFloatHyperparameter("min_weight_fraction_leaf", 0., 0.5, default_value=0.)
         max_leaf_nodes_factor = UniformFloatHyperparameter("max_leaf_nodes_factor", 1e-5, 1., default_value=1.)
         min_impurity_decrease = UniformFloatHyperparameter('min_impurity_decrease', 0., 0.75, default_value=0.)
 
-        cs.add_hyperparameters([n_estimators, max_depth_factor, min_samples_split, min_samples_leaf,
+        cs.add_hyperparameters([n_estimators, max_depth_factor, min_samples_split_factor, min_samples_leaf_factor,
                                 min_weight_fraction_leaf, max_leaf_nodes_factor, min_impurity_decrease])
         return cs

@@ -1,9 +1,9 @@
 import numpy as np
 import sklearn
+from automl.util.common import resolve_factor
 
 from automl.components.feature_preprocessing.truncated_svd import TruncatedSVDComponent
 from tests import base_test
-from util.common import resolve_factor
 
 
 class TestTruncatedSVDComponent(base_test.BaseComponentTest):

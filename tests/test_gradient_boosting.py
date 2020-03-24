@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.ensemble._hist_gradient_boosting.gradient_boosting import HistGradientBoostingClassifier
 
 from automl.components.classification.gradient_boosting import GradientBoostingClassifier
+from automl.util.common import resolve_factor
 from tests import base_test
 
 
@@ -31,8 +32,11 @@ class TestGradientBoosting(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
 
-        if config['max_leaf_nodes'] == 1:
-            config['max_leaf_nodes'] = None
+        config['max_depth'] = resolve_factor(config['max_depth_factor'], X_train.shape[1])
+        del config['max_depth_factor']
+
+        config['max_leaf_nodes'] = resolve_factor(config['max_leaf_nodes_factor'], X_train.shape[0])
+        del config['max_leaf_nodes_factor']
 
         expected = HistGradientBoostingClassifier(**config, random_state=42)
         expected.fit(X_train, y_train)

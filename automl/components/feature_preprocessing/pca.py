@@ -5,7 +5,7 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatH
     UniformIntegerHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from util.common import resolve_factor
+from automl.util.common import resolve_factor
 
 
 class PCAComponent(PreprocessingAlgorithm):

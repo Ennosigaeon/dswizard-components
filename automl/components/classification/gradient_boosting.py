@@ -6,7 +6,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformInteg
 from automl.components.base import PredictionAlgorithm
 from automl.util.common import check_none
 
-from util.common import resolve_factor
+from automl.util.common import resolve_factor
 
 
 class GradientBoostingClassifier(PredictionAlgorithm):

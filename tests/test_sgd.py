@@ -1,8 +1,8 @@
 import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
+from automl.components.classification.sgd import SGDClassifier
 
-from components.classification.sgd import SGDClassifier
 from tests import base_test
 
 

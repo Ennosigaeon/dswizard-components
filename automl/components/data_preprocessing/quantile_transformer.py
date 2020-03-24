@@ -3,7 +3,7 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntege
     UniformFloatHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from util.common import resolve_factor
+from automl.util.common import resolve_factor
 
 
 class QuantileTransformerComponent(PreprocessingAlgorithm):

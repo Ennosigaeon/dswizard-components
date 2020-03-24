@@ -2,6 +2,7 @@ import numpy as np
 import sklearn.tree
 
 from automl.components.classification.decision_tree import DecisionTree
+from automl.util.common import resolve_factor
 from tests import base_test
 
 
@@ -31,8 +32,11 @@ class TestDecisionTree(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
 
-        config['max_depth'] = int(np.round(config['max_depth_factor'] * X_train.shape[1], 0))
+        config['max_depth'] = resolve_factor(config['max_depth_factor'], X_train.shape[1])
         del config['max_depth_factor']
+
+        config['max_leaf_nodes'] = resolve_factor(config['max_leaf_nodes_factor'], X_train.shape[0])
+        del config['max_leaf_nodes_factor']
 
         expected = sklearn.tree.DecisionTreeClassifier(**config, random_state=42)
         expected.fit(X_train, y_train)

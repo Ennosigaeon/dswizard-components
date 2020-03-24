@@ -7,7 +7,7 @@ from automl.components.base import PredictionAlgorithm
 from automl.util.common import check_none
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
 
-from util.common import resolve_factor
+from automl.util.common import resolve_factor
 
 
 class ExtraTreesClassifier(PredictionAlgorithm):

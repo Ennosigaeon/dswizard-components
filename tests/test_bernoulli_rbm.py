@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn
 
-from components.feature_preprocessing.bernoulli_rbm import BernoulliRBM
+from automl.components.feature_preprocessing.bernoulli_rbm import BernoulliRBM
 from tests import base_test
 
 

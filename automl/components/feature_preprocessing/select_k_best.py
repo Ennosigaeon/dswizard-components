@@ -2,7 +2,7 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from util.common import resolve_factor
+from automl.util.common import resolve_factor
 
 
 class SelectKBestComponent(PreprocessingAlgorithm):

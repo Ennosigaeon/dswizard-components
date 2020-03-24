@@ -2,8 +2,8 @@ import numpy as np
 import pytest
 import sklearn.naive_bayes
 import sklearn.svm
+from automl.components.classification.excluded.gaussian_process import GaussianProcessClassifier
 
-from components.classification.excluded.gaussian_process import GaussianProcessClassifier
 from tests import base_test
 
 

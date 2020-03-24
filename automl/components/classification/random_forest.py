@@ -5,7 +5,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformInteg
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
-from util.common import resolve_factor
+from automl.util.common import resolve_factor
 
 
 class RandomForest(PredictionAlgorithm):

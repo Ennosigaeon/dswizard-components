@@ -1,8 +1,8 @@
 import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
+from automl.components.classification.excluded.svm import SVCClassifier
 
-from components.classification.excluded.svm import SVCClassifier
 from tests import base_test
 
 

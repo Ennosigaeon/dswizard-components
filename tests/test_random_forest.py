@@ -1,10 +1,10 @@
 import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
+from automl.util.common import resolve_factor
 
 from automl.components.classification.random_forest import RandomForest
 from tests import base_test
-from util.common import resolve_factor
 
 
 class TestRandomForest(base_test.BaseComponentTest):
