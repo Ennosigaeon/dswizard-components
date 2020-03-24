@@ -7,26 +7,24 @@ from automl.components.base import PreprocessingAlgorithm
 
 class KNNImputerComponent(PreprocessingAlgorithm):
     def __init__(self, missing_values=np.nan, n_neighbors: int = 5, weights: str = "uniform",
-                 metric: str = "nan_euclidean", copy=False):
+                 metric: str = "nan_euclidean", add_indicator: bool = False):
         super().__init__()
+
+        # TODO what about missing values in categorical data?
         self.n_neighbors = n_neighbors
         self.missing_values = missing_values
         self.weights = weights
         self.metric = metric
-        self.copy = copy
+        self.add_indicator = add_indicator
 
     def fit(self, X, y=None):
         from sklearn.impute import KNNImputer
 
         self.preprocessor = KNNImputer(missing_values=self.missing_values, n_neighbors=self.n_neighbors,
-                                       weights=self.weights, metric=self.metric, copy=self.copy)
+                                       weights=self.weights, metric=self.metric, add_indicator=self.add_indicator,
+                                       copy=False)
         self.preprocessor = self.preprocessor.fit(X)
         return self
-
-    def transform(self, X):
-        if self.preprocessor is None:
-            raise NotImplementedError()
-        return self.preprocessor.transform(X)
 
     @staticmethod
     def get_properties(dataset_properties=None):
@@ -54,7 +52,8 @@ class KNNImputerComponent(PreprocessingAlgorithm):
         n_neighbors = UniformIntegerHyperparameter("n_neighbors", 2, 50, default_value=5)
         weights = CategoricalHyperparameter("weights", ["uniform", "distance"], default_value="uniform")
         metric = Constant("metric", "nan_euclidean")
+        add_indicator = CategoricalHyperparameter("add_indicator", [True, False], default_value=False)
 
         cs = ConfigurationSpace()
-        cs.add_hyperparameters([n_neighbors, weights, metric])
+        cs.add_hyperparameters([n_neighbors, weights, metric, add_indicator])
         return cs

@@ -32,6 +32,8 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
             pooling_func = np.median
         elif self.pooling_func is "max":
             pooling_func = np.max
+        else:
+            raise ValueError('Unknown pooling function \'{}\''.format(self.pooling_func))
 
         if self.n_clusters == 1:
             self.n_clusters = None
@@ -84,9 +86,9 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
             ForbiddenEqualsClause(linkage, "ward"))
         cs.add_forbidden_clause(affinity_and_linkage)
 
-        affinity_and_linkagee = ForbiddenAndConjunction(
+        full_and_n_clusters = ForbiddenAndConjunction(
             ForbiddenEqualsClause(compute_full_tree, False),
             ForbiddenEqualsClause(n_clusters, 1))
-        cs.add_forbidden_clause(affinity_and_linkagee)
+        cs.add_forbidden_clause(full_and_n_clusters)
 
         return cs

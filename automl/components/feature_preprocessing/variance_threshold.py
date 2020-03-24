@@ -1,11 +1,10 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter, Constant
 
 from automl.components.base import PreprocessingAlgorithm
 
 
 class VarianceThresholdComponent(PreprocessingAlgorithm):
-
     """Feature selector that removes all low-variance features.
     Features with a training-set variance lower than this threshold will be removed. The default is to keep all
     features with non-zero variance, i.e. remove the features that have the same value in all samples."""
@@ -39,7 +38,7 @@ class VarianceThresholdComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
-        # TODO upper limit is totally ad hoc
-        threshold = UniformFloatHyperparameter('threshold', 0., 1.5, default_value=0.)
+        # TODO missing
+        threshold = Constant('threshold', 0.)
         cs.add_hyperparameter(threshold)
         return cs

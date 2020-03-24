@@ -5,18 +5,19 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatH
     UniformIntegerHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
+from util.common import resolve_factor
 
 
 class PCAComponent(PreprocessingAlgorithm):
     def __init__(self,
-                 n_components: float = None,
+                 keep_variance: float = None,
                  whiten: bool = False,
                  svd_solver: str = "auto",
                  tol: float = 0.,
                  iterated_power: int = "auto",
                  random_state=None):
         super().__init__()
-        self.n_components = n_components
+        self.keep_variance = keep_variance
         self.whiten = whiten
         self.svd_solver = svd_solver
         self.tol = tol
@@ -24,12 +25,8 @@ class PCAComponent(PreprocessingAlgorithm):
         self.random_state = random_state
 
     def fit(self, X, Y=None):
-        num_features = X.shape[1]
-        if self.n_components is None:
-            n_components = None
-        else:
-            n_components = max(1, int(np.round(self.n_components * num_features, 0)))
         from sklearn.decomposition import PCA
+        n_components = resolve_factor(self.keep_variance, X.shape[1])
         self.preprocessor = PCA(n_components=n_components,
                                 whiten=self.whiten,
                                 random_state=self.random_state,
@@ -60,7 +57,7 @@ class PCAComponent(PreprocessingAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
-        keep_variance = UniformFloatHyperparameter("n_components", 0., 1., default_value=0.9999)
+        keep_variance = UniformFloatHyperparameter("keep_variance", 0., 1., default_value=0.9999)
         whiten = CategoricalHyperparameter("whiten", [False, True], default_value=False)
         svd_solver = CategoricalHyperparameter("svd_solver", ["full", "arpack", "randomized"], default_value="full")
         tol = UniformFloatHyperparameter("tol", 0., 5., default_value=1e-2)

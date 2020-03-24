@@ -1,7 +1,5 @@
 import numpy as np
 import pandas as pd
-from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, Constant
 
 from automl.components.base import PreprocessingAlgorithm
 

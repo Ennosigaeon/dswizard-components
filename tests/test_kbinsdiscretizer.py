@@ -2,7 +2,7 @@ import numpy as np
 import sklearn
 from scipy.sparse import csr_matrix
 
-from automl.components.data_preprocessing.kbinsdiscretizer import KBinsDiscretizer
+from components.feature_preprocessing.kbinsdiscretizer import KBinsDiscretizer
 from tests import base_test
 
 

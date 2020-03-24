@@ -3,6 +3,7 @@ import sklearn
 
 from automl.components.data_preprocessing.quantile_transformer import QuantileTransformerComponent
 from tests import base_test
+from util.common import resolve_factor
 
 
 class TestQuantileTransformerComponent(base_test.BaseComponentTest):
@@ -30,6 +31,9 @@ class TestQuantileTransformerComponent(base_test.BaseComponentTest):
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
+
+        config['n_quantiles'] = resolve_factor(config['n_quantiles_factor'], X_train.shape[0])
+        del config['n_quantiles_factor']
 
         expected = sklearn.preprocessing.QuantileTransformer(**config, copy=False, random_state=42)
         expected.fit(X_train, y_train)

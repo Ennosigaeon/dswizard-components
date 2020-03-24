@@ -1,5 +1,5 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
+from ConfigSpace.hyperparameters import Constant
 
 from automl.components.base import PreprocessingAlgorithm
 
@@ -19,8 +19,8 @@ class BinarizerComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
-        # TODO both limits are totally ad hoc. More reasonable to use fraction of data
-        threshold = UniformFloatHyperparameter('threshold', 0., 1., default_value=0.)
+        # TODO Use fraction of data per column
+        threshold = Constant('threshold', 0.)
         cs.add_hyperparameter(threshold)
         return cs
 

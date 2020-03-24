@@ -1,15 +1,17 @@
-from automl.components.base import PreprocessingAlgorithm
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter, \
-    UniformIntegerHyperparameter
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntegerHyperparameter, \
+    UniformFloatHyperparameter
+
+from automl.components.base import PreprocessingAlgorithm
+from util.common import resolve_factor
 
 
 class QuantileTransformerComponent(PreprocessingAlgorithm):
 
-    def __init__(self, n_quantiles: int = 1000, output_distribution: str = "uniform",
+    def __init__(self, n_quantiles_factor: int = None, output_distribution: str = "uniform",
                  ignore_implicit_zeros: bool = False, subsample: int = int(1e5), random_state=None):
         super().__init__()
-        self.n_quantiles = n_quantiles
+        self.n_quantiles_factor = n_quantiles_factor
         self.output_distribution = output_distribution
         self.ignore_implicit_zeros = ignore_implicit_zeros
         self.subsample = subsample
@@ -17,8 +19,10 @@ class QuantileTransformerComponent(PreprocessingAlgorithm):
 
     def fit(self, X, y=None):
         from sklearn.preprocessing import QuantileTransformer
+
+        n_quantiles = resolve_factor(self.n_quantiles_factor, X.shape[0], default=1000)
         self.preprocessor = QuantileTransformer(copy=False,
-                                                n_quantiles=self.n_quantiles,
+                                                n_quantiles=n_quantiles,
                                                 output_distribution=self.output_distribution,
                                                 ignore_implicit_zeros=self.ignore_implicit_zeros,
                                                 subsample=self.subsample, random_state=self.random_state)
@@ -29,7 +33,7 @@ class QuantileTransformerComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        n_quantiles = UniformIntegerHyperparameter("n_quantiles", 10, 2500, default_value=1000)
+        n_quantiles = UniformFloatHyperparameter("n_quantiles_factor", 0., 1., default_value=0.5)
         output_distribution = CategoricalHyperparameter("output_distribution", ["uniform", "normal"],
                                                         default_value="uniform")
         ignore_implicit_zeros = CategoricalHyperparameter("ignore_implicit_zeros", [True, False], default_value=False)

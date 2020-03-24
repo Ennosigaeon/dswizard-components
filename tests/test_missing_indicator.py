@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn
 
-from automl.components.data_preprocessing.missing_indicator import MissingIndicatorComponent
+from components.feature_preprocessing.missing_indicator import MissingIndicatorComponent
 from tests import base_test
 
 
