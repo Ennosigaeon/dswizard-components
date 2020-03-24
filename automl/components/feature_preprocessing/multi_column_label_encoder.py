@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+
 from automl.components.base import PreprocessingAlgorithm
 
 
@@ -33,9 +34,18 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
         if not np.any(categorical.values()):
             return X.to_numpy()
         else:
+
             for colname, col in X.iteritems():
                 if categorical[colname]:
-                    X[colname] = self.preprocessor.fit_transform(col)
+                    missing_vec = pd.isna(X[colname])
+                    missing_vec = missing_vec[missing_vec == True]
+                    X[colname] = X[colname].cat.add_categories(['<MISSING>'])
+                    X.loc[missing_vec.index, colname] = '<MISSING>'
+
+                    X[colname] = self.preprocessor.fit_transform(col.astype(str))
+
+                    X.loc[missing_vec.index, colname] = np.nan
+
         return X.to_numpy()
 
     def fit_transform(self, X, y=None):

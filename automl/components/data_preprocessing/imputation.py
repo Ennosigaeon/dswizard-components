@@ -16,6 +16,10 @@ class ImputationComponent(PreprocessingAlgorithm):
     def fit(self, X, y=None):
         from sklearn.impute import SimpleImputer
 
+        # TODO passt das so oder muss das noch genauer angepasst werden? Funktionieren tut es so
+        if X.select_dtypes(include=['category', 'object']).any:
+            self.strategy = 'most_frequent'
+
         self.preprocessor = SimpleImputer(missing_values=self.missing_values, strategy=self.strategy,
                                           add_indicator=self.add_indicator, copy=False)
         self.preprocessor = self.preprocessor.fit(X)

@@ -12,9 +12,9 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
         return self
 
     def transform(self, X: pd.DataFrame):
-        # TODO OHE can not handle missing values
 
         categorical = {}
+        cat = []
 
         for i in range(X.shape[1]):
             try:
@@ -22,13 +22,12 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
                 categorical[X.columns[i]] = False
             except ValueError:
                 categorical[X.columns[i]] = True
+                cat.append(X.columns[i])
 
         if not np.any(categorical.values()):
             return X.to_numpy()
 
-        for colname, col in X.iteritems():
-            if categorical[colname]:
-                X = pd.get_dummies(X, prefix=colname, sparse=False)
+        X = pd.get_dummies(X, prefix=[cat[i] for i in range(len(cat))], sparse=False, dummy_na=True)
 
         return X.to_numpy()
 

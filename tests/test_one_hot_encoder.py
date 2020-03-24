@@ -1,6 +1,5 @@
 import numpy as np
 import pytest
-import sklearn
 import pandas as pd
 
 from automl.components.feature_preprocessing.one_hot_encoding import OneHotEncoderComponent
