@@ -3,6 +3,7 @@ import sklearn
 
 from automl.components.feature_preprocessing.fast_ica import FastICAComponent
 from tests import base_test
+from util.common import resolve_factor
 
 
 class TestFastICAComponent(base_test.BaseComponentTest):
@@ -30,6 +31,9 @@ class TestFastICAComponent(base_test.BaseComponentTest):
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
+
+        config['n_components'] = resolve_factor(config['n_components_factor'], min(*X_train.shape))
+        del config['n_components_factor']
 
         expected = sklearn.decomposition.FastICA(**config, random_state=42)
         expected.fit(X_train, y_train)

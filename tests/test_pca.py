@@ -3,6 +3,7 @@ from sklearn.decomposition import PCA
 
 from automl.components.feature_preprocessing.pca import PCAComponent
 from tests import base_test
+from util.common import resolve_factor
 
 
 class TestPCA(base_test.BaseComponentTest):
@@ -31,7 +32,8 @@ class TestPCA(base_test.BaseComponentTest):
         actual.fit(np.copy(X_train), np.copy(y_train))
         X_actual = actual.transform(np.copy(X_test))
 
-        config['n_components'] = max(1, int(np.round(config['n_components'] * X_train.shape[1], 0)))
+        config['n_components'] = resolve_factor(config['keep_variance'], X_train.shape[1])
+        del config['keep_variance']
 
         expected = PCA(**config, copy=False, random_state=42)
         expected.fit(np.copy(X_train), np.copy(y_train))

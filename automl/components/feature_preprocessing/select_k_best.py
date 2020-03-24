@@ -1,17 +1,17 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, \
-    UniformIntegerHyperparameter
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
+from util.common import resolve_factor
 
 
 class SelectKBestComponent(PreprocessingAlgorithm):
     def __init__(self,
                  score_func: str = "f_classif",
-                 k: int = 10):
+                 k_factor: float = 0.5):
         super().__init__()
         self.score_func = score_func
-        self.k = k
+        self.k_factor = k_factor
 
     def fit(self, X, y=None):
         from sklearn.feature_selection import chi2, f_classif, mutual_info_classif
@@ -25,8 +25,8 @@ class SelectKBestComponent(PreprocessingAlgorithm):
             raise ValueError("score_func must be in ('chi2, 'f_classif', 'mutual_info'), but is: %s" % self.score_func)
 
         from sklearn.feature_selection import SelectKBest
-        self.preprocessor = SelectKBest(score_func=score_func,
-                                        k=self.k)
+        k = resolve_factor(self.k_factor, X.shape[1])
+        self.preprocessor = SelectKBest(score_func=score_func, k=k)
         self.preprocessor.fit(X, y)
         return self
 
@@ -55,11 +55,11 @@ class SelectKBestComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        k = UniformIntegerHyperparameter("k", 2, 20, default_value=10)
+        k_factor = UniformFloatHyperparameter("k_factor", 0., 1., default_value=0.5)
         score_func = CategoricalHyperparameter(name="score_func", choices=["chi2", "f_classif", "mutual_info"],
                                                default_value="f_classif")
 
-        cs.add_hyperparameters([score_func, k])
+        cs.add_hyperparameters([score_func, k_factor])
         return cs
 
     @staticmethod

@@ -3,6 +3,7 @@ import sklearn
 
 from automl.components.feature_preprocessing.select_k_best import SelectKBestComponent
 from tests import base_test
+from util.common import resolve_factor
 
 
 class TestSelectKBestComponent(base_test.BaseComponentTest):
@@ -10,7 +11,7 @@ class TestSelectKBestComponent(base_test.BaseComponentTest):
     def test_default(self):
         X_train, X_test, y_train, y_test = self.load_data()
 
-        actual = SelectKBestComponent()
+        actual = SelectKBestComponent(k_factor=0.5)
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
@@ -37,6 +38,9 @@ class TestSelectKBestComponent(base_test.BaseComponentTest):
             config['score_func'] = sklearn.feature_selection.f_classif
         elif config['score_func'] == "mutual_info":
             config['score_func'] = sklearn.feature_selection.mutual_info_classif
+
+        config['k'] = resolve_factor(config['k_factor'], X_train.shape[1])
+        del config['k_factor']
 
         expected = sklearn.feature_selection.SelectKBest(**config)
         expected.fit(X_train, y_train)

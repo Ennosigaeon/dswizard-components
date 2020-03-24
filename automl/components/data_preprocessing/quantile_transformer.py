@@ -1,9 +1,9 @@
-from automl.components.base import PreprocessingAlgorithm
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter, \
-    UniformIntegerHyperparameter
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntegerHyperparameter, \
+    UniformFloatHyperparameter
 
-from util.common import check_none, resolve_factor
+from automl.components.base import PreprocessingAlgorithm
+from util.common import resolve_factor
 
 
 class QuantileTransformerComponent(PreprocessingAlgorithm):
@@ -33,7 +33,7 @@ class QuantileTransformerComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
 
-        n_quantiles = UniformIntegerHyperparameter("n_quantiles_factor", 0., 1., default_value=0.5)
+        n_quantiles = UniformFloatHyperparameter("n_quantiles_factor", 0., 1., default_value=0.5)
         output_distribution = CategoricalHyperparameter("output_distribution", ["uniform", "normal"],
                                                         default_value="uniform")
         ignore_implicit_zeros = CategoricalHyperparameter("ignore_implicit_zeros", [True, False], default_value=False)

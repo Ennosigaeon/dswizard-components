@@ -3,6 +3,7 @@ import sklearn
 
 from automl.components.feature_preprocessing.truncated_svd import TruncatedSVDComponent
 from tests import base_test
+from util.common import resolve_factor
 
 
 class TestTruncatedSVDComponent(base_test.BaseComponentTest):
@@ -32,7 +33,8 @@ class TestTruncatedSVDComponent(base_test.BaseComponentTest):
         X_actual = actual.transform(np.copy(X_test))
 
         # Fix n_components from percentage to absolute
-        config['n_components'] = max(1, int(np.round(config['n_components'] * X_train.shape[1], 0)))
+        config['n_components'] = resolve_factor(config['n_components_factor'], X_train.shape[1])
+        del config['n_components_factor']
 
         expected = sklearn.decomposition.TruncatedSVD(**config, random_state=42)
         expected.fit(X_train, y_train)
