@@ -1,6 +1,6 @@
-from automl.components.base import PreprocessingAlgorithm
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter
+
+from automl.components.base import PreprocessingAlgorithm
 
 
 class MaxAbsScalerComponent(PreprocessingAlgorithm):
