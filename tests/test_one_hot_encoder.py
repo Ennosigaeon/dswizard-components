@@ -23,6 +23,18 @@ class TestOneHotEncoderComponent(base_test.BaseComponentTest):
         assert np.allclose(X_actual, X_expected)
 
     @pytest.mark.skip
+    def test_categorical(self):
+        X_train, X_test, y_train, y_test = self.load_data(categorical=True)
+
+        actual = OneHotEncoderComponent()
+        actual.fit(X_train, y_train)
+        X_actual = actual.transform(X_test.copy())
+
+        X_expected = pd.get_dummies(X_test, sparse=False)
+
+        assert np.allclose(X_actual, X_expected)
+
+    @pytest.mark.skip
     def test_configured(self):
         X_train, X_test, y_train, y_test = self.load_data()
 

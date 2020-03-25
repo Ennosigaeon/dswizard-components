@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntegerHyperparameter, Constant
 
@@ -25,6 +26,8 @@ class KNNImputerComponent(PreprocessingAlgorithm):
                                        copy=False)
         self.preprocessor = self.preprocessor.fit(X)
         return self
+
+
 
     @staticmethod
     def get_properties(dataset_properties=None):

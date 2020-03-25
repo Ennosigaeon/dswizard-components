@@ -18,7 +18,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
                  max_depth_factor: int = None,
                  max_leaf_nodes_factor: int = 31,
                  max_bins: int = 255,
-                 l2_regularization: float = 0.,
+                 l2_regularization: float = 0,
                  tol: float = 1e-7,
                  scoring: str = None,
                  n_iter_no_change: int = None,

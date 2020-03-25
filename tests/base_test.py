@@ -13,14 +13,16 @@ class BaseComponentTest(TestCase):
     def test_configured(self):
         pass
 
-    def load_data(self, multiclass=True, random_state=42):
+    def load_data(self, multiclass=True, categorical=False, random_state=42):
         def _to_pd(array):
             return pd.DataFrame(data=array, index=range(array.shape[0]), columns=range(array.shape[1]))
 
         def _to_series(array):
             return pd.Series(array, index=range(array.shape[0]))
 
-        if multiclass:
+        if categorical:
+            X, y = datasets.fetch_openml(data_id=23381, return_X_y=True)
+        elif multiclass:
             X, y = datasets.load_iris(True)
         else:
             X, y = datasets.load_breast_cancer(True)

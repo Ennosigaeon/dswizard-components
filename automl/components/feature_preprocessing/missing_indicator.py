@@ -8,7 +8,6 @@ from automl.components.base import PreprocessingAlgorithm
 class MissingIndicatorComponent(PreprocessingAlgorithm):
     def __init__(self, missing_values=np.nan, features: str = "missing-only"):
         super().__init__()
-        # TODO what about missing values in categorical data?
 
         self.features = features
         self.missing_values = missing_values

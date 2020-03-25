@@ -15,7 +15,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
                  min_samples_split_factor: int = 2,
                  min_samples_leaf_factor: int = 1,
                  min_weight_fraction_leaf: float = 0.,
-                 max_leaf_nodes_factor: int = None,
+                 max_leaf_nodes: int = None,
                  min_impurity_decrease: float = 0.,
                  random_state=None,
                  n_jobs: int = None,
@@ -117,8 +117,6 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
-
-        # TODO check max_depth and max_leaf_nodes
 
         n_estimators = UniformIntegerHyperparameter(name="n_estimators", lower=10, upper=400, default_value=10)
         max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 1., default_value=1.)

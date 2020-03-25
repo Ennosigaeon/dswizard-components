@@ -17,5 +17,14 @@ class TestLabelEncoderComponent(base_test.BaseComponentTest):
 
         assert np.allclose(X_actual, X_test)
 
+    def test_categorical(self):
+        X_train, X_test, y_train, y_test = self.load_data(categorical=True)
+
+        actual = MultiColumnLabelEncoderComponent()
+        actual.fit(X_train, y_train)
+        X_actual = actual.transform(X_test.copy())
+
+        assert np.allclose(X_actual, X_test)
+
     def test_configured(self):
         pass

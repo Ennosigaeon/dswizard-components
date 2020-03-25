@@ -13,7 +13,6 @@ class ImputationComponent(PreprocessingAlgorithm):
         self.strategy = strategy
         self.add_indicator = add_indicator
         self.missing_values = missing_values
-        # TODO what about missing values in categorical data?
 
     def fit(self, X, y=None):
         from sklearn.impute import SimpleImputer
