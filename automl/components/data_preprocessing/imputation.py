@@ -1,6 +1,8 @@
 import numpy as np
+import pandas as pd
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter
+from sklearn.impute import MissingIndicator
 
 from automl.components.base import PreprocessingAlgorithm
 
@@ -15,15 +17,53 @@ class ImputationComponent(PreprocessingAlgorithm):
 
     def fit(self, X, y=None):
         from sklearn.impute import SimpleImputer
+        from sklearn.compose import ColumnTransformer
 
-        # TODO passt das so oder muss das noch genauer angepasst werden? Funktionieren tut es so
-        if X.select_dtypes(include=['category', 'object']).any:
-            self.strategy = 'most_frequent'
+        if not np.any(pd.isna(X)):
+            return X.to_numpy()
+        else:
+            categorical = []
+            numeric = []
 
-        self.preprocessor = SimpleImputer(missing_values=self.missing_values, strategy=self.strategy,
-                                          add_indicator=self.add_indicator, copy=False)
-        self.preprocessor = self.preprocessor.fit(X)
+            for i in range(X.shape[1]):
+                try:
+                    X.iloc[:, i].values.astype(float)
+                    numeric.append(i)
+                except ValueError:
+                    categorical.append(i)
+
+        self.preprocessor = ColumnTransformer(
+            transformers=[
+                ('cat', SimpleImputer(missing_values=self.missing_values, strategy='most_frequent',
+                                      add_indicator=False, copy=False), categorical),
+                ('num', SimpleImputer(missing_values=self.missing_values, strategy=self.strategy,
+                                      add_indicator=False, copy=False), numeric)
+            ]
+        )
+        self.preprocessor.fit(X)
+
         return self
+
+    def transform(self, X):
+
+        if self.add_indicator:
+            missingIndicator = MissingIndicator()
+            X_missing = missingIndicator.fit_transform(X)
+            X_missing = pd.DataFrame(X_missing)
+            newdf = pd.DataFrame()
+            for index, row in X_missing.iterrows():
+                if row.any():
+                    newdf = newdf.append({'missing': True}, ignore_index=True)
+                else:
+                    newdf = newdf.append({'missing': False}, ignore_index=True)
+
+        if self.preprocessor is None:
+            raise NotImplementedError()
+        X_new = self.preprocessor.transform(X)
+
+        if self.add_indicator:
+            X = pd.concat([pd.DataFrame(X_new), newdf], axis=1, sort=False)
+        return X.to_numpy()
 
     @staticmethod
     def get_properties(dataset_properties=None):

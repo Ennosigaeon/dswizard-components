@@ -31,6 +31,7 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
                 categorical[X.columns[i]] = False
             except ValueError:
                 categorical[X.columns[i]] = True
+
         if not np.any(categorical.values()):
             return X.to_numpy()
         else:
