@@ -7,16 +7,18 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
 
 from automl.components.base import PreprocessingAlgorithm
 
+from automl.util.common import resolve_factor
+
 
 class FeatureAgglomerationComponent(PreprocessingAlgorithm):
-    def __init__(self, n_clusters: int = 2,
+    def __init__(self, n_clusters_factor: int = 2,
                  affinity: str = "euclidean",
                  compute_full_tree: str = "auto",
                  linkage: str = "ward",
                  pooling_func: str = "mean",
                  distance_threshold: float = None):
         super().__init__()
-        self.n_clusters = n_clusters
+        self.n_clusters_factor = n_clusters_factor
         self.affinity = affinity
         self.compute_full_tree = compute_full_tree
         self.linkage = linkage
@@ -35,14 +37,16 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
         else:
             raise ValueError('Unknown pooling function \'{}\''.format(self.pooling_func))
 
-        if self.n_clusters == 1:
-            self.n_clusters = None
-
         if self.distance_threshold is not None:
             self.n_clusters = None
             self.compute_full_tree = True
 
-        self.preprocessor = FeatureAgglomeration(n_clusters=self.n_clusters,
+        if self.n_clusters_factor == 2:
+            n_clusters =2
+        else:
+            n_clusters = resolve_factor(self.n_clusters_factor, X.shape[1])
+
+        self.preprocessor = FeatureAgglomeration(n_clusters=n_clusters,
                                                  affinity=self.affinity,
                                                  compute_full_tree=self.compute_full_tree,
                                                  linkage=self.linkage,
@@ -66,7 +70,7 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
-        n_clusters = UniformIntegerHyperparameter("n_clusters", 1, 600, default_value=2)
+        n_clusters_factor = UniformFloatHyperparameter("n_clusters_factor", 0., 1., default_value=1.)
         affinity = CategoricalHyperparameter("affinity",
                                              ["euclidean", "l1", "l2", "manhattan", "cosine", "precomputed"],
                                              default_value="euclidean")
@@ -76,9 +80,9 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
         distance_threshold = UniformFloatHyperparameter("distance_threshold", 0., 0.75, default_value=None)
 
         cs = ConfigurationSpace()
-        cs.add_hyperparameters([n_clusters, affinity, compute_full_tree, linkage, distance_threshold, pooling_func])
+        cs.add_hyperparameters([n_clusters_factor, affinity, compute_full_tree, linkage, distance_threshold, pooling_func])
 
-        distance_thresholdAndNClustersCondition = EqualsCondition(distance_threshold, n_clusters, 1)
+        distance_thresholdAndNClustersCondition = EqualsCondition(distance_threshold, n_clusters_factor, 1.)
         cs.add_condition(distance_thresholdAndNClustersCondition)
 
         affinity_and_linkage = ForbiddenAndConjunction(
@@ -88,7 +92,7 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
 
         full_and_n_clusters = ForbiddenAndConjunction(
             ForbiddenEqualsClause(compute_full_tree, False),
-            ForbiddenEqualsClause(n_clusters, 1))
+            ForbiddenEqualsClause(n_clusters_factor, 1.))
         cs.add_forbidden_clause(full_and_n_clusters)
 
         return cs

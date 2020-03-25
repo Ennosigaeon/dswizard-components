@@ -2,6 +2,7 @@ import numpy as np
 import sklearn
 
 from automl.components.feature_preprocessing.feature_agglomeration import FeatureAgglomerationComponent
+from automl.util.common import resolve_factor
 from tests import base_test
 
 
@@ -27,9 +28,6 @@ class TestFeatureAgglomerationComponent(base_test.BaseComponentTest):
         actual = FeatureAgglomerationComponent()
         config: dict = self.get_config(actual)
 
-        # Manually decrease number of clusters due to toy dataset
-        config['n_clusters'] = min(config['n_clusters'], 4)
-
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
@@ -40,6 +38,9 @@ class TestFeatureAgglomerationComponent(base_test.BaseComponentTest):
             config['pooling_func'] = np.median
         elif config['pooling_func'] is "max":
             config['pooling_func'] = np.max
+
+        config['n_clusters'] = resolve_factor(config['n_clusters_factor'], X_train.shape[1])
+        del config['n_clusters_factor']
 
         expected = sklearn.cluster.FeatureAgglomeration(**config)
         expected.fit(X_train, y_train)

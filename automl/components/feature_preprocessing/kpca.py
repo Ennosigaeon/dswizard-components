@@ -8,9 +8,11 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatH
 
 from automl.components.base import PreprocessingAlgorithm
 
+from automl.util.common import resolve_factor
+
 
 class KernelPCAComponent(PreprocessingAlgorithm):
-    def __init__(self, n_components: int = None,
+    def __init__(self, n_components_factor: int = None,
                  kernel: str = 'linear',
                  degree: int = 3,
                  gamma: float = None,
@@ -23,7 +25,7 @@ class KernelPCAComponent(PreprocessingAlgorithm):
                  remove_zero_eig: bool = False,
                  random_state=None):
         super().__init__()
-        self.n_components = n_components
+        self.n_components_factor = n_components_factor
         self.kernel = kernel
         self.degree = degree
         self.gamma = gamma
@@ -40,8 +42,10 @@ class KernelPCAComponent(PreprocessingAlgorithm):
         import scipy.sparse
         from sklearn.decomposition import KernelPCA
 
+        n_components = resolve_factor(self.n_components_factor, X.shape[1])
+
         self.preprocessor = KernelPCA(
-            n_components=self.n_components,
+            n_components=n_components,
             kernel=self.kernel,
             degree=self.degree,
             gamma=self.gamma,
@@ -95,7 +99,7 @@ class KernelPCAComponent(PreprocessingAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
-        n_components = UniformIntegerHyperparameter("n_components", 10, 3000, default_value=100)
+        n_components_factor = UniformFloatHyperparameter("n_components_factor", 0., 1., default_value=1.)
         kernel = CategoricalHyperparameter('kernel', ['poly', 'rbf', 'sigmoid', 'cosine'], 'rbf')
         gamma = UniformFloatHyperparameter("gamma", 1e-09, 15., log=True, default_value=1.0)
         degree = UniformIntegerHyperparameter('degree', 2, 6, 3)
@@ -109,7 +113,7 @@ class KernelPCAComponent(PreprocessingAlgorithm):
 
         cs = ConfigurationSpace()
         cs.add_hyperparameters(
-            [n_components, kernel, degree, gamma, coef0, alpha, fit_inverse_transform, eigen_solver, tol, max_iter,
+            [n_components_factor, kernel, degree, gamma, coef0, alpha, fit_inverse_transform, eigen_solver, tol, max_iter,
              remove_zero_eig])
 
         degree_depends_on_poly = EqualsCondition(degree, kernel, "poly")

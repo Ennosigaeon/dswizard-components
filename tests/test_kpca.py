@@ -3,6 +3,7 @@ import pytest
 import sklearn
 
 from automl.components.feature_preprocessing.kpca import KernelPCAComponent
+from automl.util.common import resolve_factor
 from tests import base_test
 
 
@@ -32,6 +33,9 @@ class TestKernelPCAComponent(base_test.BaseComponentTest):
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
+
+        config['n_components'] = resolve_factor(config['n_components_factor'], X_train.shape[1])
+        del config['n_components_factor']
 
         expected = sklearn.decomposition.KernelPCA(**config, copy_X=False, random_state=42)
         expected.fit(X_train, y_train)
