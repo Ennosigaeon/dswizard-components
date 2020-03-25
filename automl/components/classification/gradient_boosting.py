@@ -18,7 +18,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
                  max_depth_factor: int = None,
                  max_leaf_nodes_factor: int = 31,
                  max_bins: int = 255,
-                 l2_regularization: float = 0,
+                 l2_regularization: float = 0.,
                  tol: float = 1e-7,
                  scoring: str = None,
                  n_iter_no_change: int = None,
@@ -54,11 +54,17 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         else:
             max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, X.shape[0])
 
+        # Heuristic to set the tree width
+        if isinstance(self.min_samples_leaf, int):
+            min_samples_leaf = self.min_samples_leaf
+        else:
+            min_samples_leaf = resolve_factor(self.min_samples_leaf, X.shape[0])
+
         self.estimator = HistGradientBoostingClassifier(
             loss=self.loss,
             learning_rate=self.learning_rate,
             max_iter=self.max_iter,
-            min_samples_leaf=self.min_samples_leaf,
+            min_samples_leaf=min_samples_leaf,
             max_depth=max_depth,
             max_leaf_nodes=max_leaf_nodes,
             max_bins=self.max_bins,
@@ -96,7 +102,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 1., default_value=1.)
         max_iter = UniformIntegerHyperparameter("max_iter", 0, 1000, default_value=100)
         max_leaf_nodes_factor = UniformFloatHyperparameter("max_leaf_nodes_factor", 1e-5, 1., default_value=1.)
-        min_samples_leaf = UniformIntegerHyperparameter(name="min_samples_leaf", lower=1, upper=60, default_value=20)
+        min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf", 0.0001, 0.5, default_value=0.0001)
         l2_regularization = UniformFloatHyperparameter(name="l2_regularization", lower=1e-7, upper=1.,
                                                        default_value=1e-7, log=True)
         max_bins = UniformIntegerHyperparameter("max_bins", 5, 255, default_value=255)
