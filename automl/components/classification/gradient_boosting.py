@@ -49,7 +49,10 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         max_depth = resolve_factor(self.max_depth_factor, X.shape[1])
 
         # Heuristic to set the tree width
-        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, X.shape[0])
+        if isinstance(self.max_leaf_nodes_factor, int):
+            max_leaf_nodes = self.max_leaf_nodes_factor
+        else:
+            max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, X.shape[0])
 
         self.estimator = HistGradientBoostingClassifier(
             loss=self.loss,
