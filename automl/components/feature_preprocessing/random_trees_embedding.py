@@ -81,8 +81,6 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         self._fit(X)
         return self
 
-    def fit_transform(self, X, y=None):
-        return self._fit(X)
 
     def transform(self, X):
         if self.preprocessor is None:
@@ -93,9 +91,6 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         self._fit(X)
         return self
 
-
-    def fit_transform(self, X, y=None):
-        return self._fit(X)
 
     def transform(self, X):
         if self.preprocessor is None:
