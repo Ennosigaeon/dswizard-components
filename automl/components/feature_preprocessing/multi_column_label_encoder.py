@@ -35,7 +35,6 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
         if not np.any(categorical.values()):
             return X.to_numpy()
         else:
-
             for colname, col in X.iteritems():
                 if categorical[colname]:
                     missing_vec = pd.isna(X[colname])

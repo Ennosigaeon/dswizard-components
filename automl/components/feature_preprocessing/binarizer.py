@@ -6,25 +6,22 @@ import numpy as np
 
 class BinarizerComponent(PreprocessingAlgorithm):
 
-    def __init__(self, threshold_factor: float = 0.):
+    def __init__(self, threshold_factor: float = 0.0):
         super().__init__()
         self.threshold_factor = threshold_factor
 
     def fit(self, X, y=None):
         from sklearn.preprocessing import Binarizer
 
-        variance = np.var(X)
-        print(variance)
-        threshold = max(1, int(np.round(variance[0] * self.threshold_factor, 0)))
-
-        self.preprocessor = Binarizer(threshold=threshold)
+        variance = np.mean(np.var(X))
+        threshold = max(0., int(np.round(variance * self.threshold_factor, 0)))
+        self.preprocessor = Binarizer(threshold=threshold, copy=False)
         self.preprocessor = self.preprocessor.fit(X)
         return self
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
-        # TODO Use fraction of data per column
         threshold_factor = UniformFloatHyperparameter("threshold_factor", 0., 1., default_value=0.)
         cs.add_hyperparameter(threshold_factor)
         return cs
