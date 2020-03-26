@@ -2,5 +2,5 @@ ConfigSpace==0.4.*
 numpy==1.16.*
 pandas==0.24.*
 pytest
-scikit-learn==0.21.*
+scikit-learn==0.22.*
 scipy==1.2.*
