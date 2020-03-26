@@ -16,6 +16,11 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
         categorical = {}
         cat = []
 
+        if np.any(pd.isna(X)):
+            dummy_na = True
+        else:
+            dummy_na = False
+
         for i in range(X.shape[1]):
             try:
                 X.iloc[:, i].values.astype(float)
@@ -27,7 +32,7 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
         if not np.any(categorical.values()):
             return X.to_numpy()
 
-        X = pd.get_dummies(X, prefix=[cat[i] for i in range(len(cat))], sparse=False, dummy_na=True)
+        X = pd.get_dummies(X, prefix=[cat[i] for i in range(len(cat))], sparse=False, dummy_na=dummy_na)
 
         return X.to_numpy()
 
