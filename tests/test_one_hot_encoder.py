@@ -24,15 +24,16 @@ class TestOneHotEncoderComponent(base_test.BaseComponentTest):
 
     @pytest.mark.skip
     def test_categorical(self):
-        X_train, X_test, y_train, y_test = self.load_data(categorical=True)
 
         actual = OneHotEncoderComponent()
-        actual.fit(X_train, y_train)
-        X_actual = actual.transform(X_test.copy())
+        X_before = pd.DataFrame([['Mann', 1], ['Frau', 2], ['Frau', 1]])
+        y_before = pd.Series([1, 1, 0])
+        actual.fit(X_before, y_before)
+        X_after = actual.transform(X_before).astype(float)
 
-        X_expected = pd.get_dummies(X_test, sparse=False)
+        X_test = np.array([[1.0, 0.0, 1.0], [2.0, 1.0, 0.0], [1.0, 1.0, 0.0]])
 
-        assert np.allclose(X_actual, X_expected)
+        assert np.allclose(X_after, X_test)
 
     @pytest.mark.skip
     def test_configured(self):

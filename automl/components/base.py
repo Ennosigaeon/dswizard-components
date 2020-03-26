@@ -266,6 +266,20 @@ class PreprocessingAlgorithm(EstimatorComponent, ABC):
         return cs
 
 
+class NoopComponent(EstimatorComponent):
+
+    def transform(self, X: pd.DataFrame) -> np.ndarray:
+        return X.to_numpy()
+
+    @staticmethod
+    def get_properties(dataset_properties=None) -> dict:
+        return {}
+
+    @staticmethod
+    def get_hyperparameter_search_space(dataset_properties=None) -> ConfigurationSpace:
+        return ConfigurationSpace()
+
+
 # noinspection PyPep8Naming
 class ComponentChoice(EstimatorComponent):
 

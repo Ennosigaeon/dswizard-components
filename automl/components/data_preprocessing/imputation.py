@@ -4,7 +4,8 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter
 from sklearn.impute import MissingIndicator
 
-from automl.components.base import PreprocessingAlgorithm
+from automl.components.base import PreprocessingAlgorithm, NoopComponent
+
 
 
 class ImputationComponent(PreprocessingAlgorithm):
@@ -19,7 +20,8 @@ class ImputationComponent(PreprocessingAlgorithm):
         from sklearn.compose import ColumnTransformer
 
         if not np.any(pd.isna(X)):
-            return X.to_numpy()
+            self.preprocessor = NoopComponent()
+            return self
         else:
             categorical = []
             numeric = []

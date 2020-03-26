@@ -42,7 +42,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         self.bootstrap = check_for_bool(self.bootstrap)
 
         # Heuristic to set the tree depth
-        if isinstance(self.min_samples_split_factor, int):
+        if isinstance(self.max_depth_factor, int):
             max_depth = self.max_depth_factor
         else:
             max_depth = resolve_factor(self.max_depth_factor, X.shape[1])

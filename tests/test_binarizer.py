@@ -32,7 +32,7 @@ class TestBinarizer(base_test.BaseComponentTest):
         X_actual = actual.transform(np.copy(X_test))
 
         variance = np.mean(np.var(X_train))
-        config['threshold'] = max(1, int(np.round(variance * config['threshold_factor'], 0)))
+        config['threshold'] = max(0., int(np.round(variance * config['threshold_factor'], 0)))
         del config['threshold_factor']
 
         expected = Binarizer(**config, copy=False)
