@@ -13,13 +13,12 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
 
     def transform(self, X: pd.DataFrame):
 
+        dummy_na = False
         categorical = {}
         cat = []
 
         if np.any(pd.isna(X)):
             dummy_na = True
-        else:
-            dummy_na = False
 
         for i in range(X.shape[1]):
             try:
