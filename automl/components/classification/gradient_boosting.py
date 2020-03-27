@@ -111,14 +111,21 @@ class GradientBoostingClassifier(PredictionAlgorithm):
                                                        default_value=1e-7, log=True)
         max_bins = UniformIntegerHyperparameter("max_bins", 5, 255, default_value=255)
         tol = UniformFloatHyperparameter("tol", 0., 0.25, default_value=1e-7)
-        scoring = CategoricalHyperparameter("scoring", ["accuracy", "balanced_accuracy", "average_precision", "f1",
-                                                        "f1_weighted", "precision", "recall", "roc_auc", "roc_auc_ovr",
-                                                        "roc_auc_ovo", "loss"], default_value="loss")
+        scoring = CategoricalHyperparameter("scoring",
+                                            ["accuracy", "balanced_accurary", "average_precision", "neg_brier_score",
+                                             "f1", "f1_micro", "f1_macro", "f1_weighted", "f1_samples", "neg_log_loss",
+                                             "precision", "precision_micro", "precision_macro", "precision_weighted",
+                                             "precision_samples", "recall", "recall_micro", "recall_macro",
+                                             "recall_weighted", "recall_samples", "jaccard", "jaccard_micro",
+                                             "jaccard_macro", "jaccard_weighted", "jaccard_samples", "roc_auc",
+                                             "roc_auc_ovr", "roc_auc_ovo", "roc_auc_ovr_weighted",
+                                             "roc_auc_ovo_weighted"], default_value="f1_weighted")
         n_iter_no_change = UniformIntegerHyperparameter(name="n_iter_no_change", lower=0, upper=100, default_value=0)
         validation_fraction = UniformFloatHyperparameter(name="validation_fraction", lower=0.001, upper=0.5,
                                                          default_value=0.1)
 
         cs.add_hyperparameters([loss, learning_rate, max_iter, min_samples_leaf, max_leaf_nodes_factor, max_bins,
-                                l2_regularization, tol, scoring, n_iter_no_change, validation_fraction, max_depth_factor])
+                                l2_regularization, tol, scoring, n_iter_no_change, validation_fraction,
+                                max_depth_factor])
 
         return cs

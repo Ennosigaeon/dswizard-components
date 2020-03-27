@@ -24,7 +24,7 @@ class TruncatedSVDComponent(PreprocessingAlgorithm):
     def fit(self, X, Y):
         from sklearn.decomposition import TruncatedSVD
 
-        n_components = min(resolve_factor(self.n_components_factor, X.shape[1]), (X.shape[1] - 1))
+        n_components = min(resolve_factor(self.n_components_factor, min(*X.shape)), min(*X.shape) - 1)
         self.preprocessor = TruncatedSVD(n_components=n_components,
                                          algorithm=self.algorithm,
                                          n_iter=self.n_iter,
