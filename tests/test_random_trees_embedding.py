@@ -32,16 +32,16 @@ class TestRandomTreesEmbeddingComponent(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        config['max_depth'] = resolve_factor(config['max_depth_factor'], X_train.shape[1])
+        config['max_depth'] = max(resolve_factor(config['max_depth_factor'], X_train.shape[1]), 2)
         del config['max_depth_factor']
 
-        config['max_leaf_nodes'] = resolve_factor(config['max_leaf_nodes_factor'], X_train.shape[0])
+        config['max_leaf_nodes'] = max(resolve_factor(config['max_leaf_nodes_factor'], X_train.shape[0]), 2)
         del config['max_leaf_nodes_factor']
 
         config['min_samples_leaf'] = resolve_factor(config['min_samples_leaf_factor'], X_train.shape[0])
         del config['min_samples_leaf_factor']
 
-        config['min_samples_split'] = resolve_factor(config['min_samples_split_factor'], X_train.shape[0])
+        config['min_samples_split'] = max(resolve_factor(config['min_samples_split_factor'], X_train.shape[0]), 2)
         del config['min_samples_split_factor']
 
         expected = sklearn.ensemble.RandomTreesEmbedding(**config, sparse_output=False, random_state=42)

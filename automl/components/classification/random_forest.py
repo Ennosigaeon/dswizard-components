@@ -47,9 +47,13 @@ class RandomForest(PredictionAlgorithm):
 
         # Heuristic to set the tree width
         max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, X.shape[0])
+        if max_leaf_nodes is not None:
+            max_leaf_nodes = max(max_leaf_nodes, 2)
 
         # Heuristic to set the tree depth
         max_depth = resolve_factor(self.max_depth_factor, X.shape[1])
+        if max_depth is not None:
+            max_depth = max(max_depth, 2)
 
         if self.max_features not in ("sqrt", "log2", "auto"):
             max_features = int(X.shape[1] ** float(self.max_features))

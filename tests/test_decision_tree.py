@@ -32,10 +32,10 @@ class TestDecisionTree(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
 
-        config['max_depth'] = resolve_factor(config['max_depth_factor'], X_train.shape[1])
+        config['max_depth'] = max(resolve_factor(config['max_depth_factor'], X_train.shape[1]), 2)
         del config['max_depth_factor']
 
-        config['max_leaf_nodes'] = resolve_factor(config['max_leaf_nodes_factor'], X_train.shape[0])
+        config['max_leaf_nodes'] = max(resolve_factor(config['max_leaf_nodes_factor'], X_train.shape[0]), 2)
         del config['max_leaf_nodes_factor']
 
         expected = sklearn.tree.DecisionTreeClassifier(**config, random_state=42)

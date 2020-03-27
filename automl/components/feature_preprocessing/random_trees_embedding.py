@@ -46,9 +46,13 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
             max_depth = self.max_depth_factor
         else:
             max_depth = resolve_factor(self.max_depth_factor, X.shape[1])
+        if max_depth is not None:
+            max_depth = max(max_depth, 2)
 
         # Heuristic to set the tree width
         max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, X.shape[0])
+        if max_leaf_nodes is not None:
+            max_leaf_nodes = max(max_leaf_nodes, 2)
 
         # Heuristic to set the tree width
         if isinstance(self.min_samples_leaf_factor, int):
@@ -60,7 +64,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         if isinstance(self.min_samples_split_factor, int):
             min_samples_split = self.min_samples_split_factor
         else:
-            min_samples_split = resolve_factor(self.min_samples_split_factor, X.shape[0])
+            min_samples_split = max(resolve_factor(self.min_samples_split_factor, X.shape[0]), 2)
 
         self.preprocessor = RandomTreesEmbedding(
             n_estimators=self.n_estimators,
