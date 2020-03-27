@@ -3,9 +3,7 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
     UniformFloatHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from automl.util.common import check_none, check_for_bool
-
-from automl.util.common import resolve_factor
+from automl.util.common import check_for_bool, resolve_factor
 
 
 class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
@@ -58,7 +56,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         if isinstance(self.min_samples_leaf_factor, int):
             min_samples_leaf = self.min_samples_leaf_factor
         else:
-            min_samples_leaf= resolve_factor(self.min_samples_leaf_factor, X.shape[0])
+            min_samples_leaf = resolve_factor(self.min_samples_leaf_factor, X.shape[0])
 
         # Heuristic to set the tree width
         if isinstance(self.min_samples_split_factor, int):
@@ -85,17 +83,6 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         self._fit(X)
         return self
 
-
-    def transform(self, X):
-        if self.preprocessor is None:
-            raise NotImplementedError()
-        return self.preprocessor.transform(X)
-
-    def fit(self, X, y):
-        self._fit(X)
-        return self
-
-
     def transform(self, X):
         if self.preprocessor is None:
             raise NotImplementedError()
@@ -120,8 +107,10 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
 
         n_estimators = UniformIntegerHyperparameter(name="n_estimators", lower=10, upper=400, default_value=10)
         max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 1., default_value=1.)
-        min_samples_split_factor = UniformFloatHyperparameter("min_samples_split_factor", 0.0001, 0.5, default_value=0.0001)
-        min_samples_leaf_factor = UniformFloatHyperparameter("min_samples_leaf_factor", 0.0001, 0.5, default_value=0.0001)
+        min_samples_split_factor = UniformFloatHyperparameter("min_samples_split_factor", 0.0001, 0.5,
+                                                              default_value=0.0001)
+        min_samples_leaf_factor = UniformFloatHyperparameter("min_samples_leaf_factor", 0.0001, 0.5,
+                                                             default_value=0.0001)
         min_weight_fraction_leaf = UniformFloatHyperparameter("min_weight_fraction_leaf", 0., 0.5, default_value=0.)
         max_leaf_nodes_factor = UniformFloatHyperparameter("max_leaf_nodes_factor", 1e-5, 1., default_value=1.)
         min_impurity_decrease = UniformFloatHyperparameter('min_impurity_decrease', 0., 0.75, default_value=0.)

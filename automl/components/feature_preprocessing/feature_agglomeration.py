@@ -41,8 +41,8 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
             self.n_clusters = None
             self.compute_full_tree = True
 
-        if self.n_clusters_factor == 2:
-            n_clusters =2
+        if isinstance(self.n_clusters_factor, int):
+            n_clusters = self.n_clusters_factor
         else:
             n_clusters = max(min(resolve_factor(self.n_clusters_factor, X.shape[1]), (X.shape[1] - 1)), 2)
 
