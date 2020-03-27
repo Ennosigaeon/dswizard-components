@@ -38,8 +38,6 @@ class DataPreprocessorChoice(ComponentChoice):
                     raise ValueError("Trying to include unknown component: "
                                      "%s" % incl)
 
-        # TODO check for task type classification and/or regression!
-
         components_dict = OrderedDict()
         for name in available_comp:
             if include is not None and name not in include:

@@ -8,8 +8,6 @@ from tests import base_test
 
 class TestLabelEncoderComponent(base_test.BaseComponentTest):
 
-    # TODO add test case with categorical and numerical features
-
     def test_default(self):
         X_train, X_test, y_train, y_test = self.load_data()
 
