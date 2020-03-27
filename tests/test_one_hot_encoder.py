@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import pytest
 
 from automl.components.feature_preprocessing.one_hot_encoding import OneHotEncoderComponent
 from tests import base_test
@@ -8,9 +7,6 @@ from tests import base_test
 
 class TestOneHotEncoderComponent(base_test.BaseComponentTest):
 
-    # TODO test for categorical data is missing
-
-    @pytest.mark.skip
     def test_default(self):
         X_train, X_test, y_train, y_test = self.load_data()
 
@@ -22,9 +18,7 @@ class TestOneHotEncoderComponent(base_test.BaseComponentTest):
 
         assert np.allclose(X_actual, X_expected)
 
-    @pytest.mark.skip
     def test_categorical(self):
-
         actual = OneHotEncoderComponent()
         X_before = pd.DataFrame([['Mann', 1], ['Frau', 2], ['Frau', 1]])
         y_before = pd.Series([1, 1, 0])
@@ -35,7 +29,6 @@ class TestOneHotEncoderComponent(base_test.BaseComponentTest):
 
         assert np.allclose(X_after, X_test)
 
-    @pytest.mark.skip
     def test_configured(self):
         X_train, X_test, y_train, y_test = self.load_data()
 
