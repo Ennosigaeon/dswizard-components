@@ -112,7 +112,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         max_bins = UniformIntegerHyperparameter("max_bins", 5, 255, default_value=255)
         tol = UniformFloatHyperparameter("tol", 0., 0.25, default_value=1e-7)
         scoring = CategoricalHyperparameter("scoring",
-                                            ["accuracy", "balanced_accurary", "average_precision", "neg_brier_score",
+                                            ["accuracy", "balanced_accuracy", "average_precision", "neg_brier_score",
                                              "f1", "f1_micro", "f1_macro", "f1_weighted", "f1_samples", "neg_log_loss",
                                              "precision", "precision_micro", "precision_macro", "precision_weighted",
                                              "precision_samples", "recall", "recall_micro", "recall_macro",
