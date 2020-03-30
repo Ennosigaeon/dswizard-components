@@ -26,7 +26,7 @@ class PCAComponent(PreprocessingAlgorithm):
 
     def fit(self, X, Y=None):
         from sklearn.decomposition import PCA
-        n_components = resolve_factor(self.keep_variance, X.shape[1])
+        n_components = resolve_factor(self.keep_variance, min(*X.shape))
         self.preprocessor = PCA(n_components=n_components,
                                 whiten=self.whiten,
                                 random_state=self.random_state,

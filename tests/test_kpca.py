@@ -33,7 +33,7 @@ class TestKernelPCAComponent(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        config['n_components'] = resolve_factor(config['n_components_factor'], X_train.shape[1])
+        config['n_components'] = resolve_factor(config['n_components_factor'], min(*X_train.shape))
         del config['n_components_factor']
 
         expected = sklearn.decomposition.KernelPCA(**config, copy_X=False, random_state=42)

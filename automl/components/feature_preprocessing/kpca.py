@@ -42,7 +42,7 @@ class KernelPCAComponent(PreprocessingAlgorithm):
         import scipy.sparse
         from sklearn.decomposition import KernelPCA
 
-        n_components = resolve_factor(self.n_components_factor, X.shape[1])
+        n_components = resolve_factor(self.n_components_factor, min(*X.shape))
 
         self.preprocessor = KernelPCA(
             n_components=n_components,

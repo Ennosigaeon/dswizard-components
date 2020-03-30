@@ -32,7 +32,7 @@ class TestPCA(base_test.BaseComponentTest):
         actual.fit(np.copy(X_train), np.copy(y_train))
         X_actual = actual.transform(np.copy(X_test))
 
-        config['n_components'] = resolve_factor(config['keep_variance'], X_train.shape[1])
+        config['n_components'] = resolve_factor(config['keep_variance'], min(*X_train.shape))
         del config['keep_variance']
 
         expected = PCA(**config, copy=False, random_state=42)
