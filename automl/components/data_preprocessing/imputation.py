@@ -63,8 +63,8 @@ class ImputationComponent(PreprocessingAlgorithm):
         X_new = self.preprocessor.transform(X)
 
         if self.add_indicator:
-            X = pd.concat([pd.DataFrame(X_new), newdf], axis=1, sort=False)
-        return X.to_numpy()
+            X_new = pd.concat([pd.DataFrame(X_new), newdf], axis=1, sort=False).to_numpy()
+        return X_new
 
     @staticmethod
     def get_properties(dataset_properties=None):
