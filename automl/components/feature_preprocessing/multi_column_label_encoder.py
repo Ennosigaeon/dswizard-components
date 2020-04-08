@@ -29,11 +29,12 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
         else:
             for colname in categorical:
                 missing_vec = pd.isna(X[colname])
-                X[colname] = X[colname].cat.add_categories(['<MISSING>'])
+                X[colname].cat.add_categories(['<MISSING>'], inplace=True)
                 X.loc[missing_vec, colname] = '<MISSING>'
 
                 X[colname] = self.preprocessor.fit_transform(X[colname].astype(str))
                 X.loc[missing_vec, colname] = np.nan
+                X[colname].cat.remove_categories(['<MISSING>'], inplace=True)
 
         return X.to_numpy()
 
