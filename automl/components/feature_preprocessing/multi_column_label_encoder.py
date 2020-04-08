@@ -22,21 +22,13 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
         LabelEncoder(). If no columns specified, transforms all
         columns in X.
         """
+        X_object = X.select_dtypes(include=['category', 'object'])
 
-        categorical = {}
-
-        for i in range(X.shape[1]):
-            try:
-                X.iloc[:, i].values.astype(float)
-                categorical[X.columns[i]] = False
-            except ValueError:
-                categorical[X.columns[i]] = True
-
-        if not np.any(categorical.values()):
+        if X_object.empty:
             return X.to_numpy()
         else:
             for colname, col in X.iteritems():
-                if categorical[colname]:
+                if colname in X_object.columns:
                     missing_vec = pd.isna(X[colname])
                     missing_vec = missing_vec[missing_vec == True]
                     X[colname] = X[colname].cat.add_categories(['<MISSING>'])

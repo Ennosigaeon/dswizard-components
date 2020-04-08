@@ -14,16 +14,6 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
     def transform(self, X: pd.DataFrame):
 
         dummy_na = False
-        # categorical = {}
-        # for i in range(X.shape[1]):
-        #     try:
-        #         X.iloc[:, i].values.astype(float)
-        #         categorical[X.columns[i]] = False
-        #     except ValueError:
-        #         categorical[X.columns[i]] = True
-        #         cat.append(X.columns[i])
-        # if not np.any(categorical.values()):
-        #     return X.to_numpy()
         cat = []
 
         if np.any(pd.isna(X)):

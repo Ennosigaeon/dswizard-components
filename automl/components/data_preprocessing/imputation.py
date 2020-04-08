@@ -7,7 +7,6 @@ from sklearn.impute import MissingIndicator
 from automl.components.base import PreprocessingAlgorithm, NoopComponent
 
 
-
 class ImputationComponent(PreprocessingAlgorithm):
     def __init__(self, missing_values=np.nan, strategy: str = 'mean', add_indicator: bool = False):
         super().__init__()
@@ -19,26 +18,27 @@ class ImputationComponent(PreprocessingAlgorithm):
         from sklearn.impute import SimpleImputer
         from sklearn.compose import ColumnTransformer
 
+        cat = []
+        num = []
+
         if not np.any(pd.isna(X)):
             self.preprocessor = NoopComponent()
             return self
         else:
-            categorical = []
-            numeric = []
+            X_object = X.select_dtypes(include=['category', 'object'])
+            X_numeric = X._get_numeric_data()
 
-            for i in range(X.shape[1]):
-                try:
-                    X.iloc[:, i].values.astype(float)
-                    numeric.append(i)
-                except ValueError:
-                    categorical.append(i)
+            for i in range(X_object.shape[1]):
+                cat.append(X_object.columns[i])
+            for i in range(X_numeric.shape[1]):
+                num.append(X_numeric.columns[i])
 
         self.preprocessor = ColumnTransformer(
             transformers=[
                 ('cat', SimpleImputer(missing_values=self.missing_values, strategy='most_frequent',
-                                      add_indicator=False, copy=False), categorical),
+                                      add_indicator=False, copy=False), cat),
                 ('num', SimpleImputer(missing_values=self.missing_values, strategy=self.strategy,
-                                      add_indicator=False, copy=False), numeric)
+                                      add_indicator=False, copy=False), num)
             ]
         )
         self.preprocessor.fit(X)
