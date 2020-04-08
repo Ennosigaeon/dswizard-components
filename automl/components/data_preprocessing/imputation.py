@@ -18,27 +18,19 @@ class ImputationComponent(PreprocessingAlgorithm):
         from sklearn.impute import SimpleImputer
         from sklearn.compose import ColumnTransformer
 
-        cat = []
-        num = []
-
         if not np.any(pd.isna(X)):
             self.preprocessor = NoopComponent()
             return self
         else:
-            X_object = X.select_dtypes(include=['category', 'object'])
-            X_numeric = X._get_numeric_data()
-
-            for i in range(X_object.shape[1]):
-                cat.append(X_object.columns[i])
-            for i in range(X_numeric.shape[1]):
-                num.append(X_numeric.columns[i])
+            numeric = X.select_dtypes(include=['number']).columns
+            categorical = X.select_dtypes(include=['category', 'object']).columns
 
         self.preprocessor = ColumnTransformer(
             transformers=[
                 ('cat', SimpleImputer(missing_values=self.missing_values, strategy='most_frequent',
-                                      add_indicator=False, copy=False), cat),
+                                      add_indicator=False, copy=False), categorical),
                 ('num', SimpleImputer(missing_values=self.missing_values, strategy=self.strategy,
-                                      add_indicator=False, copy=False), num)
+                                      add_indicator=False, copy=False), numeric)
             ]
         )
         self.preprocessor.fit(X)

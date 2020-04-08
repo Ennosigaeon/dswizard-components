@@ -20,7 +20,7 @@ class TestOneHotEncoderComponent(base_test.BaseComponentTest):
 
     def test_categorical(self):
         actual = OneHotEncoderComponent()
-        X_before = pd.DataFrame([['Mann', 1], ['Frau', 2], ['Frau', 1]])
+        X_before = pd.DataFrame([['Mann', 1], ['Frau', 2], ['Frau', 1]], columns=['Gender', 'Label'])
         y_before = pd.Series([1, 1, 0])
         actual.fit(X_before, y_before)
         X_after = actual.transform(X_before).astype(float)

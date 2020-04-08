@@ -12,23 +12,8 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
         return self
 
     def transform(self, X: pd.DataFrame):
-
-        dummy_na = False
-        cat = []
-
-        if np.any(pd.isna(X)):
-            dummy_na = True
-
-        X_object = X.select_dtypes(include=['category', 'object'])
-
-        for i in range(X_object.shape[1]):
-            cat.append(X_object.columns[i])
-
-        if len(cat) == 0:
-            return X.to_numpy()
-
-        X = pd.get_dummies(X, prefix=[cat[i] for i in range(len(cat))], sparse=False, dummy_na=dummy_na)
-
+        dummy_na = np.any(pd.isna(X))
+        X = pd.get_dummies(X, sparse=False, dummy_na=dummy_na)
         return X.to_numpy()
 
     @staticmethod
