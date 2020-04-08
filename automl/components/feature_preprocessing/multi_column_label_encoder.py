@@ -34,7 +34,6 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
 
                 X[colname] = self.preprocessor.fit_transform(X[colname].astype(str))
                 X.loc[missing_vec, colname] = np.nan
-                X[colname].cat.remove_categories(['<MISSING>'], inplace=True)
 
         return X.to_numpy()
 
