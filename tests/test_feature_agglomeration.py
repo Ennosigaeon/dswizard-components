@@ -32,11 +32,11 @@ class TestFeatureAgglomerationComponent(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        if config['pooling_func'] is "mean":
+        if config['pooling_func'] == "mean":
             config['pooling_func'] = np.mean
-        elif config['pooling_func'] is "median":
+        elif config['pooling_func'] == "median":
             config['pooling_func'] = np.median
-        elif config['pooling_func'] is "max":
+        elif config['pooling_func'] == "max":
             config['pooling_func'] = np.max
 
         config['n_clusters'] = max(min(resolve_factor(config['n_clusters_factor'], X_train.shape[1]), (X_train.shape[1] - 1)), 2)

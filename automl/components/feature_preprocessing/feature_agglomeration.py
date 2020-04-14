@@ -28,11 +28,11 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
     def fit(self, X, y=None):
         from sklearn.cluster import FeatureAgglomeration
 
-        if self.pooling_func is "mean":
+        if self.pooling_func == "mean":
             pooling_func = np.mean
-        elif self.pooling_func is "median":
+        elif self.pooling_func == "median":
             pooling_func = np.median
-        elif self.pooling_func is "max":
+        elif self.pooling_func == "max":
             pooling_func = np.max
         else:
             raise ValueError('Unknown pooling function \'{}\''.format(self.pooling_func))

@@ -30,25 +30,25 @@ class TestGaussianProcessClassifier(base_test.BaseComponentTest):
         actual = GaussianProcessClassifier(random_state=42)
         config: dict = self.get_config(actual)
 
-        if config['kernel'] is "constant":
+        if config['kernel'] == "constant":
             from sklearn.gaussian_process.kernels import ConstantKernel
             config['kernel'] = ConstantKernel()
-        elif config['kernel'] is "rbf":
+        elif config['kernel'] == "rbf":
             from sklearn.gaussian_process.kernels import RBF
             config['kernel'] = RBF()
-        elif config['kernel'] is "matern":
+        elif config['kernel'] == "matern":
             from sklearn.gaussian_process.kernels import Matern
             config['kernel'] = Matern()
-        elif config['kernel'] is "rational_quadratic":
+        elif config['kernel'] == "rational_quadratic":
             from sklearn.gaussian_process.kernels import RationalQuadratic
             config['kernel'] = RationalQuadratic()
-        elif config['kernel'] is "exp_sin_squared":
+        elif config['kernel'] == "exp_sin_squared":
             from sklearn.gaussian_process.kernels import ExpSineSquared
             config['kernel'] = ExpSineSquared()
-        elif config['kernel'] is "white":
+        elif config['kernel'] == "white":
             from sklearn.gaussian_process.kernels import WhiteKernel
             config['kernel'] = WhiteKernel()
-        elif config['kernel'] is "dot":
+        elif config['kernel'] == "dot":
             from sklearn.gaussian_process.kernels import DotProduct
             config['kernel'] = DotProduct()
 

@@ -27,25 +27,25 @@ class GaussianProcessClassifier(PredictionAlgorithm):
     def fit(self, X, y):
         from sklearn.gaussian_process import GaussianProcessClassifier
 
-        if self.kernel is "constant":
+        if self.kernel == "constant":
             from sklearn.gaussian_process.kernels import ConstantKernel
             self.kernel = ConstantKernel()
-        elif self.kernel is "rbf":
+        elif self.kernel == "rbf":
             from sklearn.gaussian_process.kernels import RBF
             self.kernel = RBF()
-        elif self.kernel is "matern":
+        elif self.kernel == "matern":
             from sklearn.gaussian_process.kernels import Matern
             self.kernel = Matern()
-        elif self.kernel is "rational_quadratic":
+        elif self.kernel == "rational_quadratic":
             from sklearn.gaussian_process.kernels import RationalQuadratic
             self.kernel = RationalQuadratic()
-        elif self.kernel is "exp_sin_squared":
+        elif self.kernel == "exp_sin_squared":
             from sklearn.gaussian_process.kernels import ExpSineSquared
             self.kernel = ExpSineSquared()
-        elif self.kernel is "white":
+        elif self.kernel == "white":
             from sklearn.gaussian_process.kernels import WhiteKernel
             self.kernel = WhiteKernel()
-        elif self.kernel is "dot":
+        elif self.kernel == "dot":
             from sklearn.gaussian_process.kernels import DotProduct
             self.kernel = DotProduct()
 
