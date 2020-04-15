@@ -95,12 +95,12 @@ class DecisionTree(PredictionAlgorithm):
 
         criterion = CategoricalHyperparameter("criterion", ["gini", "entropy"], default_value="gini")
         splitter = CategoricalHyperparameter("splitter", ["best", "random"], default_value="best")
-        max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 1., default_value=1.)
-        min_samples_split = UniformFloatHyperparameter("min_samples_split", 0.0001, 0.5, default_value=0.0001)
-        min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf", 0.0001, 0.5, default_value=0.0001)
+        max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-7, 1., default_value=1.)
+        min_samples_split = UniformFloatHyperparameter("min_samples_split", 1e-7, 0.5, default_value=0.0001)
+        min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf", 1e-7, 0.5, default_value=0.0001)
         min_weight_fraction_leaf = UniformFloatHyperparameter("min_weight_fraction_leaf", 0., 0.5, default_value=0.)
-        max_features = UniformFloatHyperparameter('max_features', 0.01, 1., default_value=1.)
-        max_leaf_nodes_factor = UniformFloatHyperparameter("max_leaf_nodes_factor", 1e-5, 1., default_value=1.)
+        max_features = UniformFloatHyperparameter('max_features', 1e-4, 1., default_value=1.)
+        max_leaf_nodes_factor = UniformFloatHyperparameter("max_leaf_nodes_factor", 1e-7, 1., default_value=1.)
         min_impurity_decrease = UniformFloatHyperparameter('min_impurity_decrease', 0., 0.2, default_value=0.)
         ccp_alpha = UniformFloatHyperparameter("ccp_alpha", 0., 1., default_value=0.)
 

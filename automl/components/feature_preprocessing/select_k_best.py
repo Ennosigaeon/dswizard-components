@@ -56,7 +56,7 @@ class SelectKBestComponent(PreprocessingAlgorithm):
         cs = ConfigurationSpace()
 
         k_factor = UniformFloatHyperparameter("k_factor", 0., 1., default_value=0.5)
-        score_func = CategoricalHyperparameter(name="score_func", choices=["chi2", "f_classif", "mutual_info"],
+        score_func = CategoricalHyperparameter(name="score_func", choices=["chi2", "f_classif", "mutual_info", "f_regression"],
                                                default_value="f_classif")
 
         cs.add_hyperparameters([score_func, k_factor])

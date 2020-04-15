@@ -25,7 +25,7 @@ class AdaBoostingClassifier(PredictionAlgorithm):
             algorithm=self.algorithm,
             learning_rate=self.learning_rate,
             n_estimators=self.n_estimators,
-            random_state=self.random_state,
+            random_state=self.random_state
         )
 
         self.estimator.fit(X, Y)
