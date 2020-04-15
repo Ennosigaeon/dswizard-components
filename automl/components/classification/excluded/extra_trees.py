@@ -95,20 +95,20 @@ class ExtraTreesClassifier(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
 
         cs = ConfigurationSpace()
-        n_estimators = UniformIntegerHyperparameter("n_estimators", 10, 500, default_value=100)
+        n_estimators = UniformIntegerHyperparameter("n_estimators", 10, 750, default_value=100)
         criterion = CategoricalHyperparameter("criterion", ["gini", "entropy"], default_value="gini")
 
         # The maximum number of features used in the forest is calculated as m^max_features, where
         # m is the total number of features, and max_features is the hyperparameter specified below.
         # The default is 0.5, which yields sqrt(m) features as max_features in the estimator. This
         # corresponds with Geurts' heuristic.
-        max_features = UniformFloatHyperparameter("max_features", 0., 1., default_value=0.5)
+        max_features = UniformFloatHyperparameter("max_features", 1e-4, 1., default_value=0.5)
 
-        max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 1., default_value=1.)
-        min_samples_split = UniformFloatHyperparameter("min_samples_split", 0.0001, 0.5, default_value=0.0001)
-        min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf", 0.0001, 0.5, default_value=0.0001)
+        max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-7, 1., default_value=1.)
+        min_samples_split = UniformFloatHyperparameter("min_samples_split", 1e-7, 0.5, default_value=0.0001)
+        min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf", 1e-7, 0.5, default_value=0.0001)
         min_weight_fraction_leaf = UniformFloatHyperparameter("min_weight_fraction_leaf", 0., 0.5, default_value=0.)
-        max_leaf_nodes_factor = UniformFloatHyperparameter("max_leaf_nodes_factor", 1e-5, 1., default_value=1.)
+        max_leaf_nodes_factor = UniformFloatHyperparameter("max_leaf_nodes_factor", 1e-7, 1., default_value=1.)
         min_impurity_decrease = UniformFloatHyperparameter('min_impurity_decrease', 0., 0.2, default_value=0.)
         bootstrap = CategoricalHyperparameter("bootstrap", [True, False], default_value=False)
         ccp_alpha = UniformFloatHyperparameter("ccp_alpha", 0., 1., default_value=0.)
