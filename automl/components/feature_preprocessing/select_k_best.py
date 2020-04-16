@@ -14,13 +14,15 @@ class SelectKBestComponent(PreprocessingAlgorithm):
         self.k_factor = k_factor
 
     def fit(self, X, y=None):
-        from sklearn.feature_selection import chi2, f_classif, mutual_info_classif
+        from sklearn.feature_selection import chi2, f_classif, mutual_info_classif, f_regression
         if self.score_func == "chi2":
             score_func = chi2
         elif self.score_func == "f_classif":
             score_func = f_classif
         elif self.score_func == "mutual_info":
             score_func = mutual_info_classif
+        elif self.score_func == "f_regression":
+            score_func = f_regression
         else:
             raise ValueError("score_func must be in ('chi2, 'f_classif', 'mutual_info'), but is: %s" % self.score_func)
 

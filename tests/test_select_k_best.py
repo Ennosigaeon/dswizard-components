@@ -38,6 +38,8 @@ class TestSelectKBestComponent(base_test.BaseComponentTest):
             config['score_func'] = sklearn.feature_selection.f_classif
         elif config['score_func'] == "mutual_info":
             config['score_func'] = sklearn.feature_selection.mutual_info_classif
+        elif config['score_func'] == "f_regression":
+            config['score_func'] = sklearn.feature_selection.f_regression
 
         config['k'] = resolve_factor(config['k_factor'], X_train.shape[1])
         del config['k_factor']
