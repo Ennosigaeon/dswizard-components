@@ -27,7 +27,6 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         self.min_weight_fraction_leaf = min_weight_fraction_leaf
         self.max_leaf_nodes_factor = max_leaf_nodes_factor
         self.min_impurity_decrease = min_impurity_decrease
-        self.n_jobs = n_jobs
         self.random_state = random_state
         self.bootstrap = bootstrap
         self.random_state = random_state
@@ -73,7 +72,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
             min_weight_fraction_leaf=self.min_weight_fraction_leaf,
             min_impurity_decrease=self.min_impurity_decrease,
             sparse_output=False,
-            n_jobs=self.n_jobs,
+            n_jobs=-1,
             random_state=self.random_state
         )
         self.preprocessor.fit(X, Y)

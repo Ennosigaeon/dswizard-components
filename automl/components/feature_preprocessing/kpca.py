@@ -57,6 +57,7 @@ class KernelPCAComponent(PreprocessingAlgorithm):
             tol=self.tol,
             max_iter=self.max_iter,
             remove_zero_eig=self.remove_zero_eig,
+            n_jobs=-1,
             copy_X=False)
 
         if scipy.sparse.issparse(X):

@@ -15,7 +15,7 @@ class TestSGDClassifier(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
 
-        expected = sklearn.linear_model.SGDClassifier(random_state=42)
+        expected = sklearn.linear_model.SGDClassifier(random_state=42, n_jobs=-1)
         expected.fit(X_train, y_train)
         y_expected = expected.predict(X_test)
 
@@ -32,7 +32,7 @@ class TestSGDClassifier(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
 
-        expected = sklearn.linear_model.SGDClassifier(**config, random_state=42)
+        expected = sklearn.linear_model.SGDClassifier(**config, n_jobs=-1, random_state=42)
         expected.fit(X_train, y_train)
         y_expected = expected.predict(X_test)
 
