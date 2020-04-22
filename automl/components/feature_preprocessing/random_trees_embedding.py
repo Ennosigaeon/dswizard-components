@@ -16,7 +16,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
                  max_leaf_nodes_factor: int = None,
                  min_impurity_decrease: float = 0.,
                  random_state=None,
-                 n_jobs: int = None,
+                 n_jobs: int = -1,
                  bootstrap: bool = True
                  ):
         super().__init__()
@@ -105,7 +105,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         cs = ConfigurationSpace()
 
         n_estimators = UniformIntegerHyperparameter(name="n_estimators", lower=10, upper=400, default_value=10)
-        max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 1., default_value=1.)
+        max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 5., default_value=1.)
         min_samples_split_factor = UniformFloatHyperparameter("min_samples_split_factor", 0.0001, 0.5,
                                                               default_value=0.0001)
         min_samples_leaf_factor = UniformFloatHyperparameter("min_samples_leaf_factor", 0.0001, 0.5,

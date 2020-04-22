@@ -103,13 +103,13 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         loss = Constant("loss", "auto")
         learning_rate = UniformFloatHyperparameter(name="learning_rate", lower=1e-6, upper=1.5, default_value=0.1,
                                                    log=True)
-        max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 1., default_value=1.)
+        max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 5., default_value=1.)
         max_iter = UniformIntegerHyperparameter("max_iter", 0, 1000, default_value=100)
         max_leaf_nodes_factor = UniformFloatHyperparameter("max_leaf_nodes_factor", 1e-5, 1., default_value=1.)
-        min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf", 0.0001, 0.5, default_value=0.0001)
-        l2_regularization = UniformFloatHyperparameter(name="l2_regularization", lower=1e-7, upper=1.,
+        min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf", 1e-7, 0.5, default_value=0.0001)
+        l2_regularization = UniformFloatHyperparameter(name="l2_regularization", lower=1e-11, upper=100000.,
                                                        default_value=1e-7, log=True)
-        max_bins = UniformIntegerHyperparameter("max_bins", 5, 255, default_value=255)
+        max_bins = UniformIntegerHyperparameter("max_bins", 2, 255, default_value=255)
         tol = UniformFloatHyperparameter("tol", 0., 0.25, default_value=1e-7)
         scoring = CategoricalHyperparameter("scoring",
                                             ["accuracy", "balanced_accuracy", "average_precision", "neg_brier_score",

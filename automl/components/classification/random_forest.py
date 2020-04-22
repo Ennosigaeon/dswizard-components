@@ -76,8 +76,8 @@ class RandomForest(PredictionAlgorithm):
             class_weight=self.class_weight,
             oob_score=self.oob_score,
             max_samples=self.max_samples,
-            n_jobs=-1,
-            ccp_alpha=self.ccp_alpha)
+            ccp_alpha=self.ccp_alpha,
+            n_jobs=-1)
         self.estimator.fit(X, y, sample_weight=sample_weight)
         return self
 
@@ -112,7 +112,7 @@ class RandomForest(PredictionAlgorithm):
         # The default is 0.5, which yields sqrt(m) features as max_features in the estimator. This
         # corresponds with Geurts' heuristic.
         max_features = UniformFloatHyperparameter("max_features", 0., 1., default_value=0.5)
-        max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-7, 1., default_value=1.)
+        max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-7, 5., default_value=1.)
         min_samples_split = UniformFloatHyperparameter("min_samples_split", 1e-7, 0.5, default_value=0.0001)
         min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf", 1e-7, 0.5, default_value=0.0001)
         min_weight_fraction_leaf = UniformFloatHyperparameter("min_weight_fraction_leaf", 0., 0.5, default_value=0.)

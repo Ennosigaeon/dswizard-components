@@ -43,7 +43,7 @@ class PolynomialFeaturesComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         # More than degree 3 is too expensive!
-        degree = UniformIntegerHyperparameter("degree", 2, 4, 2)
+        degree = UniformIntegerHyperparameter("degree", 1, 4, 2)
         interaction_only = CategoricalHyperparameter("interaction_only", [False, True], False)
         include_bias = CategoricalHyperparameter("include_bias", [True, False], True)
         order = CategoricalHyperparameter("order", ["C", "F"], default_value="C")
