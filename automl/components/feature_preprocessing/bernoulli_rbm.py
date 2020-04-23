@@ -51,7 +51,7 @@ class BernoulliRBM(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         n_components = UniformIntegerHyperparameter("n_components", 1, 2000, default_value=256)
-        learning_rate = UniformFloatHyperparameter("learning_rate", 1e-5, 2, default_value=0.1)
+        learning_rate = UniformFloatHyperparameter("learning_rate", 1e-5, 15, default_value=0.1)
         batch_size = UniformIntegerHyperparameter("batch_size", 1, 100, default_value=10)
         n_iter = UniformIntegerHyperparameter("n_iter", 2, 2000, default_value=10)
 

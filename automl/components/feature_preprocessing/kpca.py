@@ -104,7 +104,7 @@ class KernelPCAComponent(PreprocessingAlgorithm):
         kernel = CategoricalHyperparameter('kernel', ['poly', 'rbf', 'sigmoid', 'cosine'], 'rbf')
         gamma = UniformFloatHyperparameter("gamma", 1e-09, 15., log=True, default_value=1.0)
         degree = UniformIntegerHyperparameter('degree', 2, 6, 3)
-        coef0 = UniformFloatHyperparameter("coef0", -1., 1., default_value=0.)
+        coef0 = UniformFloatHyperparameter("coef0", -10., 10., default_value=0.)
         alpha = UniformIntegerHyperparameter("alpha", 1e-9, 5., default_value=1.)
         fit_inverse_transform = CategoricalHyperparameter("fit_inverse_transform", [True, False], default_value=False)
         eigen_solver = CategoricalHyperparameter("eigen_solver", ["dense", "arpack"], default_value="dense")

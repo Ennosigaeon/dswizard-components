@@ -104,7 +104,7 @@ class ExtraTreesClassifier(PredictionAlgorithm):
         # corresponds with Geurts' heuristic.
         max_features = UniformFloatHyperparameter("max_features", 1e-4, 1., default_value=0.5)
 
-        max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-7, 1., default_value=1.)
+        max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-7, 5., default_value=1.)
         min_samples_split = UniformFloatHyperparameter("min_samples_split", 1e-7, 0.5, default_value=0.0001)
         min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf", 1e-7, 0.5, default_value=0.0001)
         min_weight_fraction_leaf = UniformFloatHyperparameter("min_weight_fraction_leaf", 0., 0.5, default_value=0.)

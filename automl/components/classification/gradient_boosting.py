@@ -103,11 +103,11 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         loss = Constant("loss", "auto")
         learning_rate = UniformFloatHyperparameter(name="learning_rate", lower=1e-6, upper=1.5, default_value=0.1,
                                                    log=True)
-        max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 1., default_value=1.)
+        max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 2.5, default_value=1.)
         max_iter = UniformIntegerHyperparameter("max_iter", 0, 1000, default_value=100)
         max_leaf_nodes_factor = UniformFloatHyperparameter("max_leaf_nodes_factor", 1e-5, 1., default_value=1.)
         min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf", 0.0001, 0.5, default_value=0.0001)
-        l2_regularization = UniformFloatHyperparameter(name="l2_regularization", lower=1e-7, upper=1.,
+        l2_regularization = UniformFloatHyperparameter(name="l2_regularization", lower=1e-7, upper=10.,
                                                        default_value=1e-7, log=True)
         max_bins = UniformIntegerHyperparameter("max_bins", 5, 255, default_value=255)
         tol = UniformFloatHyperparameter("tol", 0., 0.25, default_value=1e-7)
@@ -121,7 +121,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
                                              "roc_auc_ovr", "roc_auc_ovo", "roc_auc_ovr_weighted",
                                              "roc_auc_ovo_weighted"], default_value="f1_weighted")
         n_iter_no_change = UniformIntegerHyperparameter(name="n_iter_no_change", lower=0, upper=100, default_value=0)
-        validation_fraction = UniformFloatHyperparameter(name="validation_fraction", lower=0.001, upper=0.5,
+        validation_fraction = UniformFloatHyperparameter(name="validation_fraction", lower=0.001, upper=1.0,
                                                          default_value=0.1)
 
         cs.add_hyperparameters([loss, learning_rate, max_iter, min_samples_leaf, max_leaf_nodes_factor, max_bins,

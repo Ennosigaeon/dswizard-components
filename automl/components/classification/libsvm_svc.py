@@ -123,12 +123,12 @@ class LibSVM_SVC(PredictionAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
-        C = UniformFloatHyperparameter("C", 1e-7, 2500, default_value=1.0, log=True)
+        C = UniformFloatHyperparameter("C", 1e-7, 1e5, default_value=1.0, log=True)
         # No linear kernel here, because we have liblinear
         kernel = CategoricalHyperparameter(name="kernel", choices=["linear", "rbf", "poly", "sigmoid"], default_value="rbf")
         degree = UniformIntegerHyperparameter("degree", 2, 6, default_value=3)
-        gamma = UniformFloatHyperparameter("gamma", 1e-7, 1, log=True, default_value=0.1)
-        coef0 = UniformFloatHyperparameter("coef0", -30., 30., default_value=0.)
+        gamma = UniformFloatHyperparameter("gamma", 1e-7, 1e5, log=True, default_value=0.1)
+        coef0 = UniformFloatHyperparameter("coef0", 1e-4, 1e4, default_value=0.)
         # probability is no hyperparameter, but an argument to the SVM algo
         shrinking = CategoricalHyperparameter("shrinking", [True, False], default_value=True)
         probability = CategoricalHyperparameter("probability", [True, False], default_value=False)
