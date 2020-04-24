@@ -128,7 +128,7 @@ class LibSVM_SVC(PredictionAlgorithm):
         kernel = CategoricalHyperparameter(name="kernel", choices=["linear", "rbf", "poly", "sigmoid"], default_value="rbf")
         degree = UniformIntegerHyperparameter("degree", 2, 6, default_value=3)
         gamma = UniformFloatHyperparameter("gamma", 1e-7, 1e5, log=True, default_value=0.1)
-        coef0 = UniformFloatHyperparameter("coef0", 1e-4, 1e4, default_value=0.)
+        coef0 = UniformFloatHyperparameter("coef0", 0., 1e4, default_value=0.)
         # probability is no hyperparameter, but an argument to the SVM algo
         shrinking = CategoricalHyperparameter("shrinking", [True, False], default_value=True)
         probability = CategoricalHyperparameter("probability", [True, False], default_value=False)
