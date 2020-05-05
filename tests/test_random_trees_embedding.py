@@ -15,7 +15,7 @@ class TestRandomTreesEmbeddingComponent(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = sklearn.ensemble.RandomTreesEmbedding(random_state=42, n_jobs=-1, sparse_output=False)
+        expected = sklearn.ensemble.RandomTreesEmbedding(random_state=42, n_jobs=1, sparse_output=False)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
@@ -44,7 +44,7 @@ class TestRandomTreesEmbeddingComponent(base_test.BaseComponentTest):
         config['min_samples_split'] = max(resolve_factor(config['min_samples_split_factor'], X_train.shape[0]), 2)
         del config['min_samples_split_factor']
 
-        expected = sklearn.ensemble.RandomTreesEmbedding(**config, n_jobs=-1, sparse_output=False, random_state=42)
+        expected = sklearn.ensemble.RandomTreesEmbedding(**config, n_jobs=1, sparse_output=False, random_state=42)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 

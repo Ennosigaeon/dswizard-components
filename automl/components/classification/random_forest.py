@@ -76,7 +76,7 @@ class RandomForest(PredictionAlgorithm):
             class_weight=self.class_weight,
             oob_score=self.oob_score,
             max_samples=self.max_samples,
-            n_jobs=-1,
+            n_jobs=1,
             ccp_alpha=self.ccp_alpha)
         self.estimator.fit(X, y, sample_weight=sample_weight)
         return self

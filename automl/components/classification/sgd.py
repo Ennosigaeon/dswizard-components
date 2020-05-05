@@ -67,7 +67,7 @@ class SGDClassifier(PredictionAlgorithm):
             validation_fraction=self.validation_fraction,
             n_iter_no_change=self.n_iter_no_change,
             average=self.average,
-            n_jobs=-1,
+            n_jobs=1,
             random_state=self.random_state
         )
         self.estimator.fit(X, y)

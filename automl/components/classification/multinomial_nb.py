@@ -28,7 +28,7 @@ class MultinomialNB(PredictionAlgorithm):
         # Fallback for multilabel classification
         if len(y.shape) > 1 and y.shape[1] > 1:
             import sklearn.multiclass
-            self.estimator = sklearn.multiclass.OneVsRestClassifier(self.estimator, n_jobs=-1)
+            self.estimator = sklearn.multiclass.OneVsRestClassifier(self.estimator, n_jobs=1)
 
         self.estimator.fit(X, y)
 

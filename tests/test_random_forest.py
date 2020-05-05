@@ -16,7 +16,7 @@ class TestRandomForest(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
 
-        expected = sklearn.ensemble.RandomForestClassifier(n_jobs=-1, random_state=42)
+        expected = sklearn.ensemble.RandomForestClassifier(n_jobs=1, random_state=42)
         expected.fit(X_train, y_train)
         y_expected = expected.predict(X_test)
 
@@ -40,7 +40,7 @@ class TestRandomForest(base_test.BaseComponentTest):
         del config['max_depth_factor']
         del config['max_leaf_nodes_factor']
 
-        expected = sklearn.ensemble.RandomForestClassifier(**config, n_jobs=-1, random_state=42)
+        expected = sklearn.ensemble.RandomForestClassifier(**config, n_jobs=1, random_state=42)
         expected.fit(X_train, y_train)
         y_expected = expected.predict(X_test)
 
