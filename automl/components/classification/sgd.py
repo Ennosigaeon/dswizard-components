@@ -7,6 +7,8 @@ from automl.components.base import PredictionAlgorithm
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
 
 
+# TODO does not honour affinity restrictions
+
 class SGDClassifier(PredictionAlgorithm):
 
     def __init__(self,
@@ -26,7 +28,7 @@ class SGDClassifier(PredictionAlgorithm):
                  validation_fraction: float = 0.1,
                  n_iter_no_change: int = 5,
                  average: bool = False,
-                 random_state = None
+                 random_state=None
                  ):
         super().__init__()
         self.loss = loss

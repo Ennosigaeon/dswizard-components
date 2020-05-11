@@ -8,6 +8,7 @@ from automl.util.common import check_none
 
 from automl.util.common import resolve_factor
 
+# TODO does not honour affinity restrictions
 
 class GradientBoostingClassifier(PredictionAlgorithm):
     def __init__(self,
