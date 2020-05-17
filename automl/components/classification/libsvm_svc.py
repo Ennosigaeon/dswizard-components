@@ -1,6 +1,3 @@
-import resource
-import sys
-
 from ConfigSpace import ForbiddenAndConjunction, ForbiddenInClause
 from ConfigSpace.conditions import EqualsCondition, InCondition
 from ConfigSpace.configuration_space import ConfigurationSpace
@@ -42,36 +39,8 @@ class LibSVM_SVC(PredictionAlgorithm):
         self.probability = probability
         self.break_ties = break_ties
 
-    def fit(self, X, Y):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.svm import SVC
-
-        # Calculate the size of the kernel cache (in MB) for sklearn's LibSVM. The cache size is
-        # calculated as 2/3 of the available memory (which is calculated as the memory limit minus
-        # the used memory)
-        try:
-            # Retrieve memory limits imposed on the process
-            soft, hard = resource.getrlimit(resource.RLIMIT_AS)
-
-            if soft > 0:
-                # Convert limit to units of megabytes
-                soft /= 1024 * 1024
-
-                # Retrieve memory used by this process
-                maxrss = resource.getrusage(resource.RUSAGE_SELF)[2] / 1024
-
-                # In MacOS, the MaxRSS output of resource.getrusage in bytes; on other platforms,
-                # it's in kilobytes
-                if sys.platform == 'darwin':
-                    maxrss = maxrss / 1024
-
-                cache_size = (soft - maxrss) / 1.5
-
-                if cache_size < 0:
-                    cache_size = 200
-            else:
-                cache_size = 200
-        except Exception:
-            cache_size = 200
 
         if self.degree is None:
             self.degree = 3
@@ -85,22 +54,20 @@ class LibSVM_SVC(PredictionAlgorithm):
         if check_none(self.class_weight):
             self.class_weight = None
 
-        self.estimator = SVC(C=self.C,
-                             kernel=self.kernel,
-                             degree=self.degree,
-                             gamma=self.gamma,
-                             coef0=self.coef0,
-                             shrinking=self.shrinking,
-                             tol=self.tol,
-                             class_weight=self.class_weight,
-                             random_state=self.random_state,
-                             cache_size=cache_size,
-                             probability=self.probability,
-                             break_ties=self.break_ties,
-                             decision_function_shape=self.decision_function_shape
-                             )
-        self.estimator.fit(X, Y)
-        return self
+        return SVC(C=self.C,
+                   kernel=self.kernel,
+                   degree=self.degree,
+                   gamma=self.gamma,
+                   coef0=self.coef0,
+                   shrinking=self.shrinking,
+                   tol=self.tol,
+                   class_weight=self.class_weight,
+                   random_state=self.random_state,
+                   cache_size=200,
+                   probability=self.probability,
+                   break_ties=self.break_ties,
+                   decision_function_shape=self.decision_function_shape
+                   )
 
     def predict_proba(self, X):
         if self.estimator is None:
@@ -125,7 +92,8 @@ class LibSVM_SVC(PredictionAlgorithm):
     def get_hyperparameter_search_space(dataset_properties=None):
         C = UniformFloatHyperparameter("C", 1e-7, 1e5, default_value=1.0, log=True)
         # No linear kernel here, because we have liblinear
-        kernel = CategoricalHyperparameter(name="kernel", choices=["linear", "rbf", "poly", "sigmoid"], default_value="rbf")
+        kernel = CategoricalHyperparameter(name="kernel", choices=["linear", "rbf", "poly", "sigmoid"],
+                                           default_value="rbf")
         degree = UniformIntegerHyperparameter("degree", 2, 6, default_value=3)
         gamma = UniformFloatHyperparameter("gamma", 1e-7, 1e5, log=True, default_value=0.1)
         coef0 = UniformFloatHyperparameter("coef0", -30, 1e4, default_value=0.)

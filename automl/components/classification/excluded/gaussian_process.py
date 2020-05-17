@@ -24,7 +24,7 @@ class GaussianProcessClassifier(PredictionAlgorithm):
         self.multi_class = multi_class
         self.random_state = random_state
 
-    def fit(self, X, y):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.gaussian_process import GaussianProcessClassifier
 
         if self.kernel == "constant":
@@ -49,7 +49,7 @@ class GaussianProcessClassifier(PredictionAlgorithm):
             from sklearn.gaussian_process.kernels import DotProduct
             self.kernel = DotProduct()
 
-        self.estimator = GaussianProcessClassifier(
+        return GaussianProcessClassifier(
             kernel=self.kernel,
             optimizer=self.optimizer,
             n_restarts_optimizer=self.n_restarts_optimizer,
@@ -57,8 +57,6 @@ class GaussianProcessClassifier(PredictionAlgorithm):
             multi_class=self.multi_class,
             random_state=self.random_state
         )
-        self.estimator.fit(X, y)
-        return self
 
     def predict_proba(self, X):
         if self.estimator is None:

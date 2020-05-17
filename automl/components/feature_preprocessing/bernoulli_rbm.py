@@ -14,18 +14,11 @@ class BernoulliRBM(PreprocessingAlgorithm):
         self.n_iter = n_iter
         self.random_state = random_state
 
-    def fit(self, X, y=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.neural_network import BernoulliRBM
 
-        self.preprocessor = BernoulliRBM(n_components=self.n_components, learning_rate=self.learning_rate,
-                                         batch_size=self.batch_size, n_iter=self.n_iter, random_state=self.random_state)
-        self.preprocessor = self.preprocessor.fit(X)
-        return self
-
-    def transform(self, X):
-        if self.preprocessor is None:
-            raise NotImplementedError()
-        return self.preprocessor.transform(X)
+        return BernoulliRBM(n_components=self.n_components, learning_rate=self.learning_rate,
+                            batch_size=self.batch_size, n_iter=self.n_iter, random_state=self.random_state)
 
     @staticmethod
     def get_properties(dataset_properties=None):

@@ -43,25 +43,30 @@ class RandomForest(PredictionAlgorithm):
         self.max_samples = max_samples
 
     def fit(self, X, y, sample_weight=None):
+        self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
+        self.estimator.fit(X, y, sample_weight=sample_weight)
+        return self
+
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.ensemble import RandomForestClassifier
 
         # Heuristic to set the tree width
-        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, X.shape[0])
+        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, n_samples)
         if max_leaf_nodes is not None:
             max_leaf_nodes = max(max_leaf_nodes, 2)
 
         # Heuristic to set the tree depth
-        max_depth = resolve_factor(self.max_depth_factor, X.shape[1])
+        max_depth = resolve_factor(self.max_depth_factor, n_features)
         if max_depth is not None:
             max_depth = max(max_depth, 2)
 
         if self.max_features not in ("sqrt", "log2", "auto"):
-            max_features = int(X.shape[1] ** float(self.max_features))
+            max_features = int(n_features ** float(self.max_features))
         else:
             max_features = self.max_features
 
         # initial fit of only increment trees
-        self.estimator = RandomForestClassifier(
+        return RandomForestClassifier(
             n_estimators=self.n_estimators,
             criterion=self.criterion,
             max_features=max_features,
@@ -78,8 +83,6 @@ class RandomForest(PredictionAlgorithm):
             max_samples=self.max_samples,
             n_jobs=1,
             ccp_alpha=self.ccp_alpha)
-        self.estimator.fit(X, y, sample_weight=sample_weight)
-        return self
 
     def predict_proba(self, X):
         if self.estimator is None:

@@ -35,10 +35,10 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
         self.average = average
         self.random_state = random_state
 
-    def fit(self, X, y):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.linear_model import PassiveAggressiveClassifier
 
-        self.estimator = PassiveAggressiveClassifier(
+        return PassiveAggressiveClassifier(
             C=self.C,
             fit_intercept=self.fit_intercept,
             tol=self.tol,
@@ -51,8 +51,6 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
             average=self.average,
             random_state=self.random_state
         )
-        self.estimator.fit(X, y)
-        return self
 
     def predict_proba(self, X):
         if self.estimator is None:

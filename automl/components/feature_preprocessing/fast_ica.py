@@ -24,19 +24,17 @@ class FastICAComponent(PreprocessingAlgorithm):
         self.tol = tol
         self.random_state = random_state
 
-    def fit(self, X, y=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.decomposition import FastICA
 
-        n_components = resolve_factor(self.n_components_factor, min(*X.shape))
-        self.preprocessor = FastICA(n_components=n_components,
-                                    algorithm=self.algorithm,
-                                    whiten=self.whiten,
-                                    fun=self.fun,
-                                    max_iter=self.max_iter,
-                                    random_state=self.random_state,
-                                    tol=self.tol)
-        self.preprocessor.fit(X)
-        return self
+        n_components = resolve_factor(self.n_components_factor, min(n_samples, n_features))
+        return FastICA(n_components=n_components,
+                       algorithm=self.algorithm,
+                       whiten=self.whiten,
+                       fun=self.fun,
+                       max_iter=self.max_iter,
+                       random_state=self.random_state,
+                       tol=self.tol)
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

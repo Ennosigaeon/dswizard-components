@@ -1,9 +1,8 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, CategoricalHyperparameter, UniformFloatHyperparameter
+from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
-import numpy as np
 
 
 class KNeighborsClassifier(PredictionAlgorithm):
@@ -26,9 +25,9 @@ class KNeighborsClassifier(PredictionAlgorithm):
         self.metric = metric
         self.random_state = random_state
 
-    def fit(self, X, y):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.neighbors import KNeighborsClassifier
-        self.estimator = KNeighborsClassifier(
+        return KNeighborsClassifier(
             algorithm=self.algorithm,
             weights=self.weights,
             n_neighbors=self.n_neighbors,
@@ -36,8 +35,6 @@ class KNeighborsClassifier(PredictionAlgorithm):
             p=self.p,
             metric=self.metric
         )
-        self.estimator.fit(X, y)
-        return self
 
     def predict_proba(self, X):
         if self.estimator is None:
@@ -65,7 +62,8 @@ class KNeighborsClassifier(PredictionAlgorithm):
 
         n_neighbors = UniformIntegerHyperparameter("n_neighbors", 1, 70, default_value=5)
         weights = CategoricalHyperparameter("weights", ["uniform", "distance"], default_value="uniform")
-        algorithm = CategoricalHyperparameter("algorithm", ["ball_tree", "kd_tree", "brute", "auto"], default_value="auto")
+        algorithm = CategoricalHyperparameter("algorithm", ["ball_tree", "kd_tree", "brute", "auto"],
+                                              default_value="auto")
         leaf_size = UniformIntegerHyperparameter("leaf_size", 1, 100, default_value=30)
         p = UniformIntegerHyperparameter("p", 1, 5, default_value=2)
         metric = CategoricalHyperparameter("metric", ["minkowski", "euclidean", "manhattan", "chebyshev"],

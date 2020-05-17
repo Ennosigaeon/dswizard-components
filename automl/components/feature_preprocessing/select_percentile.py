@@ -25,8 +25,23 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
         self.percentile = percentile
         self.score_func = score_func
 
-    def fit(self, X, y=None):
+    def fit(self, X, y):
         import scipy.sparse
+        from sklearn.feature_selection import chi2
+
+        self.preprocessor = self.to_sklearn(X.shape[0], X.shape[1])
+        # Because the pipeline guarantees that each feature is positive,
+        # clip all values below zero to zero
+        if self.score_func == chi2:
+            if scipy.sparse.issparse(X):
+                X.data[X.data < 0] = 0.0
+            else:
+                X[X < 0] = 0.0
+
+        self.preprocessor.fit(X, y)
+        return self
+
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.feature_selection import SelectPercentile, chi2, f_classif, mutual_info_classif
 
         if self.score_func == "chi2":
@@ -38,19 +53,8 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
         else:
             raise ValueError("score_func must be in ('chi2, 'f_classif', 'mutual_info'), but is: %s" % self.score_func)
 
-        self.preprocessor = SelectPercentile(score_func=score_func,
-                                             percentile=self.percentile)
-
-        # Because the pipeline guarantees that each feature is positive,
-        # clip all values below zero to zero
-        if self.score_func == chi2:
-            if scipy.sparse.issparse(X):
-                X.data[X.data < 0] = 0.0
-            else:
-                X[X < 0] = 0.0
-
-        self.preprocessor.fit(X, y)
-        return self
+        return SelectPercentile(score_func=score_func,
+                                percentile=self.percentile)
 
     def transform(self, X):
         import scipy.sparse

@@ -1,5 +1,5 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, Constant
+from ConfigSpace.hyperparameters import Constant
 
 from automl.components.base import PreprocessingAlgorithm
 
@@ -13,11 +13,9 @@ class VarianceThresholdComponent(PreprocessingAlgorithm):
         super().__init__()
         self.threshold = threshold
 
-    def fit(self, X, y=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.feature_selection import VarianceThreshold
-        self.preprocessor = VarianceThreshold(threshold=self.threshold)
-        self.preprocessor = self.preprocessor.fit(X)
-        return self
+        return VarianceThreshold(threshold=self.threshold)
 
     @staticmethod
     def get_properties(dataset_properties=None):

@@ -49,10 +49,10 @@ class SGDClassifier(PredictionAlgorithm):
         self.average = average
         self.random_state = random_state
 
-    def fit(self, X, y):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.linear_model import SGDClassifier
 
-        self.estimator = SGDClassifier(
+        return SGDClassifier(
             loss=self.loss,
             penalty=self.penalty,
             alpha=self.alpha,
@@ -72,8 +72,6 @@ class SGDClassifier(PredictionAlgorithm):
             n_jobs=1,
             random_state=self.random_state
         )
-        self.estimator.fit(X, y)
-        return self
 
     def predict_proba(self, X):
         if self.estimator is None:

@@ -18,18 +18,14 @@ class AdaBoostingClassifier(PredictionAlgorithm):
         self.n_estimators = n_estimators
         self.random_state = random_state
 
-    def fit(self, X, Y):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.ensemble import AdaBoostClassifier
-
-        self.estimator = AdaBoostClassifier(
+        return AdaBoostClassifier(
             algorithm=self.algorithm,
             learning_rate=self.learning_rate,
             n_estimators=self.n_estimators,
             random_state=self.random_state
         )
-
-        self.estimator.fit(X, Y)
-        return self
 
     @staticmethod
     def get_properties(dataset_properties=None):

@@ -31,7 +31,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         self.bootstrap = bootstrap
         self.random_state = random_state
 
-    def _fit(self, X, Y=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.ensemble import RandomTreesEmbedding
 
         self.n_estimators = int(self.n_estimators)
@@ -42,12 +42,12 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         if isinstance(self.max_depth_factor, int):
             max_depth = self.max_depth_factor
         else:
-            max_depth = resolve_factor(self.max_depth_factor, X.shape[1])
+            max_depth = resolve_factor(self.max_depth_factor, n_features)
         if max_depth is not None:
             max_depth = max(max_depth, 2)
 
         # Heuristic to set the tree width
-        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, X.shape[0])
+        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, n_samples)
         if max_leaf_nodes is not None:
             max_leaf_nodes = max(max_leaf_nodes, 2)
 
@@ -55,15 +55,15 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         if isinstance(self.min_samples_leaf_factor, int):
             min_samples_leaf = self.min_samples_leaf_factor
         else:
-            min_samples_leaf = resolve_factor(self.min_samples_leaf_factor, X.shape[0])
+            min_samples_leaf = resolve_factor(self.min_samples_leaf_factor, n_samples)
 
         # Heuristic to set the tree width
         if isinstance(self.min_samples_split_factor, int):
             min_samples_split = self.min_samples_split_factor
         else:
-            min_samples_split = max(resolve_factor(self.min_samples_split_factor, X.shape[0]), 2)
+            min_samples_split = max(resolve_factor(self.min_samples_split_factor, n_samples), 2)
 
-        self.preprocessor = RandomTreesEmbedding(
+        return RandomTreesEmbedding(
             n_estimators=self.n_estimators,
             max_depth=max_depth,
             min_samples_split=min_samples_split,
@@ -75,17 +75,6 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
             n_jobs=1,
             random_state=self.random_state
         )
-        self.preprocessor.fit(X, Y)
-        return self
-
-    def fit(self, X, y):
-        self._fit(X)
-        return self
-
-    def transform(self, X):
-        if self.preprocessor is None:
-            raise NotImplementedError()
-        return self.preprocessor.transform(X)
 
     @staticmethod
     def get_properties(dataset_properties=None):

@@ -17,14 +17,12 @@ class KNNImputerComponent(PreprocessingAlgorithm):
         self.metric = metric
         self.add_indicator = add_indicator
 
-    def fit(self, X, y=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.impute import KNNImputer
 
-        self.preprocessor = KNNImputer(missing_values=self.missing_values, n_neighbors=self.n_neighbors,
-                                       weights=self.weights, metric=self.metric, add_indicator=self.add_indicator,
-                                       copy=False)
-        self.preprocessor = self.preprocessor.fit(X)
-        return self
+        return KNNImputer(missing_values=self.missing_values, n_neighbors=self.n_neighbors,
+                          weights=self.weights, metric=self.metric, add_indicator=self.add_indicator,
+                          copy=False)
 
     @staticmethod
     def get_properties(dataset_properties=None):

@@ -57,10 +57,10 @@ class MLPClassifier(PredictionAlgorithm):
         self.max_fun = max_fun
         self.random_state = random_state
 
-    def fit(self, X, y):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.neural_network import MLPClassifier
 
-        self.estimator = MLPClassifier(
+        return MLPClassifier(
             hidden_layer_sizes=(self.layer_1_size, self.layer_2_size) if self.layer_2_size is not None
             else (self.layer_1_size,),
             activation=self.activation,
@@ -85,8 +85,6 @@ class MLPClassifier(PredictionAlgorithm):
             max_fun=self.max_fun,
             random_state=self.random_state
         )
-        self.estimator.fit(X, y)
-        return self
 
     def predict_proba(self, X):
         if self.estimator is None:

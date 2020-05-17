@@ -20,16 +20,14 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
         self.tol = tol
         self.n_components = n_components
 
-    def fit(self, X, y, sample_weight=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
         # initial fit of only increment trees
-        self.estimator = LinearDiscriminantAnalysis(solver=self.solver,
-                                                    shrinkage=self.shrinkage,
-                                                    tol=self.tol,
-                                                    n_components=self.n_components)
-        self.estimator.fit(X, y)
-        return self
+        return LinearDiscriminantAnalysis(solver=self.solver,
+                                          shrinkage=self.shrinkage,
+                                          tol=self.tol,
+                                          n_components=self.n_components)
 
     def predict_proba(self, X):
         if self.estimator is None:

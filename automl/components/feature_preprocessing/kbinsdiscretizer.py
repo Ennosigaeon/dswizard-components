@@ -16,11 +16,9 @@ class KBinsDiscretizer(PreprocessingAlgorithm):
         self.encode = encode
         self.strategy = strategy
 
-    def fit(self, X, y=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.preprocessing import KBinsDiscretizer
-        self.preprocessor = KBinsDiscretizer(n_bins=self.n_bins, encode=self.encode, strategy=self.strategy)
-        self.preprocessor = self.preprocessor.fit(X)
-        return self
+        return KBinsDiscretizer(n_bins=self.n_bins, encode=self.encode, strategy=self.strategy)
 
     def transform(self, X):
         if self.preprocessor is None:

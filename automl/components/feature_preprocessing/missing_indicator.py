@@ -12,17 +12,9 @@ class MissingIndicatorComponent(PreprocessingAlgorithm):
         self.features = features
         self.missing_values = missing_values
 
-    def fit(self, X, y=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.impute import MissingIndicator
-
-        self.preprocessor = MissingIndicator(missing_values=self.missing_values, features=self.features)
-        self.preprocessor = self.preprocessor.fit(X)
-        return self
-
-    def transform(self, X):
-        if self.preprocessor is None:
-            raise NotImplementedError()
-        return self.preprocessor.transform(X)
+        return MissingIndicator(missing_values=self.missing_values, features=self.features)
 
     @staticmethod
     def get_properties(dataset_properties=None):
@@ -47,7 +39,6 @@ class MissingIndicatorComponent(PreprocessingAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
-
         features = CategoricalHyperparameter("features", ["missing-only", "all"], default_value="missing-only")
 
         cs = ConfigurationSpace()

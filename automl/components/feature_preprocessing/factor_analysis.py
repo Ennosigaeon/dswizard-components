@@ -25,19 +25,17 @@ class FactorAnalysisComponent(PreprocessingAlgorithm):
         self.random_state = random_state
         self.copy = copy
 
-    def fit(self, X, y=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.decomposition import FactorAnalysis
 
-        n_components = resolve_factor(self.n_components_factor, X.shape[1])
-        self.preprocessor = FactorAnalysis(n_components=n_components,
-                                           svd_method=self.svd_method,
-                                           max_iter=self.max_iter,
-                                           iterated_power=self.iterated_power,
-                                           tol=self.tol,
-                                           random_state=self.random_state,
-                                           copy=self.copy)
-        self.preprocessor.fit(X)
-        return self
+        n_components = resolve_factor(self.n_components_factor, n_features)
+        return FactorAnalysis(n_components=n_components,
+                              svd_method=self.svd_method,
+                              max_iter=self.max_iter,
+                              iterated_power=self.iterated_power,
+                              tol=self.tol,
+                              random_state=self.random_state,
+                              copy=self.copy)
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

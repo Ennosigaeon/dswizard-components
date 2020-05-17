@@ -18,18 +18,21 @@ class GaussianNB(PredictionAlgorithm):
         self.var_smoothing = var_smoothing
 
     def fit(self, X, y):
+        self.estimator = self.to_sklearn(X.shape[0], X.shape[1], len(y.shape) > 1 and y.shape[1] > 1)
+        self.classes_ = np.unique(y.astype(int))
+        self.estimator.fit(X, y)
+        return self
+
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, multilabel: bool = False):
         import sklearn.naive_bayes
 
-        self.estimator = sklearn.naive_bayes.GaussianNB(var_smoothing=self.var_smoothing)
-        self.classes_ = np.unique(y.astype(int))
+        estimator = sklearn.naive_bayes.GaussianNB(var_smoothing=self.var_smoothing)
 
         # Fallback for multilabel classification
-        if len(y.shape) > 1 and y.shape[1] > 1:
+        if multilabel:
             import sklearn.multiclass
-            self.estimator = sklearn.multiclass.OneVsRestClassifier(self.estimator, n_jobs=1)
-        self.estimator.fit(X, y)
-
-        return self
+            estimator = sklearn.multiclass.OneVsRestClassifier(estimator, n_jobs=1)
+        return estimator
 
     @staticmethod
     def get_properties(dataset_properties=None):

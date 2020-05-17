@@ -17,17 +17,15 @@ class QuantileTransformerComponent(PreprocessingAlgorithm):
         self.subsample = subsample
         self.random_state = random_state
 
-    def fit(self, X, y=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.preprocessing import QuantileTransformer
 
-        n_quantiles = resolve_factor(self.n_quantiles_factor, X.shape[0], default=1000)
-        self.preprocessor = QuantileTransformer(copy=False,
-                                                n_quantiles=n_quantiles,
-                                                output_distribution=self.output_distribution,
-                                                ignore_implicit_zeros=self.ignore_implicit_zeros,
-                                                subsample=self.subsample, random_state=self.random_state)
-        self.preprocessor.fit(X)
-        return self
+        n_quantiles = resolve_factor(self.n_quantiles_factor, n_samples, default=1000)
+        return QuantileTransformer(copy=False,
+                                   n_quantiles=n_quantiles,
+                                   output_distribution=self.output_distribution,
+                                   ignore_implicit_zeros=self.ignore_implicit_zeros,
+                                   subsample=self.subsample, random_state=self.random_state)
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

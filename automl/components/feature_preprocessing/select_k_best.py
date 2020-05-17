@@ -13,7 +13,7 @@ class SelectKBestComponent(PreprocessingAlgorithm):
         self.score_func = score_func
         self.k_factor = k_factor
 
-    def fit(self, X, y=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.feature_selection import chi2, f_classif, mutual_info_classif, f_regression
         if self.score_func == "chi2":
             score_func = chi2
@@ -27,10 +27,8 @@ class SelectKBestComponent(PreprocessingAlgorithm):
             raise ValueError("score_func must be in ('chi2, 'f_classif', 'mutual_info'), but is: %s" % self.score_func)
 
         from sklearn.feature_selection import SelectKBest
-        k = resolve_factor(self.k_factor, X.shape[1])
-        self.preprocessor = SelectKBest(score_func=score_func, k=k)
-        self.preprocessor.fit(X, y)
-        return self
+        k = resolve_factor(self.k_factor, n_features)
+        return SelectKBest(score_func=score_func, k=k)
 
     def transform(self, X):
         import scipy.sparse

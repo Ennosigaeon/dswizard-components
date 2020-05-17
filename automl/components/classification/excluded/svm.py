@@ -33,10 +33,10 @@ class SVCClassifier(PredictionAlgorithm):
         self.max_iter = max_iter
         self.random_state = random_state
 
-    def fit(self, X, y):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.svm import LinearSVC
 
-        self.estimator = LinearSVC(
+        return LinearSVC(
             C=self.C,
             penalty=self.penalty,
             loss=self.loss,
@@ -48,8 +48,6 @@ class SVCClassifier(PredictionAlgorithm):
             max_iter=self.max_iter,
             random_state=self.random_state
         )
-        self.estimator.fit(X, y)
-        return self
 
     def predict_proba(self, X):
         if self.estimator is None:

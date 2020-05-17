@@ -1,11 +1,10 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, UniformIntegerHyperparameter, Constant
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, Constant
 
 from automl.components.base import PreprocessingAlgorithm
 
 
 class GenericUnivariateSelectComponent(PreprocessingAlgorithm):
-
     """Feature selector that removes all low-variance features.
     Features with a training-set variance lower than this threshold will be removed. The default is to keep all
     features with non-zero variance, i.e. remove the features that have the same value in all samples."""
@@ -28,15 +27,12 @@ class GenericUnivariateSelectComponent(PreprocessingAlgorithm):
         else:
             raise ValueError("score_func must be in ('chi2, 'f_classif', 'mutual_info'), but is: %s" % score_func)
 
-    def fit(self, X, y=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.feature_selection import GenericUnivariateSelect
 
-        self.preprocessor = GenericUnivariateSelect(param=self.param,
-                                                    mode=self.mode,
-                                                    score_func=self.score_func)
-
-        self.preprocessor = self.preprocessor.fit(X, y)
-        return self
+        return GenericUnivariateSelect(param=self.param,
+                                       mode=self.mode,
+                                       score_func=self.score_func)
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
@@ -73,4 +69,3 @@ class GenericUnivariateSelectComponent(PreprocessingAlgorithm):
             # 'input': (DENSE, SPARSE, UNSIGNED_DATA),
             # 'output': (INPUT,),
         }
-

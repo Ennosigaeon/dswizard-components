@@ -13,17 +13,15 @@ class RobustScalerComponent(PreprocessingAlgorithm):
         self.q_min = q_min
         self.q_max = q_max
 
-    def fit(self, X, y=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         if self.q_max < self.q_min:
             help = self.q_max
             self.q_max = self.q_min
             self.q_min = help
 
         from sklearn.preprocessing import RobustScaler
-        self.preprocessor = RobustScaler(quantile_range=(self.q_min, self.q_max), copy=False,
-                                         with_centering=self.with_centering, with_scaling=self.with_scaling)
-        self.preprocessor.fit(X)
-        return self
+        return RobustScaler(quantile_range=(self.q_min, self.q_max), copy=False,
+                            with_centering=self.with_centering, with_scaling=self.with_scaling)
 
     @staticmethod
     def get_properties(dataset_properties=None):

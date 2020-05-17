@@ -40,11 +40,26 @@ class KernelPCAComponent(PreprocessingAlgorithm):
 
     def fit(self, X, Y=None):
         import scipy.sparse
+
+        self.preprocessor = self.to_sklearn(X.shape[0], X.shape[1])
+        if scipy.sparse.issparse(X):
+            X = X.astype(np.float64)
+        with warnings.catch_warnings():
+            warnings.filterwarnings("error")
+            self.preprocessor.fit(X)
+
+        # Raise an informative error message, equation is based ~line 249 in
+        # kernel_pca.py in scikit-learn
+        if len(self.preprocessor.alphas_ / self.preprocessor.lambdas_) == 0:
+            raise ValueError('KernelPCA removed all features!')
+        return self
+
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.decomposition import KernelPCA
 
-        n_components = resolve_factor(self.n_components_factor, min(*X.shape))
+        n_components = resolve_factor(self.n_components_factor, min(n_samples, n_features))
 
-        self.preprocessor = KernelPCA(
+        return KernelPCA(
             n_components=n_components,
             kernel=self.kernel,
             degree=self.degree,
@@ -59,18 +74,6 @@ class KernelPCAComponent(PreprocessingAlgorithm):
             remove_zero_eig=self.remove_zero_eig,
             n_jobs=1,
             copy_X=False)
-
-        if scipy.sparse.issparse(X):
-            X = X.astype(np.float64)
-        with warnings.catch_warnings():
-            warnings.filterwarnings("error")
-            self.preprocessor.fit(X)
-
-        # Raise an informative error message, equation is based ~line 249 in
-        # kernel_pca.py in scikit-learn
-        if len(self.preprocessor.alphas_ / self.preprocessor.lambdas_) == 0:
-            raise ValueError('KernelPCA removed all features!')
-        return self
 
     def transform(self, X):
         if self.preprocessor is None:

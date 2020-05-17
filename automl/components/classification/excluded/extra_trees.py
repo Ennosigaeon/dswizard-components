@@ -1,13 +1,10 @@
-import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
-from automl.util.common import check_none
-from automl.util.util import convert_multioutput_multiclass_to_multilabel
-
 from automl.util.common import resolve_factor
+from automl.util.util import convert_multioutput_multiclass_to_multilabel
 
 
 class ExtraTreesClassifier(PredictionAlgorithm):
@@ -41,20 +38,25 @@ class ExtraTreesClassifier(PredictionAlgorithm):
         self.class_weight = class_weight
 
     def fit(self, X, y, sample_weight=None):
+        self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
+        self.estimator.fit(X, y, sample_weight=sample_weight)
+        return self
+
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.ensemble import ExtraTreesClassifier
 
         # Heuristic to set the tree depth
-        max_depth = resolve_factor(self.max_depth_factor, X.shape[1])
+        max_depth = resolve_factor(self.max_depth_factor, n_features)
         if max_depth is not None:
             max_depth = max(max_depth, 2)
 
         # Heuristic to set the tree width
-        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, X.shape[0])
+        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, n_samples)
         if max_leaf_nodes is not None:
             max_leaf_nodes = max(max_leaf_nodes, 2)
 
         # initial fit of only increment trees
-        self.estimator = ExtraTreesClassifier(
+        return ExtraTreesClassifier(
             n_estimators=self.n_estimators,
             criterion=self.criterion,
             max_features=self.max_features,
@@ -68,8 +70,6 @@ class ExtraTreesClassifier(PredictionAlgorithm):
             ccp_alpha=self.ccp_alpha,
             random_state=self.random_state,
             class_weight=self.class_weight)
-        self.estimator.fit(X, y, sample_weight=sample_weight)
-        return self
 
     def predict_proba(self, X):
         if self.estimator is None:

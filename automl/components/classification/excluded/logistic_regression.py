@@ -36,9 +36,14 @@ class LogisticRegression(PredictionAlgorithm):
         self.random_state = random_state
 
     def fit(self, X, y, sample_weight=None):
+        self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
+        self.estimator.fit(X, y, sample_weight=sample_weight)
+        return self
+
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.linear_model import LogisticRegression
 
-        self.estimator = LogisticRegression(
+        return LogisticRegression(
             penalty=self.penalty,
             solver=self.solver,
             dual=self.dual,
@@ -50,8 +55,6 @@ class LogisticRegression(PredictionAlgorithm):
             multi_class=self.multi_class,
             random_state=self.random_state,
             l1_ratio=self.l1_ratio)
-        self.estimator.fit(X, y, sample_weight=sample_weight)
-        return self
 
     def predict_proba(self, X):
         if self.estimator is None:

@@ -165,7 +165,7 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
 
     def set_hyperparameters(self, configuration: dict, init_params=None) -> 'EstimatorComponent':
         for param, value in configuration.items():
-            if not hasattr(self, param):
+            if not hasattr(self, param) and param != 'random_state':
                 raise ValueError('Cannot set hyperparameter %s for %s because '
                                  'the hyperparameter does not exist.' %
                                  (param, str(self)))
@@ -179,6 +179,10 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
                                      (param, str(self)))
                 setattr(self, param, value)
 
+        return self
+
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+        """Transforms this Component to a standard sklearn component if possible"""
         return self
 
     def __str__(self):
@@ -210,6 +214,11 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
         estimator : the underlying estimator object
         """
         return self.estimator
+
+    def fit(self, X, Y):
+        self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
+        self.estimator.fit(X, Y)
+        return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
         X = check_array(X)
@@ -252,6 +261,11 @@ class PreprocessingAlgorithm(EstimatorComponent, ABC):
         """
         return self.preprocessor
 
+    def fit(self, X, Y):
+        self.preprocessor = self.to_sklearn(X.shape[0], X.shape[1])
+        self.preprocessor.fit(X, Y)
+        return self
+
     def transform(self, X):
         if self.preprocessor is None:
             raise ValueError()
@@ -283,7 +297,7 @@ class NoopComponent(EstimatorComponent):
 # noinspection PyPep8Naming
 class ComponentChoice(EstimatorComponent):
 
-    def __init__(self, random_state=None):
+    def __init__(self, choice: Optional[BaseEstimator] = None, new_params: Dict = None, random_state=None):
         # Since all calls to get_hyperparameter_search_space will be done by the
         # pipeline on construction, it is not necessary to construct a
         # configuration space at this location!
@@ -298,10 +312,10 @@ class ComponentChoice(EstimatorComponent):
         # Since the pipeline will initialize the hyperparameters, it is not
         # necessary to do this upon the construction of this object
         # self.set_hyperparameters(self.configuration)
-        self.choice: Optional[BaseEstimator] = None
+        self.choice: Optional[BaseEstimator] = choice
+        self.new_params = new_params
         self.configuration_space_: Optional[ConfigurationSpace] = None
         self.dataset_properties_: Optional[Dict] = None
-        self.new_params = None
 
     def get_components(self) -> Dict[str, Type[EstimatorComponent]]:
         raise NotImplementedError()

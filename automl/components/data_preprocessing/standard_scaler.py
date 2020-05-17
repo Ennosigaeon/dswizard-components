@@ -11,11 +11,9 @@ class StandardScalerComponent(PreprocessingAlgorithm):
         self.with_mean = with_mean
         self.with_std = with_std
 
-    def fit(self, X, y=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.preprocessing import StandardScaler
-        self.preprocessor = StandardScaler(with_std=self.with_std, with_mean=self.with_mean, copy=False)
-        self.preprocessor.fit(X)
-        return self
+        return StandardScaler(with_std=self.with_std, with_mean=self.with_mean, copy=False)
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

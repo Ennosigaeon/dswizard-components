@@ -25,21 +25,24 @@ class PCAComponent(PreprocessingAlgorithm):
         self.random_state = random_state
 
     def fit(self, X, Y=None):
-        from sklearn.decomposition import PCA
-        n_components = resolve_factor(self.keep_variance, min(*X.shape))
-        self.preprocessor = PCA(n_components=n_components,
-                                whiten=self.whiten,
-                                random_state=self.random_state,
-                                svd_solver=self.svd_solver,
-                                tol=self.tol,
-                                iterated_power=self.iterated_power,
-                                copy=False)
+        self.preprocessor = self.to_sklearn(X.shape[0], X.shape[1])
         self.preprocessor.fit(X)
 
         if not np.isfinite(self.preprocessor.components_).all():
             raise ValueError("PCA found non-finite components.")
 
         return self
+
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+        from sklearn.decomposition import PCA
+        n_components = resolve_factor(self.keep_variance, min(n_samples, n_features))
+        return PCA(n_components=n_components,
+                   whiten=self.whiten,
+                   random_state=self.random_state,
+                   svd_solver=self.svd_solver,
+                   tol=self.tol,
+                   iterated_power=self.iterated_power,
+                   copy=False)
 
     @staticmethod
     def get_properties(dataset_properties=None):

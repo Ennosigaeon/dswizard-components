@@ -17,16 +17,14 @@ class QuadraticDiscriminantAnalysis(PredictionAlgorithm):
         self.store_covariance = store_covariance
         self.tol = tol
 
-    def fit(self, X, y):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 
-        self.estimator = QuadraticDiscriminantAnalysis(
+        return QuadraticDiscriminantAnalysis(
             reg_param=self.reg_param,
             store_covariance=self.store_covariance,
             tol=self.tol
         )
-        self.estimator.fit(X, y)
-        return self
 
     def predict_proba(self, X):
         if self.estimator is None:

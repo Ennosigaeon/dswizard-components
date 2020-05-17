@@ -1,12 +1,11 @@
-import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
-    UnParametrizedHyperparameter, Constant, CategoricalHyperparameter
+    Constant, CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.common import check_none
-
 from automl.util.common import resolve_factor
+
 
 # TODO does not honour affinity restrictions
 
@@ -40,14 +39,14 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         self.validation_fraction = validation_fraction
         self.random_state = random_state
 
-    def fit(self, X, Y):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.ensemble._hist_gradient_boosting.gradient_boosting import HistGradientBoostingClassifier
 
         if check_none(self.scoring):
             self.scoring = None
 
         # Heuristic to set the tree depth
-        max_depth = resolve_factor(self.max_depth_factor, X.shape[1])
+        max_depth = resolve_factor(self.max_depth_factor, n_features)
         if max_depth is not None:
             max_depth = max(max_depth, 2)
 
@@ -55,7 +54,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         if isinstance(self.max_leaf_nodes_factor, int):
             max_leaf_nodes = self.max_leaf_nodes_factor
         else:
-            max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, X.shape[0])
+            max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, n_samples)
         if max_leaf_nodes is not None:
             max_leaf_nodes = max(max_leaf_nodes, 2)
 
@@ -63,12 +62,12 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         if isinstance(self.min_samples_leaf, int):
             min_samples_leaf = self.min_samples_leaf
         else:
-            min_samples_leaf = resolve_factor(self.min_samples_leaf, X.shape[0])
+            min_samples_leaf = resolve_factor(self.min_samples_leaf, n_samples)
 
         if self.scoring == 'balanced_accurary':
             self.scoring = 'balanced_accuracy'
 
-        self.estimator = HistGradientBoostingClassifier(
+        return HistGradientBoostingClassifier(
             loss=self.loss,
             learning_rate=self.learning_rate,
             max_iter=self.max_iter,
@@ -83,9 +82,6 @@ class GradientBoostingClassifier(PredictionAlgorithm):
             validation_fraction=self.validation_fraction,
             random_state=self.random_state,
         )
-
-        self.estimator.fit(X, Y)
-        return self
 
     @staticmethod
     def get_properties(dataset_properties=None):

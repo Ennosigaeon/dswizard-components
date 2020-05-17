@@ -8,11 +8,9 @@ class MaxAbsScalerComponent(PreprocessingAlgorithm):
     def __init__(self):
         super().__init__()
 
-    def fit(self, X, y=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.preprocessing import MaxAbsScaler
-        self.preprocessor = MaxAbsScaler(copy=False)
-        self.preprocessor.fit(X)
-        return self
+        return MaxAbsScaler(copy=False)
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

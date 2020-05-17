@@ -21,21 +21,16 @@ class TruncatedSVDComponent(PreprocessingAlgorithm):
         self.tol = tol
         self.random_state = random_state
 
-    def fit(self, X, Y):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.decomposition import TruncatedSVD
 
-        n_components = min(resolve_factor(self.n_components_factor, min(*X.shape)), min(*X.shape) - 1)
-        self.preprocessor = TruncatedSVD(n_components=n_components,
-                                         algorithm=self.algorithm,
-                                         n_iter=self.n_iter,
-                                         tol=self.tol,
-                                         random_state=self.random_state).fit(X, Y)
-        return self
-
-    def transform(self, X):
-        if self.preprocessor is None:
-            raise NotImplementedError()
-        return self.preprocessor.transform(X)
+        n_components = min(resolve_factor(self.n_components_factor,
+                                          min(n_samples, n_features)), min(n_samples, n_features) - 1)
+        return TruncatedSVD(n_components=n_components,
+                            algorithm=self.algorithm,
+                            n_iter=self.n_iter,
+                            tol=self.tol,
+                            random_state=self.random_state)
 
     @staticmethod
     def get_properties(dataset_properties=None):

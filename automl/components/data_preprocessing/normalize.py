@@ -9,10 +9,9 @@ class NormalizerComponent(PreprocessingAlgorithm):
         super().__init__()
         self.norm = norm
 
-    def fit(self, X, y=None):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
         from sklearn.preprocessing import Normalizer
-        self.preprocessor = Normalizer(norm=self.norm, copy=False)
-        return self
+        return Normalizer(norm=self.norm, copy=False)
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
