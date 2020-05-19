@@ -1,8 +1,9 @@
+import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import Constant, UniformFloatHyperparameter
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-import numpy as np
+
 
 class BinarizerComponent(PreprocessingAlgorithm):
 
@@ -11,13 +12,15 @@ class BinarizerComponent(PreprocessingAlgorithm):
         self.threshold_factor = threshold_factor
 
     def fit(self, X, y=None):
-        from sklearn.preprocessing import Binarizer
-
-        variance = np.mean(np.var(X))
-        threshold = max(0., int(np.round(variance * self.threshold_factor, 0)))
-        self.preprocessor = Binarizer(threshold=threshold, copy=False)
+        self.preprocessor = self.to_sklearn(X.shape[0], X.shape[1], np.mean(np.var(X)))
         self.preprocessor = self.preprocessor.fit(X)
         return self
+
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, variance: float = 1, **kwargs):
+        from sklearn.preprocessing import Binarizer
+
+        threshold = max(0., int(np.round(variance * self.threshold_factor, 0)))
+        return Binarizer(threshold=threshold, copy=False)
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

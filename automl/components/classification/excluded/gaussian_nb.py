@@ -23,7 +23,7 @@ class GaussianNB(PredictionAlgorithm):
         self.estimator.fit(X, y)
         return self
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, multilabel: bool = False):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, multilabel: bool = False, **kwargs):
         import sklearn.naive_bayes
 
         estimator = sklearn.naive_bayes.GaussianNB(var_smoothing=self.var_smoothing)

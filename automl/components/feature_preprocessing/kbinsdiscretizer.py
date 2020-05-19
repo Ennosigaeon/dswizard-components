@@ -16,7 +16,7 @@ class KBinsDiscretizer(PreprocessingAlgorithm):
         self.encode = encode
         self.strategy = strategy
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.preprocessing import KBinsDiscretizer
         return KBinsDiscretizer(n_bins=self.n_bins, encode=self.encode, strategy=self.strategy)
 

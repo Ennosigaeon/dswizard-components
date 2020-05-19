@@ -8,7 +8,7 @@ class MinMaxScalerComponent(PreprocessingAlgorithm):
     def __init__(self):
         super().__init__()
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.preprocessing import MinMaxScaler
         return MinMaxScaler(copy=False)
 

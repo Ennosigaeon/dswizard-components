@@ -41,7 +41,7 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
         self.preprocessor.fit(X, y)
         return self
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.feature_selection import SelectPercentile, chi2, f_classif, mutual_info_classif
 
         if self.score_func == "chi2":

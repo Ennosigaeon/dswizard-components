@@ -33,7 +33,7 @@ class SVCClassifier(PredictionAlgorithm):
         self.max_iter = max_iter
         self.random_state = random_state
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.svm import LinearSVC
 
         return LinearSVC(

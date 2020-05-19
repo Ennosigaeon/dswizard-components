@@ -17,7 +17,7 @@ class KNNImputerComponent(PreprocessingAlgorithm):
         self.metric = metric
         self.add_indicator = add_indicator
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.impute import KNNImputer
 
         return KNNImputer(missing_values=self.missing_values, n_neighbors=self.n_neighbors,

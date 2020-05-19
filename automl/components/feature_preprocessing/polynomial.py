@@ -14,7 +14,7 @@ class PolynomialFeaturesComponent(PreprocessingAlgorithm):
         self.include_bias = include_bias
         self.order = order
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.preprocessing import PolynomialFeatures
 
         self.interaction_only = check_for_bool(self.interaction_only)

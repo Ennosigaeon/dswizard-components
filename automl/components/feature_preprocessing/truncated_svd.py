@@ -21,7 +21,7 @@ class TruncatedSVDComponent(PreprocessingAlgorithm):
         self.tol = tol
         self.random_state = random_state
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.decomposition import TruncatedSVD
 
         n_components = min(resolve_factor(self.n_components_factor,

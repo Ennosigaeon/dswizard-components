@@ -8,6 +8,33 @@ from automl.components.base import PreprocessingAlgorithm, NoopComponent
 
 
 class ImputationComponent(PreprocessingAlgorithm):
+    """ImputationComponent
+
+    An ImputationComponent that can handle missing values. Missing values are automatically detected
+    Read more in the :ref:`User Guide`.
+
+    Parameters
+    ----------
+    missing_values : np.nan
+        The value that is treated as a missing value
+
+    strategy : str
+        The imputation strategy
+
+    add_indicator : bool
+        Add an indicator if a row contained a missing value
+
+    Attributes
+    ----------
+
+    See also
+    --------
+    SimpleImputer
+
+    References
+    ----------
+    """
+
     def __init__(self, missing_values=np.nan, strategy: str = 'mean', add_indicator: bool = False):
         super().__init__()
         self.strategy = strategy
@@ -17,6 +44,9 @@ class ImputationComponent(PreprocessingAlgorithm):
     def fit(self, X, y=None):
         from sklearn.impute import SimpleImputer
         from sklearn.compose import ColumnTransformer
+
+        if isinstance(X, np.ndarray):
+            X = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1]))
 
         if not np.any(pd.isna(X)):
             self.preprocessor = NoopComponent()

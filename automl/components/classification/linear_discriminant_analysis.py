@@ -20,7 +20,7 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
         self.tol = tol
         self.n_components = n_components
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
         # initial fit of only increment trees

@@ -17,7 +17,7 @@ class QuadraticDiscriminantAnalysis(PredictionAlgorithm):
         self.store_covariance = store_covariance
         self.tol = tol
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 
         return QuadraticDiscriminantAnalysis(

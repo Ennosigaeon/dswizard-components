@@ -25,7 +25,7 @@ class BernoulliNB(PredictionAlgorithm):
         self.estimator.fit(X, y)
         return self
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, multilabel: bool = False):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, multilabel: bool = False, **kwargs):
         from sklearn.naive_bayes import BernoulliNB
 
         self.fit_prior = check_for_bool(self.fit_prior)

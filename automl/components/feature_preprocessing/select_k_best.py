@@ -13,7 +13,7 @@ class SelectKBestComponent(PreprocessingAlgorithm):
         self.score_func = score_func
         self.k_factor = k_factor
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.feature_selection import chi2, f_classif, mutual_info_classif, f_regression
         if self.score_func == "chi2":
             score_func = chi2

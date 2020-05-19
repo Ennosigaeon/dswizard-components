@@ -23,7 +23,7 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
         self.distance_threshold = distance_threshold
         self.pooling_func = pooling_func
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.cluster import FeatureAgglomeration
 
         if self.pooling_func == "mean":

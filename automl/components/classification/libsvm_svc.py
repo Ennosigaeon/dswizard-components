@@ -39,7 +39,7 @@ class LibSVM_SVC(PredictionAlgorithm):
         self.probability = probability
         self.break_ties = break_ties
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.svm import SVC
 
         if self.degree is None:

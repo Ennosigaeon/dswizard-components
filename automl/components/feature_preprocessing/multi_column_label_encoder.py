@@ -5,6 +5,28 @@ from automl.components.base import PreprocessingAlgorithm
 
 
 class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
+    """MultiColumnLabelEncoderComponent
+
+    A ColumnEncoder that can handle missing values and multiple categorical columns.
+    Read more in the :ref:`User Guide`.
+
+    Parameters
+    ----------
+    columns : List[str] (optional)
+        List of column to be encoded
+
+    Attributes
+    ----------
+    preprocessor : LabelEncoder
+        The used LabelEncoder
+
+    See also
+    --------
+    LabelEncoder
+
+    References
+    ----------
+    """
 
     def __init__(self,
                  columns=None):
@@ -22,6 +44,9 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
         LabelEncoder(). If no columns specified, transforms all
         columns in X.
         """
+
+        if isinstance(X, np.ndarray):
+            X = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1]))
 
         categorical = X.select_dtypes(include=['category', 'object']).columns
         if len(categorical) == 0:

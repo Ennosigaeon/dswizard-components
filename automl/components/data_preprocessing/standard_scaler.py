@@ -11,7 +11,7 @@ class StandardScalerComponent(PreprocessingAlgorithm):
         self.with_mean = with_mean
         self.with_std = with_std
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.preprocessing import StandardScaler
         return StandardScaler(with_std=self.with_std, with_mean=self.with_mean, copy=False)
 

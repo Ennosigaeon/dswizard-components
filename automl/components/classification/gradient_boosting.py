@@ -39,7 +39,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         self.validation_fraction = validation_fraction
         self.random_state = random_state
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.ensemble._hist_gradient_boosting.gradient_boosting import HistGradientBoostingClassifier
 
         if check_none(self.scoring):

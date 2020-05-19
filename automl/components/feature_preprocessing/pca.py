@@ -33,7 +33,7 @@ class PCAComponent(PreprocessingAlgorithm):
 
         return self
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.decomposition import PCA
         n_components = resolve_factor(self.keep_variance, min(n_samples, n_features))
         return PCA(n_components=n_components,

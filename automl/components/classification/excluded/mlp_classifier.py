@@ -57,7 +57,7 @@ class MLPClassifier(PredictionAlgorithm):
         self.max_fun = max_fun
         self.random_state = random_state
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.neural_network import MLPClassifier
 
         return MLPClassifier(

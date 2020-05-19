@@ -181,7 +181,7 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
 
         return self
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         """Transforms this Component to a standard sklearn component if possible"""
         return self
 
@@ -283,6 +283,8 @@ class PreprocessingAlgorithm(EstimatorComponent, ABC):
 class NoopComponent(EstimatorComponent):
 
     def transform(self, X: pd.DataFrame) -> np.ndarray:
+        if isinstance(X, np.ndarray):
+            return X
         return X.to_numpy()
 
     @staticmethod

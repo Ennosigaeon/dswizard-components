@@ -13,7 +13,7 @@ class VarianceThresholdComponent(PreprocessingAlgorithm):
         super().__init__()
         self.threshold = threshold
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.feature_selection import VarianceThreshold
         return VarianceThreshold(threshold=self.threshold)
 

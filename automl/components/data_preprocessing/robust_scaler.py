@@ -13,7 +13,7 @@ class RobustScalerComponent(PreprocessingAlgorithm):
         self.q_min = q_min
         self.q_max = q_max
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         if self.q_max < self.q_min:
             help = self.q_max
             self.q_max = self.q_min

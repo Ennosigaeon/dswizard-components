@@ -12,7 +12,7 @@ class MissingIndicatorComponent(PreprocessingAlgorithm):
         self.features = features
         self.missing_values = missing_values
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.impute import MissingIndicator
         return MissingIndicator(missing_values=self.missing_values, features=self.features)
 

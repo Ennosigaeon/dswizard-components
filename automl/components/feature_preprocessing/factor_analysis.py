@@ -25,7 +25,7 @@ class FactorAnalysisComponent(PreprocessingAlgorithm):
         self.random_state = random_state
         self.copy = copy
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.decomposition import FactorAnalysis
 
         n_components = resolve_factor(self.n_components_factor, n_features)

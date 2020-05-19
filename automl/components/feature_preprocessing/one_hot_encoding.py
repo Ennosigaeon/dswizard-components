@@ -5,6 +5,25 @@ from automl.components.base import PreprocessingAlgorithm
 
 
 class OneHotEncoderComponent(PreprocessingAlgorithm):
+    """OneHotEncoderComponent
+
+    A OneHotEncoder that can handle missing values and multiple categorical columns.
+    Read more in the :ref:`User Guide`.
+
+    Parameters
+    ----------
+
+    Attributes
+    ----------
+
+    See also
+    --------
+    OneHotEncoder
+
+    References
+    ----------
+    """
+
     def __init__(self):
         super().__init__()
 
@@ -12,6 +31,9 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
         return self
 
     def transform(self, X: pd.DataFrame):
+        if isinstance(X, np.ndarray):
+            X = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1]))
+
         dummy_na = np.any(pd.isna(X))
         X = pd.get_dummies(X, sparse=False, dummy_na=dummy_na)
         return X.to_numpy()

@@ -27,7 +27,7 @@ class GenericUnivariateSelectComponent(PreprocessingAlgorithm):
         else:
             raise ValueError("score_func must be in ('chi2, 'f_classif', 'mutual_info'), but is: %s" % score_func)
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0):
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.feature_selection import GenericUnivariateSelect
 
         return GenericUnivariateSelect(param=self.param,
