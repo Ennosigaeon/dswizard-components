@@ -2,6 +2,8 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, Constant
 
 from automl.components.base import PreprocessingAlgorithm
+from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
+    HANDLES_MULTICLASS
 
 
 class SelectPercentileClassification(PreprocessingAlgorithm):
@@ -87,13 +89,11 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
 
         return {'shortname': 'SPC',
                 'name': 'Select Percentile Classification',
-                'handles_regression': False,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': False,
-                'is_deterministic': True}
-        # 'input': (SPARSE, DENSE, data_type),
-        # 'output': (INPUT,)}
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

@@ -3,7 +3,8 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformInteg
     CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
-from automl.util.common import resolve_factor
+from automl.util.common import resolve_factor, HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
+    HANDLES_NOMINAL_CLASS
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
 
 
@@ -82,14 +83,11 @@ class ExtraTreesClassifier(PredictionAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'ET',
                 'name': 'Extra Trees Classifier',
-                'handles_regression': False,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                'is_deterministic': True,
-                # 'input': (DENSE, SPARSE, UNSIGNED_DATA),
-                # 'output': (PREDICTIONS,)
-                }
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

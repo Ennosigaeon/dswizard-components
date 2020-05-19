@@ -8,7 +8,8 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatH
 
 from automl.components.base import PreprocessingAlgorithm
 
-from automl.util.common import resolve_factor
+from automl.util.common import resolve_factor, HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL,\
+    HANDLES_NUMERIC, HANDLES_MULTICLASS
 
 
 class KernelPCAComponent(PreprocessingAlgorithm):
@@ -92,14 +93,11 @@ class KernelPCAComponent(PreprocessingAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'KernelPCA',
                 'name': 'Kernel Principal Component Analysis',
-                'handles_regression': True,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                'is_deterministic': False,
-                # 'input': (DENSE, SPARSE, UNSIGNED_DATA),
-                # 'output': (DENSE, UNSIGNED_DATA)
-                }
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

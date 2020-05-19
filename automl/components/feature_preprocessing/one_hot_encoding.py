@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 
 from automl.components.base import PreprocessingAlgorithm
+from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
+    HANDLES_MULTICLASS
 
 
 class OneHotEncoderComponent(PreprocessingAlgorithm):
@@ -42,12 +44,8 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': '1Hot',
                 'name': 'One Hot Encoder',
-                'handles_regression': True,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                # TODO find out of this is right!
-                'handles_sparse': True,
-                'handles_dense': True, }
-        # 'input': (DENSE, SPARSE, UNSIGNED_DATA),
-        # 'output': (INPUT,), }
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: True,
+                HANDLES_MISSING: True,
+                HANDLES_NOMINAL_CLASS: True}

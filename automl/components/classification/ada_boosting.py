@@ -3,6 +3,8 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformInteg
     CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
+from automl.util.common import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
+    HANDLES_NOMINAL_CLASS
 
 
 class AdaBoostingClassifier(PredictionAlgorithm):
@@ -31,13 +33,11 @@ class AdaBoostingClassifier(PredictionAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'AB',
                 'name': 'Ada Boosting Classifier',
-                'handles_regression': False,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': False,
-                'is_deterministic': True,
-                # 'input': (DENSE, UNSIGNED_DATA),
-                # 'output': (PREDICTIONS,)
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: True
                 }
 
     @staticmethod

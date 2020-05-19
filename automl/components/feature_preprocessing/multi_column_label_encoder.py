@@ -1,7 +1,9 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 from automl.components.base import PreprocessingAlgorithm
+from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
+    HANDLES_MULTICLASS
 
 
 class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
@@ -54,6 +56,7 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
         else:
             for colname in categorical:
                 missing_vec = pd.isna(X[colname])
+                X[colname] = X[colname].astype('category')
                 X[colname].cat.add_categories(['<MISSING>'], inplace=True)
                 X.loc[missing_vec, colname] = '<MISSING>'
 
@@ -69,19 +72,8 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'MultiColumnLabelEncoder',
                 'name': 'MultiColumnLabelEncoder',
-                'handles_missing_values': False,
-                'handles_nominal_values': False,
-                'handles_numerical_features': True,
-                'prefers_data_scaled': False,
-                'prefers_data_normalized': False,
-                'handles_regression': True,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                'is_deterministic': True,
-                # TODO find out of this is right!
-                'handles_sparse': True,
-                'handles_dense': True,
-                # 'input': (DENSE, UNSIGNED_DATA),
-                # 'output': (INPUT, SIGNED_DATA),
-                'preferred_dtype': None}
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: True,
+                HANDLES_MISSING: True,
+                HANDLES_NOMINAL_CLASS: True}

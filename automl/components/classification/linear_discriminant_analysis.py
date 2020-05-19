@@ -5,6 +5,8 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformInteg
 from ConfigSpace.conditions import InCondition
 from automl.components.base import PredictionAlgorithm
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
+from automl.util.common import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
+    HANDLES_NOMINAL_CLASS
 
 
 class LinearDiscriminantAnalysis(PredictionAlgorithm):
@@ -40,13 +42,11 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'LR',
                 'name': 'Logistic Regression',
-                'handles_regression': False,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                'is_deterministic': True,
-                # 'input': (DENSE, SPARSE, UNSIGNED_DATA),
-                # 'output': (PREDICTIONS,)
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: True
                 }
 
     @staticmethod

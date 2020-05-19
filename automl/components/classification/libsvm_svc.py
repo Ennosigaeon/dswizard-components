@@ -5,7 +5,8 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformInteg
     CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
-from automl.util.common import check_none, check_for_bool
+from automl.util.common import check_none, check_for_bool, HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, \
+    HANDLES_MISSING, HANDLES_NOMINAL_CLASS
 from automl.util.util import softmax
 
 
@@ -79,13 +80,11 @@ class LibSVM_SVC(PredictionAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'LibSVM-SVC',
                 'name': 'LibSVM Support Vector Classification',
-                'handles_regression': False,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': False,
-                'is_deterministic': True,
-                # 'input': (DENSE, SPARSE, UNSIGNED_DATA),
-                # 'output': (PREDICTIONS,)}
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: True
                 }
 
     @staticmethod

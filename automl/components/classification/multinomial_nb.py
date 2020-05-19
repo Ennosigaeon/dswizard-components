@@ -3,7 +3,8 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
-from automl.util.common import check_for_bool
+from automl.util.common import check_for_bool, HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
+    HANDLES_NOMINAL_CLASS
 
 
 class MultinomialNB(PredictionAlgorithm):
@@ -39,13 +40,11 @@ class MultinomialNB(PredictionAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'MultinomialNB',
                 'name': 'Multinomial Naive Bayes classifier',
-                'handles_regression': False,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                'is_deterministic': True,
-                # 'input': (DENSE, SPARSE, UNSIGNED_DATA),
-                # 'output': (PREDICTIONS,)
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: False
                 }
 
     @staticmethod

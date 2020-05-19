@@ -9,8 +9,19 @@ __all__ = [
     'check_for_bool',
     'check_false',
     'check_true',
-    'resolve_factor'
+    'resolve_factor',
+    'HANDLES_MULTICLASS',
+    'HANDLES_NUMERIC',
+    'HANDLES_NOMINAL',
+    'HANDLES_MISSING',
+    'HANDLES_NOMINAL_CLASS'
 ]
+
+HANDLES_MULTICLASS = 'handles_multiclass'
+HANDLES_NUMERIC = 'handles_numeric'
+HANDLES_NOMINAL = 'handles_nominal'
+HANDLES_MISSING = 'handles_missing'
+HANDLES_NOMINAL_CLASS = 'handles_nominal_class'
 
 
 def check_true(p):

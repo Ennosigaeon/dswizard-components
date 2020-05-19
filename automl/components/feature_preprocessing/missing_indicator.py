@@ -3,6 +3,8 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
+from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
+    HANDLES_MULTICLASS
 
 
 class MissingIndicatorComponent(PreprocessingAlgorithm):
@@ -20,22 +22,11 @@ class MissingIndicatorComponent(PreprocessingAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'Imputation',
                 'name': 'Imputation',
-                'handles_missing_values': True,
-                'handles_nominal_values': True,
-                'handles_numerical_features': True,
-                'prefers_data_scaled': False,
-                'prefers_data_normalized': False,
-                'handles_regression': True,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                'is_deterministic': True,
-                # TODO find out of this is right!
-                'handles_sparse': True,
-                'handles_dense': True,
-                # 'input': (DENSE, SPARSE, UNSIGNED_DATA),
-                # 'output': (INPUT,),
-                'preferred_dtype': None}
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: True,
+                HANDLES_MISSING: True,
+                HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

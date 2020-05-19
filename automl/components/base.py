@@ -224,7 +224,11 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
         X = check_array(X)
         # add class probabilities as a synthetic feature
         # noinspection PyUnresolvedReferences
-        X_transformed = np.hstack((X, self.estimator.predict_proba(X)))
+        try:
+            X_transformed = np.hstack((X, self.estimator.predict_proba(X)))
+        except AttributeError:
+            # Some classifiers do not implement predict_proba
+            X_transformed = X
 
         # add class prediction as a synthetic feature
         # noinspection PyUnresolvedReferences

@@ -2,6 +2,8 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, Constant
 
 from automl.components.base import PreprocessingAlgorithm
+from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
+    HANDLES_MULTICLASS
 
 
 class GenericUnivariateSelectComponent(PreprocessingAlgorithm):
@@ -58,14 +60,8 @@ class GenericUnivariateSelectComponent(PreprocessingAlgorithm):
         return {
             'shortname': 'GenericUnivariateSelect',
             'name': 'Generic Univariate Select',
-            # TODO Check if True
-            'handles_regression': True,
-            'handles_classification': True,
-            'handles_multiclass': True,
-            'handles_multilabel': True,
-            'is_deterministic': True,
-            'handles_sparse': True,
-            'handles_dense': True,
-            # 'input': (DENSE, SPARSE, UNSIGNED_DATA),
-            # 'output': (INPUT,),
-        }
+            HANDLES_MULTICLASS: True,
+            HANDLES_NUMERIC: True,
+            HANDLES_NOMINAL: False,
+            HANDLES_MISSING: False,
+            HANDLES_NOMINAL_CLASS: True}

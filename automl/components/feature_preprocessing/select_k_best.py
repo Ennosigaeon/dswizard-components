@@ -2,7 +2,8 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from automl.util.common import resolve_factor
+from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
+    HANDLES_MULTICLASS, resolve_factor
 
 
 class SelectKBestComponent(PreprocessingAlgorithm):
@@ -56,7 +57,8 @@ class SelectKBestComponent(PreprocessingAlgorithm):
         cs = ConfigurationSpace()
 
         k_factor = UniformFloatHyperparameter("k_factor", 0., 1., default_value=0.5)
-        score_func = CategoricalHyperparameter(name="score_func", choices=["chi2", "f_classif", "mutual_info", "f_regression"],
+        score_func = CategoricalHyperparameter(name="score_func",
+                                               choices=["chi2", "f_classif", "mutual_info", "f_regression"],
                                                default_value="f_classif")
 
         cs.add_hyperparameters([score_func, k_factor])
@@ -66,11 +68,8 @@ class SelectKBestComponent(PreprocessingAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'FastICA',
                 'name': 'Fast Independent Component Analysis',
-                'handles_regression': True,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                'is_deterministic': False,
-                # 'input': (DENSE, UNSIGNED_DATA),
-                # 'output': (INPUT, UNSIGNED_DATA)
-                }
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: True}

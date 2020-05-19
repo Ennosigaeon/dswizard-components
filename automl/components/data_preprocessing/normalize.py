@@ -2,6 +2,7 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
+from util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, HANDLES_MULTICLASS
 
 
 class NormalizerComponent(PreprocessingAlgorithm):
@@ -24,19 +25,8 @@ class NormalizerComponent(PreprocessingAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'Normalizer',
                 'name': 'Normalizer',
-                'handles_missing_values': False,
-                'handles_nominal_values': False,
-                'handles_numerical_features': True,
-                'prefers_data_scaled': False,
-                'prefers_data_normalized': False,
-                'handles_regression': True,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                'is_deterministic': True,
-                # TODO find out of this is right!
-                'handles_sparse': True,
-                'handles_dense': True,
-                # 'input': (SPARSE, DENSE, UNSIGNED_DATA),
-                # 'output': (INPUT,),
-                'preferred_dtype': None}
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: True}

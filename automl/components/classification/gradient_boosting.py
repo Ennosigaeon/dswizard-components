@@ -3,7 +3,8 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformInteg
     Constant, CategoricalHyperparameter
 
 from automl.components.base import PredictionAlgorithm
-from automl.util.common import check_none
+from automl.util.common import check_none, HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
+    HANDLES_NOMINAL_CLASS
 from automl.util.common import resolve_factor
 
 
@@ -87,13 +88,11 @@ class GradientBoostingClassifier(PredictionAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'GB',
                 'name': 'Gradient Boosting Classifier',
-                'handles_regression': False,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': False,
-                'is_deterministic': True,
-                # 'input': (DENSE, UNSIGNED_DATA),
-                # 'output': (PREDICTIONS,)
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: True
                 }
 
     @staticmethod

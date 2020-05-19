@@ -4,7 +4,8 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalH
     UniformIntegerHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from automl.util.common import resolve_factor
+from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
+    HANDLES_MULTICLASS, resolve_factor
 
 
 class TruncatedSVDComponent(PreprocessingAlgorithm):
@@ -36,14 +37,11 @@ class TruncatedSVDComponent(PreprocessingAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'TSVD',
                 'name': 'Truncated Singular Value Decomposition',
-                'handles_regression': True,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                'is_deterministic': True,
-                # 'input': (SPARSE, UNSIGNED_DATA),
-                # 'output': (DENSE, INPUT)
-                }
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

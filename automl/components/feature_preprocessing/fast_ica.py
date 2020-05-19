@@ -3,7 +3,8 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalH
     UniformIntegerHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from automl.util.common import resolve_factor
+from automl.util.common import resolve_factor, HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, \
+    HANDLES_NUMERIC, HANDLES_MULTICLASS
 
 
 class FastICAComponent(PreprocessingAlgorithm):
@@ -54,11 +55,8 @@ class FastICAComponent(PreprocessingAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'FastICA',
                 'name': 'Fast Independent Component Analysis',
-                'handles_regression': True,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                'is_deterministic': False,
-                # 'input': (DENSE, UNSIGNED_DATA),
-                # 'output': (INPUT, UNSIGNED_DATA)
-                }
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: True}

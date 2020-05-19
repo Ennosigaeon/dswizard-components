@@ -3,7 +3,8 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformIntegerHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from automl.util.common import check_for_bool
+from automl.util.common import check_for_bool, HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL,\
+    HANDLES_NUMERIC, HANDLES_MULTICLASS
 
 
 class PolynomialFeaturesComponent(PreprocessingAlgorithm):
@@ -29,14 +30,11 @@ class PolynomialFeaturesComponent(PreprocessingAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'PolynomialFeatures',
                 'name': 'PolynomialFeatures',
-                'handles_regression': True,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                'is_deterministic': True,
-                # 'input': (DENSE, UNSIGNED_DATA),
-                # 'output': (INPUT,)
-                }
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

@@ -5,6 +5,8 @@ from ConfigSpace import ForbiddenAndConjunction, ForbiddenEqualsClause
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
+from automl.util.common import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
+    HANDLES_NOMINAL_CLASS
 
 
 class SVCClassifier(PredictionAlgorithm):
@@ -60,14 +62,11 @@ class SVCClassifier(PredictionAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'LinearSVC',
                 'name': 'Linear Support Vector Classifier',
-                'handles_regression': False,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                'is_deterministic': True,
-                # 'input': (DENSE, SPARSE, UNSIGNED_DATA),
-                # 'output': (PREDICTIONS,)}
-                }
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

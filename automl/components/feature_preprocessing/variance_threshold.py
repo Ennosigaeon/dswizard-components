@@ -2,6 +2,8 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import Constant
 
 from automl.components.base import PreprocessingAlgorithm
+from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
+    HANDLES_MULTICLASS
 
 
 class VarianceThresholdComponent(PreprocessingAlgorithm):
@@ -19,19 +21,13 @@ class VarianceThresholdComponent(PreprocessingAlgorithm):
 
     @staticmethod
     def get_properties(dataset_properties=None):
-        return {
-            'shortname': 'Variance Threshold',
-            'name': 'Variance Threshold (constant feature removal)',
-            'handles_regression': True,
-            'handles_classification': True,
-            'handles_multiclass': True,
-            'handles_multilabel': True,
-            'is_deterministic': True,
-            'handles_sparse': True,
-            'handles_dense': True,
-            # 'input': (DENSE, SPARSE, UNSIGNED_DATA),
-            # 'output': (INPUT,),
-        }
+        return {'shortname': 'Variance Threshold',
+                'name': 'Variance Threshold (constant feature removal)',
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: True,
+                HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

@@ -5,7 +5,8 @@ from ConfigSpace.forbidden import ForbiddenAndConjunction, ForbiddenInClause, Fo
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from automl.util.common import resolve_factor
+from automl.util.common import resolve_factor, HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, \
+    HANDLES_NUMERIC, HANDLES_MULTICLASS
 
 
 class FeatureAgglomerationComponent(PreprocessingAlgorithm):
@@ -55,14 +56,11 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'FA',
                 'name': 'Feature Agglomeration',
-                'handles_regression': True,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                'is_deterministic': True,
-                # 'input': (DENSE, UNSIGNED_DATA),
-                # 'output': (INPUT,)
-                }
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

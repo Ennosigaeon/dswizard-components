@@ -3,6 +3,8 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 from automl.components.base import PredictionAlgorithm
+from automl.util.common import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
+    HANDLES_NOMINAL_CLASS
 
 
 class GaussianNB(PredictionAlgorithm):
@@ -38,14 +40,11 @@ class GaussianNB(PredictionAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'GaussianNB',
                 'name': 'Gaussian Naive Bayes classifier',
-                'handles_regression': False,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                'is_deterministic': True,
-                # 'input': (DENSE, UNSIGNED_DATA),
-                # 'output': (PREDICTIONS,)
-                }
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: False,
+                HANDLES_NOMINAL_CLASS: False}
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):

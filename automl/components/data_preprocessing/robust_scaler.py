@@ -2,6 +2,7 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
+from util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, HANDLES_MULTICLASS
 
 
 class RobustScalerComponent(PreprocessingAlgorithm):
@@ -27,17 +28,11 @@ class RobustScalerComponent(PreprocessingAlgorithm):
     def get_properties(dataset_properties=None):
         return {'shortname': 'RobustScaler',
                 'name': 'RobustScaler',
-                'handles_regression': True,
-                'handles_classification': True,
-                'handles_multiclass': True,
-                'handles_multilabel': True,
-                'is_deterministic': True,
-                # TODO find out of this is right!
-                'handles_sparse': True,
-                'handles_dense': True,
-                # 'input': (DENSE, UNSIGNED_DATA),
-                # 'output': (INPUT, SIGNED_DATA),
-                'preferred_dtype': None}
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: False,
+                HANDLES_MISSING: True,
+                HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
