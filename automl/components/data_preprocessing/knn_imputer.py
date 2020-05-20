@@ -3,7 +3,7 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntegerHyperparameter, Constant
 
 from automl.components.base import PreprocessingAlgorithm
-from util.common import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, HANDLES_NOMINAL_CLASS
+from automl.util.common import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, HANDLES_NOMINAL_CLASS
 
 
 class KNNImputerComponent(PreprocessingAlgorithm):

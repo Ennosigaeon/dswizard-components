@@ -1,7 +1,7 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
 
 from automl.components.base import PreprocessingAlgorithm
-from util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, HANDLES_MULTICLASS
+from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, HANDLES_MULTICLASS
 
 
 class MaxAbsScalerComponent(PreprocessingAlgorithm):

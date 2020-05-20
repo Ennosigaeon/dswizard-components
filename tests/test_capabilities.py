@@ -10,7 +10,7 @@ from automl.util.common import HANDLES_MULTICLASS, HANDLES_MISSING, HANDLES_NOMI
 from components.classification import ClassifierChoice
 from components.data_preprocessing import DataPreprocessorChoice
 from components.feature_preprocessing import FeaturePreprocessorChoice
-from util.common import HANDLES_NUMERIC, HANDLES_NOMINAL
+from automl.util.common import HANDLES_NUMERIC, HANDLES_NOMINAL
 
 
 class CapabilitiesTest(TestCase):

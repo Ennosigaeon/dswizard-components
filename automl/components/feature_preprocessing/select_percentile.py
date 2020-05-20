@@ -81,12 +81,6 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
 
     @staticmethod
     def get_properties():
-        # data_type = UNSIGNED_DATA
-        # if dataset_properties is not None:
-        #     signed = dataset_properties.get('signed')
-        #     if signed is not None:
-        #         data_type = SIGNED_DATA if signed is True else UNSIGNED_DATA
-
         return {'shortname': 'SPC',
                 'name': 'Select Percentile Classification',
                 HANDLES_MULTICLASS: True,

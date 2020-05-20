@@ -5,7 +5,7 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter
 from sklearn.impute import MissingIndicator
 
 from automl.components.base import PreprocessingAlgorithm, NoopComponent
-from util.common import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, HANDLES_NOMINAL_CLASS
+from automl.util.common import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, HANDLES_NOMINAL_CLASS
 
 
 class ImputationComponent(PreprocessingAlgorithm):
