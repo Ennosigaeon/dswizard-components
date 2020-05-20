@@ -355,9 +355,10 @@ class ComponentChoice(EstimatorComponent):
         new_params = {}
 
         choice = configuration['__choice__']
-        del configuration['__choice__']
-
         for param, value in configuration.items():
+            if param == '__choice__':
+                continue
+
             param = param.replace(choice, '').replace(':', '')
             new_params[param] = value
 
