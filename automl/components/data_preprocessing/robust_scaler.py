@@ -25,7 +25,7 @@ class RobustScalerComponent(PreprocessingAlgorithm):
                             with_centering=self.with_centering, with_scaling=self.with_scaling)
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'RobustScaler',
                 'name': 'RobustScaler',
                 HANDLES_MULTICLASS: True,
@@ -35,7 +35,7 @@ class RobustScalerComponent(PreprocessingAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
         with_centering = CategoricalHyperparameter("with_centering", [True, False], default_value=True)
         with_scaling = CategoricalHyperparameter("with_scaling", [True, False], default_value=True)

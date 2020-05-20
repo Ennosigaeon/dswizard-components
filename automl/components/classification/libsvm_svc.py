@@ -77,7 +77,7 @@ class LibSVM_SVC(PredictionAlgorithm):
         return softmax(decision)
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'LibSVM-SVC',
                 'name': 'LibSVM Support Vector Classification',
                 HANDLES_MULTICLASS: True,
@@ -88,7 +88,7 @@ class LibSVM_SVC(PredictionAlgorithm):
                 }
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         C = UniformFloatHyperparameter("C", 1e-7, 1e5, default_value=1.0, log=True)
         # No linear kernel here, because we have liblinear
         kernel = CategoricalHyperparameter(name="kernel", choices=["linear", "rbf", "poly", "sigmoid"],

@@ -20,7 +20,7 @@ class VarianceThresholdComponent(PreprocessingAlgorithm):
         return VarianceThreshold(threshold=self.threshold)
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'Variance Threshold',
                 'name': 'Variance Threshold (constant feature removal)',
                 HANDLES_MULTICLASS: True,
@@ -30,7 +30,7 @@ class VarianceThresholdComponent(PreprocessingAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
         # TODO missing
         threshold = Constant('threshold', 0.)

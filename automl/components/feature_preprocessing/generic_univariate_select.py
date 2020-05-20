@@ -1,5 +1,5 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, Constant
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
 from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
@@ -37,7 +37,7 @@ class GenericUnivariateSelectComponent(PreprocessingAlgorithm):
                                        score_func=self.score_func)
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         mode = CategoricalHyperparameter("mode", ['percentile', 'k_best', 'fpr', 'fdr', 'fwe'], default_value="percentile")
@@ -46,17 +46,12 @@ class GenericUnivariateSelectComponent(PreprocessingAlgorithm):
             name="score_func",
             choices=["chi2", "f_classif", "f_regression"],
             default_value="chi2")
-        if dataset_properties is not None:
-            # Chi2 can handle sparse data, so we respect this
-            if 'sparse' in dataset_properties and dataset_properties['sparse']:
-                score_func = Constant(
-                    name="score_func", value="chi2")
 
         cs.add_hyperparameters([mode, param, score_func])
         return cs
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {
             'shortname': 'GenericUnivariateSelect',
             'name': 'Generic Univariate Select',

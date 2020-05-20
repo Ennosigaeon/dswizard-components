@@ -4,7 +4,7 @@ import pkgutil
 import sys
 from abc import ABC
 from collections import OrderedDict
-from typing import Type, Dict, Any, Optional
+from typing import Type, Dict, Optional, List
 
 import numpy as np
 import pandas as pd
@@ -35,15 +35,10 @@ def find_components(package: str, directory: str, base_class: Type) -> Dict[str,
 
 class MetaData:
     @staticmethod
-    def get_properties(dataset_properties=None) -> dict:
+    def get_properties() -> dict:
         """Get the properties of the underlying algorithm.
 
         Find more information at :ref:`get_properties`
-
-        Parameters
-        ----------
-
-        dataset_properties : dict, optional (default=None)
 
         Returns
         -------
@@ -52,13 +47,8 @@ class MetaData:
         raise NotImplementedError()
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None) -> ConfigurationSpace:
+    def get_hyperparameter_search_space(**kwargs) -> ConfigurationSpace:
         """Return the configuration space of this classification algorithm.
-
-        Parameters
-        ----------
-
-        dataset_properties : dict, optional (default=None)
 
         Returns
         -------
@@ -247,7 +237,6 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
         return self.estimator.predict_proba(X)
 
 
-# noinspection PyPep8Naming
 class PreprocessingAlgorithm(EstimatorComponent, ABC):
     """Provide an abstract interface for preprocessing algorithms in auto-sklearn.
 
@@ -279,7 +268,7 @@ class PreprocessingAlgorithm(EstimatorComponent, ABC):
         return self.fit(X, y).transform(X)
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
         return cs
 
@@ -292,11 +281,11 @@ class NoopComponent(EstimatorComponent):
         return X.to_numpy()
 
     @staticmethod
-    def get_properties(dataset_properties=None) -> dict:
+    def get_properties() -> dict:
         return {}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None) -> ConfigurationSpace:
+    def get_hyperparameter_search_space(**kwargs) -> ConfigurationSpace:
         return ConfigurationSpace()
 
 
@@ -304,12 +293,6 @@ class NoopComponent(EstimatorComponent):
 class ComponentChoice(EstimatorComponent):
 
     def __init__(self, choice: Optional[BaseEstimator] = None, new_params: Dict = None, random_state=None):
-        # Since all calls to get_hyperparameter_search_space will be done by the
-        # pipeline on construction, it is not necessary to construct a
-        # configuration space at this location!
-        # self.configuration = self.get_hyperparameter_search_space(
-        #     dataset_properties).get_default_configuration()
-
         if random_state is None:
             self.random_state = check_random_state(1)
         else:
@@ -321,17 +304,13 @@ class ComponentChoice(EstimatorComponent):
         self.choice: Optional[BaseEstimator] = choice
         self.new_params = new_params
         self.configuration_space_: Optional[ConfigurationSpace] = None
-        self.dataset_properties_: Optional[Dict] = None
 
     def get_components(self) -> Dict[str, Type[EstimatorComponent]]:
         raise NotImplementedError()
 
-    def get_available_components(self, dataset_properties: dict = None,
-                                 include=None,
-                                 exclude=None) -> Dict[str, Any]:
-        if dataset_properties is None:
-            dataset_properties = {}
-
+    def get_available_components(self, mf: np.ndarray = None,
+                                 include: List = None,
+                                 exclude: List = None):
         if include is not None and exclude is not None:
             raise ValueError(
                 "The argument include and exclude cannot be used together.")
@@ -351,9 +330,24 @@ class ComponentChoice(EstimatorComponent):
             elif exclude is not None and name in exclude:
                 continue
 
-            # TODO maybe check for sparse?
+            entry = available_comp[name]
 
-            components_dict[name] = available_comp[name]
+            # Exclude itself to avoid infinite loop
+            if entry == type(self) or hasattr(entry, 'get_components'):
+                continue
+
+            props = entry.get_properties()
+            # TODO check properties and meta-features compatibilities
+            # if entry.get_properties()['handles_classification'] is False:
+            #     continue
+            # if dataset_properties.get('multiclass') is True and \
+            #         entry.get_properties()['handles_multiclass'] is False:
+            #     continue
+            # if dataset_properties.get('multilabel') is True and \
+            #         entry.get_properties()['handles_multilabel'] is False:
+            #     continue
+
+            components_dict[name] = entry
 
         return components_dict
 
@@ -379,7 +373,8 @@ class ComponentChoice(EstimatorComponent):
 
         return self
 
-    def get_hyperparameter_search_space(self, dataset_properties: dict = None,
+    def get_hyperparameter_search_space(self,
+                                        mf: np.ndarray = None,
                                         default=None,
                                         include=None,
                                         exclude=None) -> ConfigurationSpace:
@@ -390,7 +385,7 @@ class ComponentChoice(EstimatorComponent):
         return self.choice.transform(X)
 
     @staticmethod
-    def get_properties(dataset_properties: dict = None) -> Dict:
+    def get_properties() -> Dict:
         return {}
 
 
@@ -414,11 +409,11 @@ class TunableEstimator(EstimatorComponent):
             return self.instance.fit(X, y).transform(X)
 
     @staticmethod
-    def get_properties(dataset_properties=None) -> Dict:
+    def get_properties() -> Dict:
         pass
 
-    def get_hyperparameter_search_space(self, dataset_properties=None) -> ConfigurationSpace:
-        return self.type.get_hyperparameter_search_space(dataset_properties)
+    def get_hyperparameter_search_space(self, ) -> ConfigurationSpace:
+        return self.type.get_hyperparameter_search_space()
 
     def set_hyperparameters(self, configuration: dict, init_params=None) -> None:
         # noinspection PyArgumentList

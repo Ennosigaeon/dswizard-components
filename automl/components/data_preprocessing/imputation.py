@@ -90,7 +90,7 @@ class ImputationComponent(PreprocessingAlgorithm):
         return X_new
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'Imputation',
                 'name': 'Imputation',
                 HANDLES_MULTICLASS: True,
@@ -100,7 +100,7 @@ class ImputationComponent(PreprocessingAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         # TODO add replace by zero!
         strategy = CategoricalHyperparameter("strategy", ["mean", "median", "most_frequent"], default_value="mean")
         add_indicator = CategoricalHyperparameter("add_indicator", [True, False], default_value=False)

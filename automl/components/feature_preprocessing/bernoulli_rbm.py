@@ -23,7 +23,7 @@ class BernoulliRBM(PreprocessingAlgorithm):
                             batch_size=self.batch_size, n_iter=self.n_iter, random_state=self.random_state)
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'Imputation',
                 'name': 'Imputation',
                 HANDLES_MULTICLASS: True,
@@ -33,7 +33,7 @@ class BernoulliRBM(PreprocessingAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         n_components = UniformIntegerHyperparameter("n_components", 1, 2000, default_value=256)
         learning_rate = UniformFloatHyperparameter("learning_rate", 1e-5, 15, default_value=0.1)
         batch_size = UniformIntegerHyperparameter("batch_size", 1, 100, default_value=10)

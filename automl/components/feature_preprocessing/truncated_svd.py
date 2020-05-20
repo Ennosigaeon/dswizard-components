@@ -34,7 +34,7 @@ class TruncatedSVDComponent(PreprocessingAlgorithm):
                             random_state=self.random_state)
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'TSVD',
                 'name': 'Truncated Singular Value Decomposition',
                 HANDLES_MULTICLASS: True,
@@ -44,7 +44,7 @@ class TruncatedSVDComponent(PreprocessingAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         n_components_factor = UniformFloatHyperparameter(name="n_components_factor", lower=0., upper=1.,
                                                          default_value=0.5)
         n_iter = UniformIntegerHyperparameter(name="n_iter", lower=1, upper=100, default_value=5)

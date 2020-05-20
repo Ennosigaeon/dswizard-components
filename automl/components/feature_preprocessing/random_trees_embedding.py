@@ -78,7 +78,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         )
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'RandomTreesEmbedding',
                 'name': 'Random Trees Embedding',
                 HANDLES_MULTICLASS: True,
@@ -88,7 +88,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         n_estimators = UniformIntegerHyperparameter(name="n_estimators", lower=10, upper=400, default_value=10)

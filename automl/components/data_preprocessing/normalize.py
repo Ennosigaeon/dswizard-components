@@ -15,14 +15,14 @@ class NormalizerComponent(PreprocessingAlgorithm):
         return Normalizer(norm=self.norm, copy=False)
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
         norm = CategoricalHyperparameter('norm', ['l1', 'l2', 'max'], default_value='l2')
         cs.add_hyperparameter(norm)
         return cs
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'Normalizer',
                 'name': 'Normalizer',
                 HANDLES_MULTICLASS: True,

@@ -62,7 +62,7 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
         return probas
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'PA',
                 'name': 'Passive Aggressive Classifier',
                 HANDLES_MULTICLASS: True,
@@ -72,7 +72,7 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         C = UniformFloatHyperparameter("C", 1e-6, 25., default_value=1.)

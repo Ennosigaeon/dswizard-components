@@ -90,7 +90,7 @@ class KernelPCAComponent(PreprocessingAlgorithm):
             return X_new
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'KernelPCA',
                 'name': 'Kernel Principal Component Analysis',
                 HANDLES_MULTICLASS: True,
@@ -100,7 +100,7 @@ class KernelPCAComponent(PreprocessingAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         n_components_factor = UniformFloatHyperparameter("n_components_factor", 0., 1., default_value=1.)
         kernel = CategoricalHyperparameter('kernel', ['poly', 'rbf', 'sigmoid', 'cosine'], 'rbf')
         gamma = UniformFloatHyperparameter("gamma", 1e-09, 15., log=True, default_value=1.0)

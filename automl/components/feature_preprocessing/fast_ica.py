@@ -38,7 +38,7 @@ class FastICAComponent(PreprocessingAlgorithm):
                        tol=self.tol)
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         n_components_factor = UniformFloatHyperparameter("n_components_factor", 0., 1., default_value=1.)
@@ -52,7 +52,7 @@ class FastICAComponent(PreprocessingAlgorithm):
         return cs
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'FastICA',
                 'name': 'Fast Independent Component Analysis',
                 HANDLES_MULTICLASS: True,

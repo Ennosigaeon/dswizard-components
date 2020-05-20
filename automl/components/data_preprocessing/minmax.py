@@ -14,14 +14,14 @@ class MinMaxScalerComponent(PreprocessingAlgorithm):
         return MinMaxScaler(copy=False)
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         # Feature Range?
         return cs
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'MinMaxScaler',
                 'name': 'MinMaxScaler',
                 HANDLES_MULTICLASS: True,

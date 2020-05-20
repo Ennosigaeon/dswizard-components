@@ -19,7 +19,7 @@ class MissingIndicatorComponent(PreprocessingAlgorithm):
         return MissingIndicator(missing_values=self.missing_values, features=self.features)
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'Imputation',
                 'name': 'Imputation',
                 HANDLES_MULTICLASS: True,
@@ -29,7 +29,7 @@ class MissingIndicatorComponent(PreprocessingAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         features = CategoricalHyperparameter("features", ["missing-only", "all"], default_value="missing-only")
 
         cs = ConfigurationSpace()

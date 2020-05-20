@@ -1,5 +1,5 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, Constant
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
 from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
@@ -80,7 +80,7 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
         return Xt
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         # data_type = UNSIGNED_DATA
         # if dataset_properties is not None:
         #     signed = dataset_properties.get('signed')
@@ -96,16 +96,11 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         percentile = UniformFloatHyperparameter(name="percentile", lower=1, upper=99, default_value=10)
 
         score_func = CategoricalHyperparameter(name="score_func", choices=["chi2", "f_classif", "mutual_info"],
                                                default_value="chi2")
-        if dataset_properties is not None:
-            # Chi2 can handle sparse data, so we respect this
-            if 'sparse' in dataset_properties and dataset_properties['sparse']:
-                score_func = Constant(
-                    name="score_func", value="chi2")
 
         cs = ConfigurationSpace()
         cs.add_hyperparameters([percentile, score_func])

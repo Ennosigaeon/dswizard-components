@@ -17,7 +17,7 @@ class StandardScalerComponent(PreprocessingAlgorithm):
         return StandardScaler(with_std=self.with_std, with_mean=self.with_mean, copy=False)
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         with_mean = CategoricalHyperparameter("with_mean", [True, False], default_value=True)
@@ -27,7 +27,7 @@ class StandardScalerComponent(PreprocessingAlgorithm):
         return cs
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'StandardScaler',
                 'name': 'StandardScaler',
                 HANDLES_MULTICLASS: True,

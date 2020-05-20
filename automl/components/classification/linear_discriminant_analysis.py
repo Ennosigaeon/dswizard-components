@@ -39,7 +39,7 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
         return probas
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'LR',
                 'name': 'Logistic Regression',
                 HANDLES_MULTICLASS: True,
@@ -50,7 +50,7 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
                 }
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
         solver = CategoricalHyperparameter("solver", ["svd", "lsqr", "eigen"], default_value="svd")
         shrinkage = UniformFloatHyperparameter("shrinkage", 0., 1., default_value=0.1)

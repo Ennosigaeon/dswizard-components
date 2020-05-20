@@ -30,7 +30,7 @@ class AdaBoostingClassifier(PredictionAlgorithm):
         )
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'AB',
                 'name': 'Ada Boosting Classifier',
                 HANDLES_MULTICLASS: True,
@@ -41,7 +41,7 @@ class AdaBoostingClassifier(PredictionAlgorithm):
                 }
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
         learning_rate = UniformFloatHyperparameter(name="learning_rate", lower=1e-6, upper=15., default_value=1.0,
                                                    log=True)

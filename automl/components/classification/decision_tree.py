@@ -77,7 +77,7 @@ class DecisionTree(PredictionAlgorithm):
         return probas
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'DT',
                 'name': 'Decision Tree Classifier',
                 HANDLES_MULTICLASS: True,
@@ -88,7 +88,7 @@ class DecisionTree(PredictionAlgorithm):
                 }
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         criterion = CategoricalHyperparameter("criterion", ["gini", "entropy"], default_value="gini")

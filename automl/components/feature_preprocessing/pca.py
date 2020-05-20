@@ -46,7 +46,7 @@ class PCAComponent(PreprocessingAlgorithm):
                    copy=False)
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'PCA',
                 'name': 'Principle Component Analysis',
                 HANDLES_MULTICLASS: True,
@@ -56,7 +56,7 @@ class PCAComponent(PreprocessingAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         keep_variance = UniformFloatHyperparameter("keep_variance", 0., 1., default_value=0.9999)
         whiten = CategoricalHyperparameter("whiten", [False, True], default_value=False)
         svd_solver = CategoricalHyperparameter("svd_solver", ["auto", "full", "arpack", "randomized"], default_value="full")

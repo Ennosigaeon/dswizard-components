@@ -8,7 +8,8 @@ from collections import OrderedDict
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter
 
-from automl.components.base import PredictionAlgorithm, find_components, ComponentChoice, PredictionMixin, EstimatorComponent
+from automl.components.base import PredictionAlgorithm, find_components, ComponentChoice, PredictionMixin, \
+    EstimatorComponent
 
 classifier_directory = os.path.split(__file__)[0]
 _classifiers = find_components(__package__, classifier_directory, PredictionAlgorithm)
@@ -21,54 +22,11 @@ class ClassifierChoice(ComponentChoice, PredictionMixin):
         components.update(_classifiers)
         return components
 
-    def get_available_components(self, dataset_properties=None,
-                                 include=None,
-                                 exclude=None):
-        if dataset_properties is None:
-            dataset_properties = {}
-
-        available_comp = self.get_components()
-        components_dict = OrderedDict()
-
-        if include is not None and exclude is not None:
-            raise ValueError("The argument include and exclude cannot be used together.")
-
-        if include is not None:
-            for incl in include:
-                if incl not in available_comp:
-                    raise ValueError("Trying to include unknown component: "
-                                     "%s" % incl)
-
-        for name in available_comp:
-            if include is not None and name not in include:
-                continue
-            elif exclude is not None and name in exclude:
-                continue
-
-            entry = available_comp[name]
-
-            # Avoid infinite loop
-            if entry == ClassifierChoice:
-                continue
-
-            if entry.get_properties()['handles_classification'] is False:
-                continue
-            if dataset_properties.get('multiclass') is True and entry.get_properties()[
-                'handles_multiclass'] is False:
-                continue
-            if dataset_properties.get('multilabel') is True and available_comp[name]. \
-                    get_properties()['handles_multilabel'] is False:
-                continue
-            components_dict[name] = entry
-
-        return components_dict
-
-    def get_hyperparameter_search_space(self, dataset_properties=None,
+    def get_hyperparameter_search_space(self, mf=None,
                                         default=None,
                                         include=None,
-                                        exclude=None):
-        if dataset_properties is None:
-            dataset_properties = {}
+                                        exclude=None,
+                                        **kwargs):
 
         if include is not None and exclude is not None:
             raise ValueError("The arguments include_estimators and "
@@ -77,10 +35,7 @@ class ClassifierChoice(ComponentChoice, PredictionMixin):
         cs = ConfigurationSpace()
 
         # Compile a list of all estimator objects for this problem
-        available_estimators = self.get_available_components(
-            dataset_properties=dataset_properties,
-            include=include,
-            exclude=exclude)
+        available_estimators = self.get_available_components(mf=mf, include=include, exclude=exclude)
 
         if len(available_estimators) == 0:
             raise ValueError("No classifiers found")
@@ -100,16 +55,12 @@ class ClassifierChoice(ComponentChoice, PredictionMixin):
         estimator = CategoricalHyperparameter('__choice__', list(available_estimators.keys()), default_value=default)
         cs.add_hyperparameter(estimator)
         for estimator_name in available_estimators.keys():
-            estimator_configuration_space = available_estimators[estimator_name]. \
-                get_hyperparameter_search_space(dataset_properties)
-            parent_hyperparameter = {'parent': estimator,
-                                     'value': estimator_name}
-            cs.add_configuration_space(estimator_name,
-                                       estimator_configuration_space,
+            estimator_configuration_space = available_estimators[estimator_name].get_hyperparameter_search_space()
+            parent_hyperparameter = {'parent': estimator, 'value': estimator_name}
+            cs.add_configuration_space(estimator_name, estimator_configuration_space,
                                        parent_hyperparameter=parent_hyperparameter)
 
         self.configuration_space_ = cs
-        self.dataset_properties_ = dataset_properties
         return cs
 
     def fit(self, X, y, **kwargs):

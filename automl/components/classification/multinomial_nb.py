@@ -37,7 +37,7 @@ class MultinomialNB(PredictionAlgorithm):
         return estimator
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'MultinomialNB',
                 'name': 'Multinomial Naive Bayes classifier',
                 HANDLES_MULTICLASS: True,
@@ -48,7 +48,7 @@ class MultinomialNB(PredictionAlgorithm):
                 }
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         # the smoothing parameter is a non-negative float

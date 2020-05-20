@@ -96,7 +96,7 @@ class MLPClassifier(PredictionAlgorithm):
         return probas
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'MLP',
                 'name': 'MLP Classifier',
                 HANDLES_MULTICLASS: True,
@@ -106,7 +106,7 @@ class MLPClassifier(PredictionAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         layer_1_size = UniformIntegerHyperparameter("layer_1_size", 1, 5, default_value=3)

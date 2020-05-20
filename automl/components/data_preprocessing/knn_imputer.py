@@ -26,7 +26,7 @@ class KNNImputerComponent(PreprocessingAlgorithm):
                           copy=False)
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'Imputation',
                 'name': 'Imputation',
                 HANDLES_MULTICLASS: True,
@@ -36,7 +36,7 @@ class KNNImputerComponent(PreprocessingAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         n_neighbors = UniformIntegerHyperparameter("n_neighbors", 2, 50, default_value=5)
         weights = CategoricalHyperparameter("weights", ["uniform", "distance"], default_value="uniform")
         metric = Constant("metric", "nan_euclidean")

@@ -85,7 +85,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         )
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'GB',
                 'name': 'Gradient Boosting Classifier',
                 HANDLES_MULTICLASS: True,
@@ -96,7 +96,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
                 }
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         loss = Constant("loss", "auto")

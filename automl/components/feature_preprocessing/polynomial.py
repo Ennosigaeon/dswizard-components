@@ -27,7 +27,7 @@ class PolynomialFeaturesComponent(PreprocessingAlgorithm):
                                   order=self.order)
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'PolynomialFeatures',
                 'name': 'PolynomialFeatures',
                 HANDLES_MULTICLASS: True,
@@ -37,7 +37,7 @@ class PolynomialFeaturesComponent(PreprocessingAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         # More than degree 3 is too expensive!
         degree = UniformIntegerHyperparameter("degree", 2, 4, 2)
         interaction_only = CategoricalHyperparameter("interaction_only", [False, True], False)

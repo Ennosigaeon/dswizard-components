@@ -83,7 +83,7 @@ class SGDClassifier(PredictionAlgorithm):
         return probas
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'SGD',
                 'name': 'Stochastic Gradient Descent Classifier',
                 HANDLES_MULTICLASS: True,
@@ -94,7 +94,7 @@ class SGDClassifier(PredictionAlgorithm):
                 }
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         loss = CategoricalHyperparameter("loss", ["hinge", "log", "modified_huber", "squared_hinge", "perceptron",

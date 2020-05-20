@@ -46,7 +46,7 @@ class KNeighborsClassifier(PredictionAlgorithm):
         return probas
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'KN',
                 'name': 'KNeighbors Classifier',
                 HANDLES_MULTICLASS: True,
@@ -56,7 +56,7 @@ class KNeighborsClassifier(PredictionAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         n_neighbors = UniformIntegerHyperparameter("n_neighbors", 1, 70, default_value=5)

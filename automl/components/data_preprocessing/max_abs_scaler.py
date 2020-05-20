@@ -14,12 +14,12 @@ class MaxAbsScalerComponent(PreprocessingAlgorithm):
         return MaxAbsScaler(copy=False)
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
         return cs
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'MaxAbsScaler',
                 'name': 'MaxAbsScaler',
                 HANDLES_MULTICLASS: True,

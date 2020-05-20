@@ -80,7 +80,7 @@ class ExtraTreesClassifier(PredictionAlgorithm):
         return probas
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'ET',
                 'name': 'Extra Trees Classifier',
                 HANDLES_MULTICLASS: True,
@@ -90,7 +90,7 @@ class ExtraTreesClassifier(PredictionAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
 
         cs = ConfigurationSpace()
         n_estimators = UniformIntegerHyperparameter("n_estimators", 10, 750, default_value=100)

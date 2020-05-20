@@ -53,7 +53,7 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
                                     pooling_func=pooling_func)
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'FA',
                 'name': 'Feature Agglomeration',
                 HANDLES_MULTICLASS: True,
@@ -63,7 +63,7 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         n_clusters_factor = UniformFloatHyperparameter("n_clusters_factor", 0., 1., default_value=1.)
         affinity = CategoricalHyperparameter("affinity",
                                              ["euclidean", "l1", "l2", "manhattan", "cosine", "precomputed"],

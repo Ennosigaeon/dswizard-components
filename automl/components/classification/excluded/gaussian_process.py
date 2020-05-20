@@ -68,7 +68,7 @@ class GaussianProcessClassifier(PredictionAlgorithm):
         return probas
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'GP',
                 'name': 'Gaussian Process Classifier',
                 HANDLES_MULTICLASS: True,
@@ -78,7 +78,7 @@ class GaussianProcessClassifier(PredictionAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         kernel = CategoricalHyperparameter("kernel",

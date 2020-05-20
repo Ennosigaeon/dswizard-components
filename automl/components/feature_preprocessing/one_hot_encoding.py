@@ -41,7 +41,7 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
         return X.to_numpy()
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': '1Hot',
                 'name': 'One Hot Encoder',
                 HANDLES_MULTICLASS: True,

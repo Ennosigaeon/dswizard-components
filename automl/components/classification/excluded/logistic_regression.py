@@ -66,7 +66,7 @@ class LogisticRegression(PredictionAlgorithm):
         return probas
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'LR',
                 'name': 'Logistic Regression',
                 HANDLES_MULTICLASS: True,
@@ -76,7 +76,7 @@ class LogisticRegression(PredictionAlgorithm):
                 HANDLES_NOMINAL_CLASS: True}
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
         penalty = CategoricalHyperparameter("penalty", ["l1", "l2", "elasticnet", "none"], default_value='l2')
         solver = CategoricalHyperparameter("solver", ["newton-cg", "lbfgs", "liblinear", "sag", "saga"],

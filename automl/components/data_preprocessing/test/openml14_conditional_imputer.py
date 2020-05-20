@@ -222,7 +222,7 @@ class ConditionalImputer(Imputer):
         return X
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         strategy = CategoricalHyperparameter("strategy", ["mean", "median", "most_frequent"], default_value="mean")
@@ -233,7 +233,7 @@ class ConditionalImputer(Imputer):
         return cs
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'OCI',
                 'name': 'OpenML 14 Conditional Imputer',
                 'handles_missing_values': False,

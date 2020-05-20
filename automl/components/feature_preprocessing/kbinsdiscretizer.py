@@ -34,7 +34,7 @@ class KBinsDiscretizer(PreprocessingAlgorithm):
             return Xt
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         n_bins = UniformIntegerHyperparameter("n_bins", 2, 100, default_value=5)
@@ -45,7 +45,7 @@ class KBinsDiscretizer(PreprocessingAlgorithm):
         return cs
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         # TODO find out of this is right!
         return {'shortname': 'KBD',
                 'name': 'K Bins Discretizer',

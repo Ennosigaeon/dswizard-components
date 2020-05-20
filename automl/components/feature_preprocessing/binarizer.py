@@ -25,14 +25,14 @@ class BinarizerComponent(PreprocessingAlgorithm):
         return Binarizer(threshold=threshold, copy=False)
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
         threshold_factor = UniformFloatHyperparameter("threshold_factor", 0., 1., default_value=0.)
         cs.add_hyperparameter(threshold_factor)
         return cs
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         # TODO find out of this is right!
         return {'shortname': 'Binarizer',
                 'name': 'Binarizer',

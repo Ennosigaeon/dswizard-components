@@ -53,7 +53,7 @@ class SelectKBestComponent(PreprocessingAlgorithm):
         return Xt
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         k_factor = UniformFloatHyperparameter("k_factor", 0., 1., default_value=0.5)
@@ -65,7 +65,7 @@ class SelectKBestComponent(PreprocessingAlgorithm):
         return cs
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'FastICA',
                 'name': 'Fast Independent Component Analysis',
                 HANDLES_MULTICLASS: True,

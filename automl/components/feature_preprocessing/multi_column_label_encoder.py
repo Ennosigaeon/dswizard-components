@@ -69,7 +69,7 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
         return self.fit(X, y).transform(X)
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'MultiColumnLabelEncoder',
                 'name': 'MultiColumnLabelEncoder',
                 HANDLES_MULTICLASS: True,

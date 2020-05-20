@@ -29,7 +29,7 @@ class QuantileTransformerComponent(PreprocessingAlgorithm):
                                    subsample=self.subsample, random_state=self.random_state)
 
     @staticmethod
-    def get_hyperparameter_search_space(dataset_properties=None):
+    def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
         n_quantiles = UniformFloatHyperparameter("n_quantiles_factor", 0., 1., default_value=0.5)
@@ -42,7 +42,7 @@ class QuantileTransformerComponent(PreprocessingAlgorithm):
         return cs
 
     @staticmethod
-    def get_properties(dataset_properties=None):
+    def get_properties():
         return {'shortname': 'QuantileTransformer',
                 'name': 'QuantileTransformer',
                 HANDLES_MULTICLASS: True,
