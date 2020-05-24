@@ -9,7 +9,7 @@ from typing import Type, Dict, Optional, List
 import numpy as np
 import pandas as pd
 from ConfigSpace import ConfigurationSpace
-from sklearn.base import BaseEstimator
+from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils import check_random_state, check_array
 
 
@@ -66,7 +66,7 @@ class MetaData:
 
 
 # noinspection PyPep8Naming
-class PredictionMixin:
+class PredictionMixin(ClassifierMixin):
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """The predict function calls the predict function of the
