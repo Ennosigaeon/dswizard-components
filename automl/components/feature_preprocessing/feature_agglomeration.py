@@ -1,4 +1,5 @@
 import numpy as np
+from ConfigSpace.conditions import EqualsCondition
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.forbidden import ForbiddenAndConjunction, ForbiddenInClause, ForbiddenEqualsClause
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter
@@ -77,8 +78,8 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
             [n_clusters_factor, affinity, compute_full_tree, linkage, distance_threshold, pooling_func])
 
         # TODO this condition breaks FeaturePreprocessorChoice. Not sure why
-        # distance_thresholdAndNClustersCondition = EqualsCondition(distance_threshold, n_clusters_factor, 1.)
-        # cs.add_condition(distance_thresholdAndNClustersCondition)
+        distance_thresholdAndNClustersCondition = EqualsCondition(distance_threshold, n_clusters_factor, 1.)
+        cs.add_condition(distance_thresholdAndNClustersCondition)
 
         affinity_and_linkage = ForbiddenAndConjunction(
             ForbiddenInClause(affinity, ["l1", "l2", "manhattan", "cosine", "precomputed"]),
