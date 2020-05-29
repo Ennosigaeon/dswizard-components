@@ -12,6 +12,9 @@ class TestDecisionTree(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test = self.load_data()
 
         actual = DecisionTree(random_state=42)
+        config: dict = self.get_default(actual)
+
+        actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
 
@@ -37,6 +40,10 @@ class TestDecisionTree(base_test.BaseComponentTest):
 
         config['max_leaf_nodes'] = max(resolve_factor(config['max_leaf_nodes_factor'], X_train.shape[0]), 2)
         del config['max_leaf_nodes_factor']
+
+        config['max_features'] = resolve_factor(config['max_features'], X_train.shape[1])
+        config['min_samples_split'] = resolve_factor(config['min_samples_split'], X_train.shape[0])
+        config['min_samples_leaf'] = resolve_factor(config['min_samples_leaf'], X_train.shape[0])
 
         expected = sklearn.tree.DecisionTreeClassifier(**config, random_state=42)
         expected.fit(X_train, y_train)

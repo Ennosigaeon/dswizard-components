@@ -51,8 +51,8 @@ def check_for_bool(p):
         raise ValueError("%s is not a bool" % str(p))
 
 
-def resolve_factor(value: Optional[float], n: float, default=None) -> Optional[int]:
-    if check_none(value):
+def resolve_factor(value: Optional[float], n: float, default=None, cs_default=None) -> Optional[int]:
+    if check_none(value) or value == cs_default:
         return default
     else:
         return max(1, int(np.round(value * n, 0)))

@@ -12,6 +12,9 @@ class TestPCA(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test = self.load_data()
 
         actual = PCAComponent(random_state=42)
+        config: dict = self.get_default(actual)
+
+        actual.set_hyperparameters(config)
         actual.fit(np.copy(X_train), np.copy(y_train))
         X_actual = actual.transform(np.copy(X_test))
 

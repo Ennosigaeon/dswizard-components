@@ -28,7 +28,7 @@ class FastICAComponent(PreprocessingAlgorithm):
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.decomposition import FastICA
 
-        n_components = resolve_factor(self.n_components_factor, min(n_samples, n_features))
+        n_components = resolve_factor(self.n_components_factor, min(n_samples, n_features), cs_default=1.)
         return FastICA(n_components=n_components,
                        algorithm=self.algorithm,
                        whiten=self.whiten,

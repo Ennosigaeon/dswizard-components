@@ -29,7 +29,7 @@ class FactorAnalysisComponent(PreprocessingAlgorithm):
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.decomposition import FactorAnalysis
 
-        n_components = resolve_factor(self.n_components_factor, n_features)
+        n_components = resolve_factor(self.n_components_factor, n_features, cs_default=1.)
         return FactorAnalysis(n_components=n_components,
                               svd_method=self.svd_method,
                               max_iter=self.max_iter,

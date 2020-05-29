@@ -12,6 +12,9 @@ class TestLibSVM_SVC(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test = self.load_data()
 
         actual = LibSVM_SVC(random_state=42)
+        config: dict = self.get_default(actual)
+
+        actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
 
@@ -24,6 +27,7 @@ class TestLibSVM_SVC(base_test.BaseComponentTest):
 
     def test_configured(self):
         X_train, X_test, y_train, y_test = self.load_data()
+        np.random.seed(0)
 
         actual = LibSVM_SVC(random_state=42)
         config: dict = self.get_config(actual)

@@ -48,8 +48,8 @@ class QuadraticDiscriminantAnalysis(PredictionAlgorithm):
     def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
-        reg_param = UniformFloatHyperparameter("reg_param", 0., 1.5, default_value=1.)
-        store_covariance = CategoricalHyperparameter("store_covariance", [True, False], default_value=True)
+        reg_param = UniformFloatHyperparameter("reg_param", 0., 1.5, default_value=0.)
+        store_covariance = CategoricalHyperparameter("store_covariance", [True, False], default_value=False)
         tol = UniformFloatHyperparameter("tol", 1e-5, 10.0, default_value=1e-4)
 
         cs.add_hyperparameters(

@@ -12,6 +12,9 @@ class TestSVCClassifier(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test = self.load_data()
 
         actual = SVCClassifier(random_state=42)
+        config: dict = self.get_default(actual)
+
+        actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
 

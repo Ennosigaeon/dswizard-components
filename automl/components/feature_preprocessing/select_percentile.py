@@ -1,5 +1,6 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
+    UniformIntegerHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
 from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
@@ -91,10 +92,10 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
-        percentile = UniformFloatHyperparameter(name="percentile", lower=1, upper=99, default_value=10)
+        percentile = UniformIntegerHyperparameter(name="percentile", lower=1, upper=99, default_value=10)
 
         score_func = CategoricalHyperparameter(name="score_func", choices=["chi2", "f_classif", "mutual_info"],
-                                               default_value="chi2")
+                                               default_value="f_classif")
 
         cs = ConfigurationSpace()
         cs.add_hyperparameters([percentile, score_func])

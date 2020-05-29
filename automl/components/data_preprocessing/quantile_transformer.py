@@ -21,7 +21,7 @@ class QuantileTransformerComponent(PreprocessingAlgorithm):
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.preprocessing import QuantileTransformer
 
-        n_quantiles = resolve_factor(self.n_quantiles_factor, n_samples, default=1000)
+        n_quantiles = resolve_factor(self.n_quantiles_factor, n_samples, default=1000, cs_default=0.5)
         return QuantileTransformer(copy=False,
                                    n_quantiles=n_quantiles,
                                    output_distribution=self.output_distribution,

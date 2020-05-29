@@ -58,20 +58,23 @@ class KernelPCAComponent(PreprocessingAlgorithm):
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.decomposition import KernelPCA
 
-        n_components = resolve_factor(self.n_components_factor, min(n_samples, n_features))
+        n_components = resolve_factor(self.n_components_factor, min(n_samples, n_features), cs_default=1.)
+
+        gamma = None if self.gamma == 1. else self.gamma
+        max_iter = None if self.max_iter == 100 else self.max_iter
 
         return KernelPCA(
             n_components=n_components,
             kernel=self.kernel,
             degree=self.degree,
-            gamma=self.gamma,
+            gamma=gamma,
             coef0=self.coef0,
             random_state=self.random_state,
             alpha=self.alpha,
             fit_inverse_transform=self.fit_inverse_transform,
             eigen_solver=self.eigen_solver,
             tol=self.tol,
-            max_iter=self.max_iter,
+            max_iter=max_iter,
             remove_zero_eig=self.remove_zero_eig,
             n_jobs=1,
             copy_X=False)
@@ -102,13 +105,13 @@ class KernelPCAComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
         n_components_factor = UniformFloatHyperparameter("n_components_factor", 0., 1., default_value=1.)
-        kernel = CategoricalHyperparameter('kernel', ['poly', 'rbf', 'sigmoid', 'cosine'], 'rbf')
+        kernel = CategoricalHyperparameter('kernel', ['poly', 'rbf', 'sigmoid', 'cosine', 'linear'], 'linear')
         gamma = UniformFloatHyperparameter("gamma", 1e-09, 15., log=True, default_value=1.0)
         degree = UniformIntegerHyperparameter('degree', 2, 6, 3)
         coef0 = UniformFloatHyperparameter("coef0", -10., 10., default_value=0.)
         alpha = UniformIntegerHyperparameter("alpha", 1e-9, 5., default_value=1.)
         fit_inverse_transform = CategoricalHyperparameter("fit_inverse_transform", [True, False], default_value=False)
-        eigen_solver = CategoricalHyperparameter("eigen_solver", ["dense", "arpack"], default_value="dense")
+        eigen_solver = CategoricalHyperparameter("eigen_solver", ["auto", "dense", "arpack"], default_value="auto")
         tol = UniformFloatHyperparameter("tol", 0., 2., default_value=0.)
         max_iter = UniformIntegerHyperparameter("max_iter", 1, 1000, default_value=100)
         remove_zero_eig = CategoricalHyperparameter("remove_zero_eig", [True, False], default_value=False)

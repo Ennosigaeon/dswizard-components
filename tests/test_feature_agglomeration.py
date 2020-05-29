@@ -12,6 +12,9 @@ class TestFeatureAgglomerationComponent(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test = self.load_data()
 
         actual = FeatureAgglomerationComponent()
+        config: dict = self.get_default(actual)
+
+        actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
@@ -39,7 +42,8 @@ class TestFeatureAgglomerationComponent(base_test.BaseComponentTest):
         elif config['pooling_func'] == "max":
             config['pooling_func'] = np.max
 
-        config['n_clusters'] = max(min(resolve_factor(config['n_clusters_factor'], X_train.shape[1]), (X_train.shape[1] - 1)), 2)
+        config['n_clusters'] = max(
+            min(resolve_factor(config['n_clusters_factor'], X_train.shape[1]), (X_train.shape[1] - 1)), 2)
         del config['n_clusters_factor']
 
         expected = sklearn.cluster.FeatureAgglomeration(**config)

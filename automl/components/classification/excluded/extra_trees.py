@@ -47,23 +47,27 @@ class ExtraTreesClassifier(PredictionAlgorithm):
         from sklearn.ensemble import ExtraTreesClassifier
 
         # Heuristic to set the tree depth
-        max_depth = resolve_factor(self.max_depth_factor, n_features)
+        max_depth = resolve_factor(self.max_depth_factor, n_features, cs_default=1.)
         if max_depth is not None:
             max_depth = max(max_depth, 2)
 
         # Heuristic to set the tree width
-        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, n_samples)
+        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, n_samples, cs_default=1.)
         if max_leaf_nodes is not None:
             max_leaf_nodes = max(max_leaf_nodes, 2)
+
+        max_features = 'auto' if self.max_features == 0.5 else self.max_features
+        min_samples_leaf = 1 if self.min_samples_leaf == 0.0001 else self.min_samples_leaf
+        min_samples_split = 2 if self.min_samples_split == 0.0001 else self.min_samples_split
 
         # initial fit of only increment trees
         return ExtraTreesClassifier(
             n_estimators=self.n_estimators,
             criterion=self.criterion,
-            max_features=self.max_features,
+            max_features=max_features,
             max_depth=max_depth,
-            min_samples_split=self.min_samples_split,
-            min_samples_leaf=self.min_samples_leaf,
+            min_samples_split=min_samples_split,
+            min_samples_leaf=min_samples_leaf,
             min_weight_fraction_leaf=self.min_weight_fraction_leaf,
             bootstrap=self.bootstrap,
             max_leaf_nodes=max_leaf_nodes,

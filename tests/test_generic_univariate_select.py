@@ -11,6 +11,9 @@ class TestGenericUnivariateSelectComponent(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test = self.load_data()
 
         actual = GenericUnivariateSelectComponent()
+        config: dict = self.get_default(actual)
+
+        actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
@@ -26,6 +29,7 @@ class TestGenericUnivariateSelectComponent(base_test.BaseComponentTest):
 
         actual = GenericUnivariateSelectComponent()
         config: dict = self.get_config(actual)
+        actual.set_hyperparameters(config)
 
         if config['score_func'] == "chi2":
             config['score_func'] = sklearn.feature_selection.chi2
@@ -34,7 +38,6 @@ class TestGenericUnivariateSelectComponent(base_test.BaseComponentTest):
         elif config['score_func'] == "f_regression":
             config['score_func'] = sklearn.feature_selection.f_regression
 
-        actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 

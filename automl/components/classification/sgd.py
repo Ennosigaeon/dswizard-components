@@ -101,7 +101,7 @@ class SGDClassifier(PredictionAlgorithm):
                                                   "squared_loss", "huber", "epsilon_insensitive",
                                                   "squared_epsilon_insensitive"], default_value="hinge")
         penaly = CategoricalHyperparameter("penalty", ["l2", "l1", "elasticnet"], default_value="l2")
-        alpha = UniformFloatHyperparameter("alpha", 1e-7, 1e5, default_value=0.001, log=True)
+        alpha = UniformFloatHyperparameter("alpha", 1e-7, 1e5, default_value=0.0001, log=True)
         l1_ratio = UniformFloatHyperparameter("l1_ratio", 1e-7, 1., default_value=0.15)
         fit_intercept = CategoricalHyperparameter("fit_intercept", [True, False], default_value=True)
         max_iter = UniformIntegerHyperparameter("max_iter", 20, 1e9, default_value=1000)

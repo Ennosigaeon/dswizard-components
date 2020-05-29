@@ -52,19 +52,25 @@ class RandomForest(PredictionAlgorithm):
         from sklearn.ensemble import RandomForestClassifier
 
         # Heuristic to set the tree width
-        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, n_samples)
+        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, n_samples, cs_default=1.)
         if max_leaf_nodes is not None:
             max_leaf_nodes = max(max_leaf_nodes, 2)
 
         # Heuristic to set the tree depth
-        max_depth = resolve_factor(self.max_depth_factor, n_features)
+        max_depth = resolve_factor(self.max_depth_factor, n_features, cs_default=1.)
         if max_depth is not None:
             max_depth = max(max_depth, 2)
 
-        if self.max_features not in ("sqrt", "log2", "auto"):
+        if self.max_features == 0.5:
+            max_features = 'auto'
+        elif self.max_features not in ("sqrt", "log2", "auto"):
             max_features = int(n_features ** float(self.max_features))
         else:
             max_features = self.max_features
+
+        max_samples = None if self.max_samples == 0.99 else self.max_samples
+        min_samples_leaf = 1 if self.min_samples_leaf == 0.0001 else self.min_samples_leaf
+        min_samples_split = 2 if self.min_samples_split == 0.0001 else self.min_samples_split
 
         # initial fit of only increment trees
         return RandomForestClassifier(
@@ -72,8 +78,8 @@ class RandomForest(PredictionAlgorithm):
             criterion=self.criterion,
             max_features=max_features,
             max_depth=max_depth,
-            min_samples_split=self.min_samples_split,
-            min_samples_leaf=self.min_samples_leaf,
+            min_samples_split=min_samples_split,
+            min_samples_leaf=min_samples_leaf,
             min_weight_fraction_leaf=self.min_weight_fraction_leaf,
             bootstrap=self.bootstrap,
             max_leaf_nodes=max_leaf_nodes,
@@ -81,7 +87,7 @@ class RandomForest(PredictionAlgorithm):
             random_state=self.random_state,
             class_weight=self.class_weight,
             oob_score=self.oob_score,
-            max_samples=self.max_samples,
+            max_samples=max_samples,
             n_jobs=1,
             ccp_alpha=self.ccp_alpha)
 
@@ -122,7 +128,7 @@ class RandomForest(PredictionAlgorithm):
         min_impurity_decrease = UniformFloatHyperparameter('min_impurity_decrease', 0., 1., default_value=0.)
         bootstrap = CategoricalHyperparameter("bootstrap", [True, False], default_value=True)
         oob_score = CategoricalHyperparameter("oob_score", [True, False], default_value=False)
-        ccp_alpha = UniformFloatHyperparameter("ccp_alpha", 0., 1., default_value=0.1)
+        ccp_alpha = UniformFloatHyperparameter("ccp_alpha", 0., 1., default_value=0.0)
         max_samples = UniformFloatHyperparameter("max_samples", 1e-2, 0.99, default_value=0.99)
 
         cs.add_hyperparameters(

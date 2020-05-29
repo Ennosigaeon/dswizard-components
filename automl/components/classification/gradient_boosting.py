@@ -21,7 +21,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
                  max_bins: int = 255,
                  l2_regularization: float = 0.,
                  tol: float = 1e-7,
-                 scoring: str = None,
+                 scoring: str = 'f1_weighted',
                  n_iter_no_change: int = None,
                  validation_fraction: float = 0.1,
                  random_state=None):
@@ -47,15 +47,17 @@ class GradientBoostingClassifier(PredictionAlgorithm):
             self.scoring = None
 
         # Heuristic to set the tree depth
-        max_depth = resolve_factor(self.max_depth_factor, n_features)
+        max_depth = resolve_factor(self.max_depth_factor, n_features, cs_default=1.)
         if max_depth is not None:
             max_depth = max(max_depth, 2)
+
+        l2_regularization = 0. if self.l2_regularization == 1e-07 else self.l2_regularization
 
         # Heuristic to set the tree width
         if isinstance(self.max_leaf_nodes_factor, int):
             max_leaf_nodes = self.max_leaf_nodes_factor
         else:
-            max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, n_samples)
+            max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, n_samples, default=31, cs_default=1.)
         if max_leaf_nodes is not None:
             max_leaf_nodes = max(max_leaf_nodes, 2)
 
@@ -63,7 +65,9 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         if isinstance(self.min_samples_leaf, int):
             min_samples_leaf = self.min_samples_leaf
         else:
-            min_samples_leaf = resolve_factor(self.min_samples_leaf, n_samples)
+            min_samples_leaf = resolve_factor(self.min_samples_leaf, n_samples, default=20, cs_default=0.0001)
+
+        n_iter_no_change = None if self.n_iter_no_change == 0 else self.n_iter_no_change
 
         if self.scoring == 'balanced_accurary':
             self.scoring = 'balanced_accuracy'
@@ -76,10 +80,10 @@ class GradientBoostingClassifier(PredictionAlgorithm):
             max_depth=max_depth,
             max_leaf_nodes=max_leaf_nodes,
             max_bins=self.max_bins,
-            l2_regularization=self.l2_regularization,
+            l2_regularization=l2_regularization,
             tol=self.tol,
             scoring=self.scoring,
-            n_iter_no_change=self.n_iter_no_change,
+            n_iter_no_change=n_iter_no_change,
             validation_fraction=self.validation_fraction,
             random_state=self.random_state,
         )

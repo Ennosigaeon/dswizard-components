@@ -2,6 +2,8 @@ import numpy as np
 import pytest
 import sklearn.naive_bayes
 import sklearn.svm
+from sklearn.gaussian_process.kernels import RBF
+
 from automl.components.classification.excluded.gaussian_process import GaussianProcessClassifier
 
 from tests import base_test
@@ -13,10 +15,13 @@ class TestGaussianProcessClassifier(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test = self.load_data()
 
         actual = GaussianProcessClassifier(random_state=42)
+        config: dict = self.get_default(actual)
+
+        actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
 
-        expected = sklearn.gaussian_process.GaussianProcessClassifier(random_state=42)
+        expected = sklearn.gaussian_process.GaussianProcessClassifier(RBF(), random_state=42)
         expected.fit(X_train, y_train)
         y_expected = expected.predict(X_test)
 

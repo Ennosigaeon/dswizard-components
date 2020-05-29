@@ -43,26 +43,24 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         if isinstance(self.max_depth_factor, int):
             max_depth = self.max_depth_factor
         else:
-            max_depth = resolve_factor(self.max_depth_factor, n_features)
+            max_depth = resolve_factor(self.max_depth_factor, n_features, default=5, cs_default=1.)
         if max_depth is not None:
             max_depth = max(max_depth, 2)
 
         # Heuristic to set the tree width
-        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, n_samples)
+        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, n_samples, cs_default=1.)
         if max_leaf_nodes is not None:
             max_leaf_nodes = max(max_leaf_nodes, 2)
 
-        # Heuristic to set the tree width
-        if isinstance(self.min_samples_leaf_factor, int):
-            min_samples_leaf = self.min_samples_leaf_factor
-        else:
-            min_samples_leaf = resolve_factor(self.min_samples_leaf_factor, n_samples)
+        # Heuristic to set max features
+        min_samples_split = resolve_factor(self.min_samples_split_factor, n_samples, default=2, cs_default=0.0001)
+        if min_samples_split is not None:
+            min_samples_split = max(min_samples_split, 2)
 
-        # Heuristic to set the tree width
-        if isinstance(self.min_samples_split_factor, int):
-            min_samples_split = self.min_samples_split_factor
-        else:
-            min_samples_split = max(resolve_factor(self.min_samples_split_factor, n_samples), 2)
+        # Heuristic to set max features
+        min_samples_leaf = resolve_factor(self.min_samples_leaf_factor, n_samples, default=1, cs_default=0.0001)
+        if min_samples_leaf is not None:
+            min_samples_leaf = max(min_samples_leaf, 1)
 
         return RandomTreesEmbedding(
             n_estimators=self.n_estimators,
@@ -91,7 +89,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
-        n_estimators = UniformIntegerHyperparameter(name="n_estimators", lower=10, upper=400, default_value=10)
+        n_estimators = UniformIntegerHyperparameter(name="n_estimators", lower=10, upper=400, default_value=100)
         max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 2.5, default_value=1.)
         min_samples_split_factor = UniformFloatHyperparameter("min_samples_split_factor", 0.0001, 0.5,
                                                               default_value=0.0001)

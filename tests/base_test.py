@@ -3,6 +3,7 @@ from unittest import TestCase
 import pandas as pd
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
+import numpy as np
 
 
 class BaseComponentTest(TestCase):
@@ -14,6 +15,8 @@ class BaseComponentTest(TestCase):
         pass
 
     def load_data(self, multiclass=True, categorical=False, random_state=42):
+        np.random.seed(4)
+
         def _to_pd(array):
             return pd.DataFrame(data=array, index=range(array.shape[0]), columns=range(array.shape[1]))
 
@@ -32,8 +35,10 @@ class BaseComponentTest(TestCase):
 
     def get_config(self, actual) -> dict:
         config: dict = actual.get_hyperparameter_search_space().sample_configuration().get_dictionary()
-        # for key, value in config.items():
-        #     if check_none(value):
-        #         config[key] = None
+        print(config)
+        return config
+
+    def get_default(self, actual) -> dict:
+        config: dict = actual.get_hyperparameter_search_space().get_default_configuration().get_dictionary()
         print(config)
         return config

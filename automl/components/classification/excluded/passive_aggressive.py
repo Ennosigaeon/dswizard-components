@@ -40,6 +40,8 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.linear_model import PassiveAggressiveClassifier
 
+        average = False if self.average == 1 else self.average
+
         return PassiveAggressiveClassifier(
             C=self.C,
             fit_intercept=self.fit_intercept,
@@ -50,7 +52,7 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
             n_iter_no_change=self.n_iter_no_change,
             shuffle=self.shuffle,
             loss=self.loss,
-            average=self.average,
+            average=average,
             random_state=self.random_state
         )
 
@@ -76,7 +78,7 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
         cs = ConfigurationSpace()
 
         C = UniformFloatHyperparameter("C", 1e-6, 25., default_value=1.)
-        fit_intercept = CategoricalHyperparameter("fit_intercept", [True, False], default_value=False)
+        fit_intercept = CategoricalHyperparameter("fit_intercept", [True, False], default_value=True)
         max_iter = UniformIntegerHyperparameter("max_iter", 5, 1000, default_value=1000)
         tol = UniformFloatHyperparameter("tol", 1e-7, 1., default_value=1e-3)
         early_stopping = CategoricalHyperparameter("early_stopping", [True, False], False)

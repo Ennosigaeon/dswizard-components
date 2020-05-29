@@ -46,22 +46,37 @@ class DecisionTree(PredictionAlgorithm):
         from sklearn.tree import DecisionTreeClassifier
 
         # Heuristic to set the tree depth
-        max_depth = resolve_factor(self.max_depth_factor, n_features)
+        max_depth = resolve_factor(self.max_depth_factor, n_features, cs_default=1.)
         if max_depth is not None:
             max_depth = max(max_depth, 2)
 
         # Heuristic to set the tree width
-        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, n_samples)
+        max_leaf_nodes = resolve_factor(self.max_leaf_nodes_factor, n_samples, cs_default=1.)
         if max_leaf_nodes is not None:
             max_leaf_nodes = max(max_leaf_nodes, 2)
+
+        # Heuristic to set max features
+        max_features = resolve_factor(self.max_features, n_features, cs_default=1.)
+        if max_features is not None:
+            max_features = max(max_features, 1)
+
+        # Heuristic to set min_samples_split
+        min_samples_split = resolve_factor(self.min_samples_split, n_samples, default=2, cs_default=0.0001)
+        if min_samples_split is not None:
+            min_samples_split = max(min_samples_split, 2)
+
+        # Heuristic to set min_samples_leaf
+        min_samples_leaf = resolve_factor(self.min_samples_leaf, n_samples, default=1, cs_default=0.0001)
+        if min_samples_leaf is not None:
+            min_samples_leaf = max(min_samples_leaf, 1)
 
         return DecisionTreeClassifier(
             criterion=self.criterion,
             splitter=self.splitter,
             max_depth=max_depth,
-            max_features=self.max_features,
-            min_samples_split=self.min_samples_split,
-            min_samples_leaf=self.min_samples_leaf,
+            max_features=max_features,
+            min_samples_split=min_samples_split,
+            min_samples_leaf=min_samples_leaf,
             max_leaf_nodes=max_leaf_nodes,
             min_weight_fraction_leaf=self.min_weight_fraction_leaf,
             min_impurity_decrease=self.min_impurity_decrease,

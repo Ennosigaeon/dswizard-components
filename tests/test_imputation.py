@@ -12,6 +12,9 @@ class TestImputation(base_test.BaseComponentTest):
         X_train = pd.DataFrame([[1.0], [np.nan]])
         y_train = pd.Series([1, 0])
         actual = ImputationComponent()
+        config: dict = self.get_default(actual)
+
+        actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         X_actual = actual.transform(X_train)
 

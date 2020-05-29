@@ -43,7 +43,8 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
         if isinstance(self.n_clusters_factor, int):
             n_clusters = self.n_clusters_factor
         else:
-            n_clusters = max(min(resolve_factor(self.n_clusters_factor, n_features), (n_features - 1)), 2)
+            n_clusters = max(min(resolve_factor(self.n_clusters_factor, n_features, default=2, cs_default=1.),
+                                 (n_features - 1)), 2)
 
         return FeatureAgglomeration(n_clusters=n_clusters,
                                     affinity=self.affinity,
@@ -68,7 +69,7 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
         affinity = CategoricalHyperparameter("affinity",
                                              ["euclidean", "l1", "l2", "manhattan", "cosine", "precomputed"],
                                              default_value="euclidean")
-        compute_full_tree = CategoricalHyperparameter("compute_full_tree", [True, False], default_value=True)
+        compute_full_tree = CategoricalHyperparameter("compute_full_tree", [True, False, 'auto'], default_value='auto')
         linkage = CategoricalHyperparameter("linkage", ["ward", "complete", "average", "single"], default_value="ward")
         pooling_func = CategoricalHyperparameter("pooling_func", ["mean", "median", "max"], default_value="mean")
         distance_threshold = UniformFloatHyperparameter("distance_threshold", 0., 1.0, default_value=None)
@@ -78,7 +79,7 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
             [n_clusters_factor, affinity, compute_full_tree, linkage, distance_threshold, pooling_func])
 
         # TODO this condition breaks FeaturePreprocessorChoice. Not sure why
-        distance_thresholdAndNClustersCondition = EqualsCondition(distance_threshold, n_clusters_factor, 1.)
+        distance_thresholdAndNClustersCondition = EqualsCondition(distance_threshold, n_clusters_factor, 0.)
         cs.add_condition(distance_thresholdAndNClustersCondition)
 
         affinity_and_linkage = ForbiddenAndConjunction(

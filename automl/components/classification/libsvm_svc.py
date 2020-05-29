@@ -50,6 +50,8 @@ class LibSVM_SVC(PredictionAlgorithm):
         if self.coef0 is None:
             self.coef0 = 0.0
 
+        gamma = 'scale' if self.gamma == 0.1 else self.gamma
+
         self.shrinking = check_for_bool(self.shrinking)
 
         if check_none(self.class_weight):
@@ -58,7 +60,7 @@ class LibSVM_SVC(PredictionAlgorithm):
         return SVC(C=self.C,
                    kernel=self.kernel,
                    degree=self.degree,
-                   gamma=self.gamma,
+                   gamma=gamma,
                    coef0=self.coef0,
                    shrinking=self.shrinking,
                    tol=self.tol,

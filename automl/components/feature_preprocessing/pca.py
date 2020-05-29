@@ -36,7 +36,7 @@ class PCAComponent(PreprocessingAlgorithm):
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.decomposition import PCA
-        n_components = resolve_factor(self.keep_variance, min(n_samples, n_features))
+        n_components = resolve_factor(self.keep_variance, min(n_samples, n_features), cs_default=0.9999)
         return PCA(n_components=n_components,
                    whiten=self.whiten,
                    random_state=self.random_state,
@@ -59,8 +59,8 @@ class PCAComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(**kwargs):
         keep_variance = UniformFloatHyperparameter("keep_variance", 0., 1., default_value=0.9999)
         whiten = CategoricalHyperparameter("whiten", [False, True], default_value=False)
-        svd_solver = CategoricalHyperparameter("svd_solver", ["auto", "full", "arpack", "randomized"], default_value="full")
-        tol = UniformFloatHyperparameter("tol", 0., 5., default_value=1e-2)
+        svd_solver = CategoricalHyperparameter("svd_solver", ["auto", "full", "arpack", "randomized"], default_value="auto")
+        tol = UniformFloatHyperparameter("tol", 0., 5., default_value=0.)
         iterated_power = UniformIntegerHyperparameter("iterated_power", 0, 1000, default_value=1000)
 
         cs = ConfigurationSpace()

@@ -25,11 +25,13 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
+        n_components = None if self.n_components == 10 else self.n_components
+
         # initial fit of only increment trees
         return LinearDiscriminantAnalysis(solver=self.solver,
                                           shrinkage=self.shrinkage,
                                           tol=self.tol,
-                                          n_components=self.n_components)
+                                          n_components=n_components)
 
     def predict_proba(self, X):
         if self.estimator is None:

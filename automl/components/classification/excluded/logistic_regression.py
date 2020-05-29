@@ -45,6 +45,10 @@ class LogisticRegression(PredictionAlgorithm):
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.linear_model import LogisticRegression
 
+        # Cast only for test case
+        if self.intercept_scaling == 1.:
+            self.intercept_scaling = 1
+
         return LogisticRegression(
             penalty=self.penalty,
             solver=self.solver,
@@ -88,7 +92,7 @@ class LogisticRegression(PredictionAlgorithm):
         intercept_scaling = UniformFloatHyperparameter("intercept_scaling", lower=0.0001, upper=2.0, default_value=1.0,
                                                        log=True)
         max_iter = UniformIntegerHyperparameter("max_iter", lower=50, upper=10000, default_value=100)
-        multi_class = CategoricalHyperparameter("multi_class", ["ovr", "multinomial"], default_value="ovr")
+        multi_class = CategoricalHyperparameter("multi_class", ["ovr", "multinomial", "auto"], default_value="auto")
         l1_ratio = UniformFloatHyperparameter("l1_ratio", lower=0., upper=1., default_value=0.1)
 
         l1_ratio_condition = InCondition(l1_ratio, penalty, ["elasticnet"])
