@@ -12,6 +12,8 @@ from ConfigSpace import ConfigurationSpace
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils import check_random_state, check_array
 
+from automl.util.common import HANDLES_NOMINAL, HANDLES_NUMERIC, HANDLES_MISSING
+
 
 def find_components(package: str, directory: str, base_class: Type) -> Dict[str, Type]:
     components = OrderedDict()
@@ -308,9 +310,9 @@ class ComponentChoice(EstimatorComponent):
     def get_components(self) -> Dict[str, Type[EstimatorComponent]]:
         raise NotImplementedError()
 
-    def get_available_components(self, mf: np.ndarray = None,
+    def get_available_components(self, mf: Dict[str, float] = None,
                                  include: List = None,
-                                 exclude: List = None):
+                                 exclude: List = None) -> Dict[str, Type[EstimatorComponent]]:
         if include is not None and exclude is not None:
             raise ValueError(
                 "The argument include and exclude cannot be used together.")
@@ -336,16 +338,15 @@ class ComponentChoice(EstimatorComponent):
             if entry == type(self) or hasattr(entry, 'get_components'):
                 continue
 
-            props = entry.get_properties()
-            # TODO check properties and meta-features compatibilities
-            # if entry.get_properties()['handles_classification'] is False:
-            #     continue
-            # if dataset_properties.get('multiclass') is True and \
-            #         entry.get_properties()['handles_multiclass'] is False:
-            #     continue
-            # if dataset_properties.get('multilabel') is True and \
-            #         entry.get_properties()['handles_multilabel'] is False:
-            #     continue
+            # Basic check if component is compatible with data set
+            if mf is not None:
+                props = entry.get_properties()
+                if mf['nr_cat'] > 0 and not props[HANDLES_NOMINAL]:
+                    continue
+                if mf['nr_num'] > 0 and not props[HANDLES_NUMERIC]:
+                    continue
+                if mf['nr_missing_values'] > 0 and not props[HANDLES_MISSING]:
+                    continue
 
             components_dict[name] = entry
 
