@@ -228,7 +228,8 @@ class MetaFeatureFactory(object):
 
     @classmethod
     def ft_class_prob(cls, y):
-        return np.bincount(y) / y.size
+        _, count = np.unique(y, return_counts=True)
+        return count / y.size
 
     @classmethod
     def _set_data_categoric(cls, N, C, transform_num: bool,
