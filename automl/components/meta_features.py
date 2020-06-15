@@ -11,12 +11,11 @@ from pymfe.statistical import MFEStatistical
 
 import pynisher2
 
-LOGGER = logging.getLogger('mf')
-
 MetaFeatures = np.ndarray
 
 
 class MetaFeatureFactory(object):
+    logger = logging.getLogger('Meta-Features')
 
     @staticmethod
     def calculate(X: np.ndarray,
@@ -24,7 +23,7 @@ class MetaFeatureFactory(object):
                   max_nan_percentage: float = 0.9,
                   max_features: int = 10000,
                   random_state: int = 42,
-                  timeout: int = 600,
+                  timeout: int = 30,
                   memory: int = 6144) -> Tuple[Optional[Dict[str, float]], Optional[MetaFeatures]]:
         """
         Calculates the meta-features for the given DataFrame. The actual computation is dispatched to another process
@@ -38,20 +37,23 @@ class MetaFeatureFactory(object):
         :param memory:
         :return:
         """
-        LOGGER.debug('Calculating MF')
+        MetaFeatureFactory.logger.debug('Calculating MF')
         wrapper = pynisher2.enforce_limits(wall_time_in_s=timeout, mem_in_mb=memory)(MetaFeatureFactory._calculate)
         res = wrapper(X, y, max_nan_percentage=max_nan_percentage, max_features=max_features,
                       random_state=random_state)
         # TODO improve error handling
         if wrapper.exit_status is pynisher2.TimeoutException or wrapper.exit_status is pynisher2.MemorylimitException:
-            LOGGER.warning('Failed to extract MF due to resource constraints')
+            MetaFeatureFactory.logger.warning('Failed to extract MF due to resource constraints')
             return None, None
         elif wrapper.exit_status is pynisher2.AnythingException:
-            LOGGER.warning('Failed to extract MF due to {}'.format(res[0]))
+            MetaFeatureFactory.logger.warning('Failed to extract MF due to {}'.format(res[0]))
             return None, None
         elif wrapper.exit_status == 0 and res is not None:
-            # TODO assert that all values in res are finite
-            return res, np.atleast_2d(np.fromiter(res.values(), dtype=float))
+            array = np.atleast_2d(np.fromiter(res.values(), dtype=float))
+            if np.isnan(array).any():
+                MetaFeatureFactory.logger.warning('MF are partially NaN: {}'.format(res))
+                return None, None
+            return res, array
 
     @staticmethod
     def _calculate(X: np.ndarray,
@@ -160,59 +162,59 @@ class MetaFeatureFactory(object):
         var_importance = MFEModelBased.ft_var_importance(precomp_model['model'])
 
         return {
-                   'nr_inst': int(nr_inst),
-                   'nr_attr': int(nr_attr),
-                   'nr_num': int(X.shape[1] - C_tmp.shape[1]),
-                   'nr_cat': int(C_tmp.shape[1]),
-                   'nr_class': int(MFEGeneral.ft_nr_class(y)),
-                   'nr_missing_values': int(nr_missing_values),
-                   'pct_missing_values': float(pct_missing_values),
-                   'nr_inst_mv': int(nr_inst_mv),
-                   'pct_inst_mv': float(pct_inst_mv),
-                   'nr_attr_mv': int(nr_attr_mv),
-                   'pct_attr_mv': float(pct_attr_mv),
+            'nr_inst': int(nr_inst),
+            'nr_attr': int(nr_attr),
+            'nr_num': int(X.shape[1] - C_tmp.shape[1]),
+            'nr_cat': int(C_tmp.shape[1]),
+            'nr_class': int(MFEGeneral.ft_nr_class(y)),
+            'nr_missing_values': int(nr_missing_values),
+            'pct_missing_values': float(pct_missing_values),
+            'nr_inst_mv': int(nr_inst_mv),
+            'pct_inst_mv': float(pct_inst_mv),
+            'nr_attr_mv': int(nr_attr_mv),
+            'pct_attr_mv': float(pct_attr_mv),
 
-                   'nr_outliers': int(MFEStatistical.ft_nr_outliers(N)),
-                   'skewness_mean': float(skewness.mean()),
-                   'skewness_sd': float(skewness.std(ddof=1)) if nr_attr > 1 else 0,
-                   'kurtosis_mean': float(kurtosis.mean()),
-                   'kurtosis_sd': float(kurtosis.std(ddof=1)) if nr_attr > 1 else 0,
-                   'cor_mean': float(cor.mean()) if nr_attr > 1 else 1,
-                   'cor_sd': float(cor.std(ddof=1)) if nr_attr > 2 else 0,
-                   'cov_mean': float(cov.mean()) if nr_attr > 1 else 0,
-                   'cov_sd': float(cov.std(ddof=1)) if nr_attr > 2 else 0,
-                   'sparsity_mean': float(sparsity.mean()),
-                   'sparsity_sd': float(sparsity.std(ddof=1)) if nr_attr > 1 else 0,
-                   'var_mean': float(var.mean()),
-                   'var_sd': float(var.std(ddof=1)) if nr_attr > 1 else 0,
-                   'class_prob_mean': float(class_prob.mean()),
-                   'class_prob_std': float(class_prob.std(ddof=0)),
+            'nr_outliers': int(MFEStatistical.ft_nr_outliers(N)),
+            'skewness_mean': float(skewness.mean()),
+            'skewness_sd': float(skewness.std(ddof=1)) if nr_attr > 1 else 0,
+            'kurtosis_mean': float(kurtosis.mean()),
+            'kurtosis_sd': float(kurtosis.std(ddof=1)) if nr_attr > 1 else 0,
+            'cor_mean': float(cor.mean()) if nr_attr > 1 else 1,
+            'cor_sd': float(cor.std(ddof=1)) if nr_attr > 2 else 0,
+            'cov_mean': float(cov.mean()) if nr_attr > 1 else 0,
+            'cov_sd': float(cov.std(ddof=1)) if nr_attr > 2 else 0,
+            'sparsity_mean': float(sparsity.mean()),
+            'sparsity_sd': float(sparsity.std(ddof=1)) if nr_attr > 1 else 0,
+            'var_mean': float(var.mean()),
+            'var_sd': float(var.std(ddof=1)) if nr_attr > 1 else 0,
+            'class_prob_mean': float(class_prob.mean()),
+            'class_prob_std': float(class_prob.std(ddof=0)),
 
-                   'class_ent': float(
-                       MFEInfoTheory.ft_class_ent(y, precomp_info['class_ent'], precomp_info['class_freqs'])),
-                   'attr_ent_mean': float(attr_ent.mean()),
-                   'attr_ent_sd': float(attr_ent.std(ddof=1)) if nr_attr > 1 else 0,
-                   'mut_inf_mean': float(mut_inf.mean()),
-                   'mut_inf_sd': float(mut_inf.std(ddof=1)) if nr_attr > 1 else 0,
-                   'eq_num_attr': float(eq_num_attr),
-                   'ns_ratio': float(ns_ratio),
+            'class_ent': float(
+                MFEInfoTheory.ft_class_ent(y, precomp_info['class_ent'], precomp_info['class_freqs'])),
+            'attr_ent_mean': float(attr_ent.mean()),
+            'attr_ent_sd': float(attr_ent.std(ddof=1)) if nr_attr > 1 else 0,
+            'mut_inf_mean': float(mut_inf.mean()),
+            'mut_inf_sd': float(mut_inf.std(ddof=1)) if nr_attr > 1 else 0,
+            'eq_num_attr': float(eq_num_attr),
+            'ns_ratio': float(ns_ratio),
 
-                   'nodes': float(MFEModelBased.ft_nodes(precomp_model['table'])),
-                   'leaves': float(MFEModelBased.ft_leaves(precomp_model['table'])),
-                   'leaves_branch_mean': float(leaves_branch.mean()),
-                   'leaves_branch_sd': float(leaves_branch.std(ddof=1)),
-                   'nodes_per_attr': float(MFEModelBased.ft_nodes_per_attr(N, precomp_model['table'])),
-                   'leaves_per_class_mean': float(leaves_per_class.mean()),
-                   'leaves_per_class_sd': float(leaves_per_class.std(ddof=1)) if not np.isnan(
-                       leaves_per_class).any() else 0,
-                   'var_importance_mean': float(var_importance.mean()),
-                   'var_importance_sd': float(var_importance.std(ddof=1)) if nr_attr > 1 else 0,
+            'nodes': float(MFEModelBased.ft_nodes(precomp_model['table'])),
+            'leaves': float(MFEModelBased.ft_leaves(precomp_model['table'])),
+            'leaves_branch_mean': float(leaves_branch.mean()),
+            'leaves_branch_sd': float(leaves_branch.std(ddof=1)),
+            'nodes_per_attr': float(MFEModelBased.ft_nodes_per_attr(N, precomp_model['table'])),
+            'leaves_per_class_mean': float(leaves_per_class.mean()),
+            'leaves_per_class_sd': float(leaves_per_class.std(ddof=1)) if not np.isnan(
+                leaves_per_class).any() else 0,
+            'var_importance_mean': float(var_importance.mean()),
+            'var_importance_sd': float(var_importance.std(ddof=1)) if nr_attr > 1 else 0,
 
-                   'one_nn_mean': 0, 'one_nn_sd': 0,
-                   'best_node_mean': 0, 'best_node_sd': 0,
-                   'linear_discr_mean': 0, 'linear_discr_sd': 0,
-                   'naive_bayes_mean': 0, 'naive_bayes_sd': 0
-               }
+            'one_nn_mean': 0, 'one_nn_sd': 0,
+            'best_node_mean': 0, 'best_node_sd': 0,
+            'linear_discr_mean': 0, 'linear_discr_sd': 0,
+            'naive_bayes_mean': 0, 'naive_bayes_sd': 0
+        }
 
     @classmethod
     def ft_nr_missing_val(cls, M):
