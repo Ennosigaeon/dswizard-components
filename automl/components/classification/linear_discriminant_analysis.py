@@ -6,7 +6,7 @@ from ConfigSpace.conditions import InCondition
 from automl.components.base import PredictionAlgorithm
 from automl.util.util import convert_multioutput_multiclass_to_multilabel
 from automl.util.common import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
-    HANDLES_NOMINAL_CLASS
+    HANDLES_NOMINAL_CLASS, resolve_factor
 
 
 class LinearDiscriminantAnalysis(PredictionAlgorithm):
@@ -22,10 +22,17 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
         self.tol = tol
         self.n_components = n_components
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
+    def fit(self, X, Y):
+        import numpy as np
+
+        self.estimator = self.to_sklearn(X.shape[0], X.shape[1], n_classes=len(np.unique(Y)))
+        self.estimator.fit(X, Y)
+        return self
+
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, n_classes: int = 0, **kwargs):
         from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
-        n_components = None if self.n_components == 10 else self.n_components
+        n_components = resolve_factor(self.n_components, min(n_features, n_classes - 1), cs_default=0.5)
 
         # initial fit of only increment trees
         return LinearDiscriminantAnalysis(solver=self.solver,
@@ -56,7 +63,7 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
         cs = ConfigurationSpace()
         solver = CategoricalHyperparameter("solver", ["svd", "lsqr", "eigen"], default_value="svd")
         shrinkage = UniformFloatHyperparameter("shrinkage", 0., 1., default_value=0.1)
-        n_components = UniformIntegerHyperparameter("n_components", 2, 400, default_value=10)
+        n_components = UniformFloatHyperparameter("n_components", 0.01, 1., default_value=0.5)
         tol = UniformFloatHyperparameter(name="tol", lower=1.0e-7, upper=1., default_value=1.0e-4, log=True)
 
         cs.add_hyperparameters([shrinkage, solver, tol, n_components])
