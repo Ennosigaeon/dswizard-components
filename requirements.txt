@@ -1,3 +1,4 @@
+pymfe==0.1.0
 ConfigSpace==0.4.*
 numpy==1.16.*
 pandas==0.24.*
