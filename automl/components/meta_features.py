@@ -206,7 +206,7 @@ class MetaFeatureFactory(object):
             'nodes_per_attr': float(MFEModelBased.ft_nodes_per_attr(N, precomp_model['table'])),
             'leaves_per_class_mean': float(leaves_per_class.mean()),
             'leaves_per_class_sd': float(leaves_per_class.std(ddof=1)) if not np.isnan(
-                leaves_per_class).any() else 0,
+                leaves_per_class).any() and leaves_per_class.size > 1 else 0,
             'var_importance_mean': float(var_importance.mean()),
             'var_importance_sd': float(var_importance.std(ddof=1)) if nr_attr > 1 else 0,
 
