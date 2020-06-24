@@ -1,9 +1,13 @@
 import numpy as np
 import pandas as pd
+from typing import List
+
+from sklearn.compose import ColumnTransformer
 
 from automl.components.base import PreprocessingAlgorithm
 from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
     HANDLES_MULTICLASS
+from automl.components.base import NoopComponent
 
 
 class OneHotEncoderComponent(PreprocessingAlgorithm):
@@ -30,15 +34,34 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
         super().__init__()
 
     def fit(self, X, y=None):
+        if isinstance(X, np.ndarray):
+            df = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1])).infer_objects()
+        else:
+            df = X
+
+        categorical = (df.dtypes == object).to_numpy()
+        if not categorical.any():
+            self.preprocessor = NoopComponent()
+        else:
+            self.preprocessor = self.to_sklearn(X.shape[0], X.shape[1], categorical=categorical)
+            self.preprocessor.fit(X, y)
         return self
 
-    def transform(self, X: pd.DataFrame):
-        if isinstance(X, np.ndarray):
-            X = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1]))
+    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, categorical: List[bool] = 'auto', **kwargs):
+        from sklearn.preprocessing import OneHotEncoder
+        return ColumnTransformer([('ohe', OneHotEncoder(sparse=False, handle_unknown='ignore'), categorical)],
+                                 remainder='passthrough')
+        # return OneHotEncoder(sparse=False, categories=categorical_columns, handle_unknown='ignore')
 
-        dummy_na = np.any(pd.isna(X))
-        X = pd.get_dummies(X, sparse=False, dummy_na=dummy_na)
-        return X.to_numpy()
+    def transform(self, X: pd.DataFrame):
+        # if isinstance(X, np.ndarray):
+        #     X = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1])).infer_objects()
+        #
+        # dummy_na = np.any(pd.isna(X))
+        # X = pd.get_dummies(X, sparse=False, dummy_na=dummy_na)
+        # return X.to_numpy()
+
+        return self.preprocessor.transform(X)
 
     @staticmethod
     def get_properties():
@@ -47,5 +70,5 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
                 HANDLES_MULTICLASS: True,
                 HANDLES_NUMERIC: True,
                 HANDLES_NOMINAL: True,
-                HANDLES_MISSING: True,
+                HANDLES_MISSING: False,
                 HANDLES_NOMINAL_CLASS: True}

@@ -63,8 +63,11 @@ class MetaData:
         raise NotImplementedError()
 
     @classmethod
-    def name(cls) -> str:
-        return '.'.join([cls.__module__, cls.__qualname__])
+    def name(cls, short: bool = False) -> str:
+        if short:
+            return cls.__qualname__
+        else:
+            return '.'.join([cls.__module__, cls.__qualname__])
 
 
 # noinspection PyPep8Naming
