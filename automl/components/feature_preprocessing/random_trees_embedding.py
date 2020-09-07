@@ -1,6 +1,6 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
-    UniformFloatHyperparameter
+    UniformFloatHyperparameter, CategoricalHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
 from automl.util.common import check_for_bool, resolve_factor, HANDLES_NOMINAL_CLASS, HANDLES_MISSING, \
@@ -96,9 +96,8 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         min_samples_leaf_factor = UniformFloatHyperparameter("min_samples_leaf_factor", 0.0001, 0.5,
                                                              default_value=0.0001)
         min_weight_fraction_leaf = UniformFloatHyperparameter("min_weight_fraction_leaf", 0., 0.5, default_value=0.)
-        max_leaf_nodes_factor = UniformFloatHyperparameter("max_leaf_nodes_factor", 1e-5, 1., default_value=1.)
-        min_impurity_decrease = UniformFloatHyperparameter('min_impurity_decrease', 0., 1.0, default_value=0.)
+        bootstrap = CategoricalHyperparameter('bootstrap', [True, False])
 
         cs.add_hyperparameters([n_estimators, max_depth_factor, min_samples_split_factor, min_samples_leaf_factor,
-                                min_weight_fraction_leaf, max_leaf_nodes_factor, min_impurity_decrease])
+                                min_weight_fraction_leaf, bootstrap])
         return cs

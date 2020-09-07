@@ -46,7 +46,6 @@ class KBinsDiscretizer(PreprocessingAlgorithm):
 
     @staticmethod
     def get_properties():
-        # TODO find out of this is right!
         return {'shortname': 'KBD',
                 'name': 'K Bins Discretizer',
                 HANDLES_MULTICLASS: True,

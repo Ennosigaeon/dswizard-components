@@ -1,12 +1,11 @@
 import numpy as np
-from ConfigSpace.conditions import EqualsCondition
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.forbidden import ForbiddenAndConjunction, ForbiddenInClause, ForbiddenEqualsClause
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from automl.util.common import resolve_factor, HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, \
-    HANDLES_NUMERIC, HANDLES_MULTICLASS
+from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, \
+    HANDLES_NUMERIC, HANDLES_MULTICLASS, resolve_factor
 
 
 class FeatureAgglomerationComponent(PreprocessingAlgorithm):
@@ -37,14 +36,14 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
             raise ValueError('Unknown pooling function \'{}\''.format(self.pooling_func))
 
         if self.distance_threshold is not None:
-            self.n_clusters = None
+            n_clusters = None
             self.compute_full_tree = True
-
-        if isinstance(self.n_clusters_factor, int):
-            n_clusters = self.n_clusters_factor
         else:
-            n_clusters = max(min(resolve_factor(self.n_clusters_factor, n_features, default=2, cs_default=1.),
-                                 (n_features - 1)), 2)
+            if isinstance(self.n_clusters_factor, int):
+                n_clusters = self.n_clusters_factor
+            else:
+                n_clusters = max(min(resolve_factor(self.n_clusters_factor, n_features, default=2, cs_default=1.),
+                                     (n_features - 1)), 2)
 
         return FeatureAgglomeration(n_clusters=n_clusters,
                                     affinity=self.affinity,
@@ -66,30 +65,15 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
         n_clusters_factor = UniformFloatHyperparameter("n_clusters_factor", 0., 1., default_value=1.)
-        affinity = CategoricalHyperparameter("affinity",
-                                             ["euclidean", "l1", "l2", "manhattan", "cosine", "precomputed"],
+        affinity = CategoricalHyperparameter("affinity", ["euclidean", "manhattan", "cosine"],
                                              default_value="euclidean")
-        compute_full_tree = CategoricalHyperparameter("compute_full_tree", [True, False, 'auto'], default_value='auto')
-        linkage = CategoricalHyperparameter("linkage", ["ward", "complete", "average", "single"], default_value="ward")
+        linkage = CategoricalHyperparameter("linkage", ["ward", "complete", "average"], default_value="ward")
         pooling_func = CategoricalHyperparameter("pooling_func", ["mean", "median", "max"], default_value="mean")
-        distance_threshold = UniformFloatHyperparameter("distance_threshold", 0., 1.0, default_value=None)
 
         cs = ConfigurationSpace()
-        cs.add_hyperparameters(
-            [n_clusters_factor, affinity, compute_full_tree, linkage, distance_threshold, pooling_func])
+        cs.add_hyperparameters([n_clusters_factor, affinity, linkage, pooling_func])
 
-        # TODO this condition breaks FeaturePreprocessorChoice. Not sure why
-        distance_thresholdAndNClustersCondition = EqualsCondition(distance_threshold, n_clusters_factor, 0.)
-        cs.add_condition(distance_thresholdAndNClustersCondition)
-
-        affinity_and_linkage = ForbiddenAndConjunction(
-            ForbiddenInClause(affinity, ["l1", "l2", "manhattan", "cosine", "precomputed"]),
-            ForbiddenEqualsClause(linkage, "ward"))
+        affinity_and_linkage = ForbiddenAndConjunction(ForbiddenInClause(affinity, ["manhattan", "cosine"]),
+                                                       ForbiddenEqualsClause(linkage, "ward"))
         cs.add_forbidden_clause(affinity_and_linkage)
-
-        full_and_n_clusters = ForbiddenAndConjunction(
-            ForbiddenEqualsClause(compute_full_tree, False),
-            ForbiddenEqualsClause(n_clusters_factor, 1.))
-        cs.add_forbidden_clause(full_and_n_clusters)
-
         return cs

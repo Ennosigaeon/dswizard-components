@@ -38,12 +38,14 @@ class TestDecisionTree(base_test.BaseComponentTest):
         config['max_depth'] = max(resolve_factor(config['max_depth_factor'], X_train.shape[1]), 2)
         del config['max_depth_factor']
 
-        config['max_leaf_nodes'] = max(resolve_factor(config['max_leaf_nodes_factor'], X_train.shape[0]), 2)
-        del config['max_leaf_nodes_factor']
+        config['max_features'] = resolve_factor(config['max_features_factor'], X_train.shape[1], cs_default=1., default=None)
+        del config['max_features_factor']
 
-        config['max_features'] = resolve_factor(config['max_features'], X_train.shape[1])
-        config['min_samples_split'] = resolve_factor(config['min_samples_split'], X_train.shape[0])
-        config['min_samples_leaf'] = resolve_factor(config['min_samples_leaf'], X_train.shape[0])
+        config['min_samples_split'] = resolve_factor(config['min_samples_split_factor'], X_train.shape[0])
+        del config['min_samples_split_factor']
+
+        config['min_samples_leaf'] = resolve_factor(config['min_samples_leaf_factor'], X_train.shape[0])
+        del config['min_samples_leaf_factor']
 
         expected = sklearn.tree.DecisionTreeClassifier(**config, random_state=42)
         expected.fit(X_train, y_train)

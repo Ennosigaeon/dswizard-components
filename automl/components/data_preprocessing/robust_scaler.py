@@ -1,8 +1,9 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, HANDLES_MULTICLASS
+from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
+    HANDLES_MULTICLASS
 
 
 class RobustScalerComponent(PreprocessingAlgorithm):
@@ -37,9 +38,7 @@ class RobustScalerComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
-        with_centering = CategoricalHyperparameter("with_centering", [True, False], default_value=True)
-        with_scaling = CategoricalHyperparameter("with_scaling", [True, False], default_value=True)
-        q_min = UniformFloatHyperparameter('q_min', 0., 100., default_value=25.)
-        q_max = UniformFloatHyperparameter('q_max', 0., 100., default_value=75.)
-        cs.add_hyperparameters([q_min, q_max, with_centering, with_scaling])
+        q_min = UniformFloatHyperparameter('q_min', 0.1, 30, default_value=25)
+        q_max = UniformFloatHyperparameter('q_max', 70, 99.9, default_value=75)
+        cs.add_hyperparameters([q_min, q_max])
         return cs

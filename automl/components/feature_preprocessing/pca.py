@@ -1,11 +1,9 @@
 import numpy as np
-from ConfigSpace.conditions import EqualsCondition
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter, \
-    UniformIntegerHyperparameter
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from automl.util.common import resolve_factor, HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL,\
+from automl.util.common import resolve_factor, HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, \
     HANDLES_NUMERIC, HANDLES_MULTICLASS
 
 
@@ -57,15 +55,9 @@ class PCAComponent(PreprocessingAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
-        keep_variance = UniformFloatHyperparameter("keep_variance", 0., 1., default_value=0.9999)
+        keep_variance = UniformFloatHyperparameter("keep_variance", 0.5, 0.9999, default_value=0.9999)
         whiten = CategoricalHyperparameter("whiten", [False, True], default_value=False)
-        svd_solver = CategoricalHyperparameter("svd_solver", ["auto", "full", "arpack", "randomized"], default_value="auto")
-        tol = UniformFloatHyperparameter("tol", 0., 5., default_value=0.)
-        iterated_power = UniformIntegerHyperparameter("iterated_power", 0, 1000, default_value=1000)
 
         cs = ConfigurationSpace()
-        cs.add_hyperparameters([keep_variance, whiten, svd_solver, tol, iterated_power])
-
-        iterated_power_condition = EqualsCondition(iterated_power, svd_solver, "randomized")
-        cs.add_condition(iterated_power_condition)
+        cs.add_hyperparameters([keep_variance, whiten])
         return cs

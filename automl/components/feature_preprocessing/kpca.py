@@ -8,7 +8,7 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatH
 
 from automl.components.base import PreprocessingAlgorithm
 
-from automl.util.common import resolve_factor, HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL,\
+from automl.util.common import resolve_factor, HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, \
     HANDLES_NUMERIC, HANDLES_MULTICLASS
 
 
@@ -86,7 +86,6 @@ class KernelPCAComponent(PreprocessingAlgorithm):
             warnings.filterwarnings("error")
             X_new = self.preprocessor.transform(X)
 
-            # TODO write a unittest for this case
             if X_new.shape[1] == 0:
                 raise ValueError("KernelPCA removed all features!")
 
@@ -105,26 +104,16 @@ class KernelPCAComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
         n_components_factor = UniformFloatHyperparameter("n_components_factor", 0., 1., default_value=1.)
-        kernel = CategoricalHyperparameter('kernel', ['poly', 'rbf', 'sigmoid', 'cosine', 'linear'], 'linear')
-        gamma = UniformFloatHyperparameter("gamma", 1e-09, 15., log=True, default_value=1.0)
-        degree = UniformIntegerHyperparameter('degree', 2, 6, 3)
-        coef0 = UniformFloatHyperparameter("coef0", -10., 10., default_value=0.)
-        alpha = UniformIntegerHyperparameter("alpha", 1e-9, 5., default_value=1.)
-        fit_inverse_transform = CategoricalHyperparameter("fit_inverse_transform", [True, False], default_value=False)
-        eigen_solver = CategoricalHyperparameter("eigen_solver", ["auto", "dense", "arpack"], default_value="auto")
-        tol = UniformFloatHyperparameter("tol", 0., 2., default_value=0.)
-        max_iter = UniformIntegerHyperparameter("max_iter", 1, 1000, default_value=100)
-        remove_zero_eig = CategoricalHyperparameter("remove_zero_eig", [True, False], default_value=False)
+        kernel = CategoricalHyperparameter('kernel', ['poly', 'rbf', 'sigmoid', 'cosine'], 'rbf')
+        gamma = UniformFloatHyperparameter("gamma", 3.0517578125e-05, 8, log=True, default_value=1.0)
+        degree = UniformIntegerHyperparameter('degree', 2, 5, 3)
+        coef0 = UniformFloatHyperparameter("coef0", -1., 1., default_value=0.)
 
         cs = ConfigurationSpace()
-        cs.add_hyperparameters(
-            [n_components_factor, kernel, degree, gamma, coef0, alpha, fit_inverse_transform, eigen_solver, tol, max_iter,
-             remove_zero_eig])
+        cs.add_hyperparameters([n_components_factor, kernel, degree, gamma, coef0])
 
         degree_depends_on_poly = EqualsCondition(degree, kernel, "poly")
         coef0_condition = InCondition(coef0, kernel, ["poly", "sigmoid"])
         gamma_condition = InCondition(gamma, kernel, ["poly", "rbf"])
-        alpha_condition = EqualsCondition(alpha, fit_inverse_transform, True)
-        tol_condition = InCondition(tol, eigen_solver, ["arpack"])
-        cs.add_conditions([degree_depends_on_poly, coef0_condition, gamma_condition, alpha_condition, tol_condition])
+        cs.add_conditions([degree_depends_on_poly, coef0_condition, gamma_condition])
         return cs

@@ -1,8 +1,8 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, HANDLES_MULTICLASS
+from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
+    HANDLES_MULTICLASS
 
 
 class NormalizerComponent(PreprocessingAlgorithm):
@@ -17,8 +17,6 @@ class NormalizerComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
-        norm = CategoricalHyperparameter('norm', ['l1', 'l2', 'max'], default_value='l2')
-        cs.add_hyperparameter(norm)
         return cs
 
     @staticmethod

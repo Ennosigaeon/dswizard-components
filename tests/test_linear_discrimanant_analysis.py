@@ -32,12 +32,13 @@ class TestLinearDiscriminantAnalysis(base_test.BaseComponentTest):
         actual = LinearDiscriminantAnalysis()
         config: dict = self.get_config(actual)
 
-        config['n_components'] = resolve_factor(config['n_components'], min(X_train.shape[1], len(np.unique(y_train)) - 1), cs_default=0.5)
-        del config['n_components']
-
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
+
+        config['n_components'] = resolve_factor(config['n_components_factor'],
+                                                min(X_train.shape[1], len(np.unique(y_train)) - 1), cs_default=0.5)
+        del config['n_components_factor']
 
         expected = sklearn.discriminant_analysis.LinearDiscriminantAnalysis(**config)
         expected.fit(X_train, y_train)

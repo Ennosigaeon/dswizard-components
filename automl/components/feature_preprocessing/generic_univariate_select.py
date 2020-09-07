@@ -48,10 +48,8 @@ class GenericUnivariateSelectComponent(PreprocessingAlgorithm):
         mode = CategoricalHyperparameter("mode", ['percentile', 'k_best', 'fpr', 'fdr', 'fwe'],
                                          default_value="percentile")
         param = UniformFloatHyperparameter("param", 1e-05, 0.75, default_value=1e-05)
-        score_func = CategoricalHyperparameter(
-            name="score_func",
-            choices=["chi2", "f_classif", "f_regression"],
-            default_value="f_classif")
+        score_func = CategoricalHyperparameter(name="score_func", choices=["chi2", "f_classif", "f_regression"],
+                                               default_value="f_classif")
 
         cs.add_hyperparameters([mode, param, score_func])
         return cs

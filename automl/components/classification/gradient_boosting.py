@@ -1,6 +1,6 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
-    Constant, CategoricalHyperparameter
+    Constant, UnParametrizedHyperparameter
 
 from automl.components.base import PredictionAlgorithm
 from automl.util.common import check_none, HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
@@ -9,27 +9,26 @@ from automl.util.common import resolve_factor
 
 
 # TODO does not honour affinity restrictions
-
 class GradientBoostingClassifier(PredictionAlgorithm):
     def __init__(self,
                  loss: str = 'auto',
                  learning_rate: float = 0.1,
                  max_iter: int = 100,
-                 min_samples_leaf: int = 20,
+                 min_samples_leaf_factor: int = 20,
                  max_depth_factor: int = None,
                  max_leaf_nodes_factor: int = 31,
                  max_bins: int = 255,
                  l2_regularization: float = 0.,
                  tol: float = 1e-7,
                  scoring: str = 'f1_weighted',
-                 n_iter_no_change: int = None,
+                 n_iter_no_change: int = 10,
                  validation_fraction: float = 0.1,
                  random_state=None):
         super().__init__()
         self.loss = loss
         self.learning_rate = learning_rate
         self.max_iter = max_iter
-        self.min_samples_leaf = min_samples_leaf
+        self.min_samples_leaf_factor = min_samples_leaf_factor
         self.max_depth_factor = max_depth_factor
         self.max_leaf_nodes_factor = max_leaf_nodes_factor
         self.max_bins = max_bins
@@ -62,10 +61,10 @@ class GradientBoostingClassifier(PredictionAlgorithm):
             max_leaf_nodes = max(max_leaf_nodes, 2)
 
         # Heuristic to set the tree width
-        if isinstance(self.min_samples_leaf, int):
-            min_samples_leaf = self.min_samples_leaf
+        if isinstance(self.min_samples_leaf_factor, int):
+            min_samples_leaf = self.min_samples_leaf_factor
         else:
-            min_samples_leaf = resolve_factor(self.min_samples_leaf, n_samples, default=20, cs_default=0.0001)
+            min_samples_leaf = resolve_factor(self.min_samples_leaf_factor, n_samples, default=20, cs_default=0.0001)
 
         n_iter_no_change = None if self.n_iter_no_change == 0 else self.n_iter_no_change
 
@@ -104,32 +103,24 @@ class GradientBoostingClassifier(PredictionAlgorithm):
         cs = ConfigurationSpace()
 
         loss = Constant("loss", "auto")
-        learning_rate = UniformFloatHyperparameter(name="learning_rate", lower=1e-6, upper=1.5, default_value=0.1,
+        learning_rate = UniformFloatHyperparameter(name="learning_rate", lower=0.01, upper=1, default_value=0.1,
                                                    log=True)
+        min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf_factor", 0.0001, 0.25, default_value=0.0001,
+                                                      log=True)
         max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 2.5, default_value=1.)
-        max_iter = UniformIntegerHyperparameter("max_iter", 0, 1000, default_value=100)
         max_leaf_nodes_factor = UniformFloatHyperparameter("max_leaf_nodes_factor", 1e-5, 1., default_value=1.)
-        min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf", 0.0001, 0.5, default_value=0.0001)
-        l2_regularization = UniformFloatHyperparameter(name="l2_regularization", lower=1e-7, upper=10.,
-                                                       default_value=1e-7, log=True)
-        max_bins = UniformIntegerHyperparameter("max_bins", 5, 255, default_value=255)
-        tol = UniformFloatHyperparameter("tol", 0., 0.25, default_value=1e-7)
-        scoring = CategoricalHyperparameter("scoring",
-                                            ["accuracy", "balanced_accuracy", "balanced_accurary", "average_precision",
-                                             "neg_brier_score",
-                                             "f1", "f1_micro", "f1_macro", "f1_weighted", "f1_samples", "neg_log_loss",
-                                             "precision", "precision_micro", "precision_macro", "precision_weighted",
-                                             "precision_samples", "recall", "recall_micro", "recall_macro",
-                                             "recall_weighted", "recall_samples", "jaccard", "jaccard_micro",
-                                             "jaccard_macro", "jaccard_weighted", "jaccard_samples", "roc_auc",
-                                             "roc_auc_ovr", "roc_auc_ovo", "roc_auc_ovr_weighted",
-                                             "roc_auc_ovo_weighted"], default_value="f1_weighted")
-        n_iter_no_change = UniformIntegerHyperparameter(name="n_iter_no_change", lower=0, upper=100, default_value=0)
-        validation_fraction = UniformFloatHyperparameter(name="validation_fraction", lower=0.001, upper=1.0,
+        max_iter = Constant("max_iter", 512)
+        max_bins = Constant("max_bins", 255)
+        l2_regularization = UniformFloatHyperparameter(name="l2_regularization", lower=1e-10, upper=1., log=True,
+                                                       default_value=1e-10)
+        tol = UnParametrizedHyperparameter(name="tol", value=1e-7)
+        scoring = UnParametrizedHyperparameter(name="scoring", value="loss")
+        n_iter_no_change = UniformIntegerHyperparameter(name="n_iter_no_change", lower=1, upper=20, default_value=10)
+        validation_fraction = UniformFloatHyperparameter(name="validation_fraction", lower=0.01, upper=0.4,
                                                          default_value=0.1)
 
-        cs.add_hyperparameters([loss, learning_rate, max_iter, min_samples_leaf, max_leaf_nodes_factor, max_bins,
-                                l2_regularization, tol, scoring, n_iter_no_change, validation_fraction,
-                                max_depth_factor])
+        cs.add_hyperparameters(
+            [loss, learning_rate, min_samples_leaf, max_depth_factor, max_leaf_nodes_factor, max_bins, max_iter,
+             l2_regularization, tol, scoring, n_iter_no_change, validation_fraction, ])
 
         return cs

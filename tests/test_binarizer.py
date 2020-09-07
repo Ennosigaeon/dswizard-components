@@ -34,10 +34,6 @@ class TestBinarizer(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        variance = np.mean(np.var(X_train))
-        config['threshold'] = max(0., int(np.round(variance * config['threshold_factor'], 0)))
-        del config['threshold_factor']
-
         expected = Binarizer(**config, copy=False)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)

@@ -1,10 +1,10 @@
+from ConfigSpace.conditions import EqualsCondition
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, \
-    UniformIntegerHyperparameter
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from automl.util.common import resolve_factor, HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, \
-    HANDLES_NUMERIC, HANDLES_MULTICLASS
+from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, \
+    HANDLES_NUMERIC, HANDLES_MULTICLASS, resolve_factor
 
 
 class FastICAComponent(PreprocessingAlgorithm):
@@ -45,10 +45,9 @@ class FastICAComponent(PreprocessingAlgorithm):
         algorithm = CategoricalHyperparameter("algorithm", ["parallel", "deflation"], default_value="parallel")
         whiten = CategoricalHyperparameter("whiten", [True, False], default_value=True)
         fun = CategoricalHyperparameter("fun", ["logcosh", "exp", "cube"], default_value="logcosh")
-        max_iter = UniformIntegerHyperparameter("max_iter", 1, 1000, default_value=200)
-        tol = UniformFloatHyperparameter("tol", 1e-7, 1., default_value=1e-4)
+        cs.add_hyperparameters([n_components_factor, algorithm, whiten, fun])
 
-        cs.add_hyperparameters([n_components_factor, algorithm, whiten, fun, max_iter, tol])
+        cs.add_condition(EqualsCondition(n_components_factor, whiten, True))
         return cs
 
     @staticmethod

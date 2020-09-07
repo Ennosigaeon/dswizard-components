@@ -48,8 +48,7 @@ class SelectKBestComponent(PreprocessingAlgorithm):
             raise NotImplementedError()
         Xt = self.preprocessor.transform(X)
         if Xt.shape[1] == 0:
-            raise ValueError(
-                "%s removed all features." % self.__class__.__name__)
+            raise ValueError("%s removed all features." % self.__class__.__name__)
         return Xt
 
     @staticmethod

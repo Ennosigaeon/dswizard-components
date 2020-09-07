@@ -17,7 +17,7 @@ class TestVarianceThreshold(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(X_test)
 
-        expected = VarianceThreshold()
+        expected = VarianceThreshold(threshold=0.0001)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 

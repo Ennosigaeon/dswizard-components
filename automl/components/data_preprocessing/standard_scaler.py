@@ -1,8 +1,8 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
-from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, HANDLES_MULTICLASS
+from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
+    HANDLES_MULTICLASS
 
 
 class StandardScalerComponent(PreprocessingAlgorithm):
@@ -19,11 +19,6 @@ class StandardScalerComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
-
-        with_mean = CategoricalHyperparameter("with_mean", [True, False], default_value=True)
-        with_std = CategoricalHyperparameter("with_std", [True, False], default_value=True)
-
-        cs.add_hyperparameters([with_mean, with_std])
         return cs
 
     @staticmethod

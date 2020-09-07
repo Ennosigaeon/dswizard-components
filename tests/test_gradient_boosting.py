@@ -18,7 +18,8 @@ class TestGradientBoosting(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
 
-        expected = HistGradientBoostingClassifier(scoring='f1_weighted', random_state=42)
+        expected = HistGradientBoostingClassifier(n_iter_no_change=10, l2_regularization=1e-10, max_iter=512,
+                                                  random_state=42)
         expected.fit(X_train, y_train)
         y_expected = expected.predict(X_test)
 
@@ -41,7 +42,8 @@ class TestGradientBoosting(base_test.BaseComponentTest):
         config['max_leaf_nodes'] = max(resolve_factor(config['max_leaf_nodes_factor'], X_train.shape[0]), 2)
         del config['max_leaf_nodes_factor']
 
-        config['min_samples_leaf'] = resolve_factor(config['min_samples_leaf'], X_train.shape[0])
+        config['min_samples_leaf'] = resolve_factor(config['min_samples_leaf_factor'], X_train.shape[0])
+        del config['min_samples_leaf_factor']
 
         expected = HistGradientBoostingClassifier(**config, random_state=42)
         expected.fit(X_train, y_train)

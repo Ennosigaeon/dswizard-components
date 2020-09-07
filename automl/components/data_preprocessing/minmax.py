@@ -16,8 +16,6 @@ class MinMaxScalerComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
-
-        # Feature Range?
         return cs
 
     @staticmethod

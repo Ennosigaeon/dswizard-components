@@ -1,5 +1,5 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import Constant
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 from automl.components.base import PreprocessingAlgorithm
 from automl.util.common import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
@@ -31,8 +31,7 @@ class VarianceThresholdComponent(PreprocessingAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
+        threshold = UniformFloatHyperparameter("threshold", 0.0001, 0.2, default_value=0.0001)
         cs = ConfigurationSpace()
-        # TODO missing
-        threshold = Constant('threshold', 0.)
         cs.add_hyperparameter(threshold)
         return cs
