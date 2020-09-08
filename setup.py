@@ -10,7 +10,7 @@
 import sys
 
 from pkg_resources import VersionConflict, require
-from setuptools import setup
+from setuptools import setup, find_packages
 
 try:
     require('setuptools>=38.3')
@@ -18,19 +18,19 @@ except VersionConflict:
     print("Error: version of setuptools is too old (<38.3)!")
     sys.exit(1)
 
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
 
 if __name__ == "__main__":
-    setup(name='sklearn-components',
+    setup(name='automl',
           version='0.1',
           description='Contains sklearn algorithms',
+          author='Marc Zoeller',
+          author_email='m.zoeller@usu.de',
           license='MIT',
-          packages=['automl',
-                    'automl.components',
-                    'automl.components.classification',
-                    'automl.components.data_preprocessing',
-                    'automl.components.feature_preprocessing',
-                    'automl.util'],
+          packages=find_packages(),
           include_package_data=True,
+          install_requires=requirements,
           zip_safe=False)
 
     # setup(use_pyscaffold=True)
