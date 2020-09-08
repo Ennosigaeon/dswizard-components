@@ -157,9 +157,10 @@ class MetaFeatureFactory(object):
             ns_ratio = 0
 
         precomp_model = MFEModelBased.precompute_model_based_class(N, y, random_state=random_state)
-        leaves_branch = MFEModelBased.ft_leaves_branch(precomp_model['table'], precomp_model['tree_depth'])
-        leaves_per_class = MFEModelBased.ft_leaves_per_class(precomp_model['table'])
-        var_importance = MFEModelBased.ft_var_importance(precomp_model['model'])
+        leaves_branch = MFEModelBased.ft_leaves_branch(precomp_model['dt_model'], precomp_model['leaf_nodes'],
+                                                       precomp_model['dt_node_depths'])
+        leaves_per_class = MFEModelBased.ft_leaves_per_class(precomp_model['dt_model'], precomp_model['dt_info_table'])
+        var_importance = MFEModelBased.ft_var_importance(precomp_model['dt_model'])
 
         return {
             'nr_inst': int(nr_inst),
@@ -199,11 +200,11 @@ class MetaFeatureFactory(object):
             'eq_num_attr': float(eq_num_attr),
             'ns_ratio': float(ns_ratio),
 
-            'nodes': float(MFEModelBased.ft_nodes(precomp_model['table'])),
-            'leaves': float(MFEModelBased.ft_leaves(precomp_model['table'])),
+            'nodes': float(MFEModelBased.ft_nodes(precomp_model['dt_model'])),
+            'leaves': float(MFEModelBased.ft_leaves(precomp_model['dt_model'])),
             'leaves_branch_mean': float(leaves_branch.mean()),
             'leaves_branch_sd': float(leaves_branch.std(ddof=1)),
-            'nodes_per_attr': float(MFEModelBased.ft_nodes_per_attr(N, precomp_model['table'])),
+            'nodes_per_attr': float(MFEModelBased.ft_nodes_per_attr(precomp_model['dt_model'])),
             'leaves_per_class_mean': float(leaves_per_class.mean()),
             'leaves_per_class_sd': float(leaves_per_class.std(ddof=1)) if not np.isnan(
                 leaves_per_class).any() and leaves_per_class.size > 1 else 0,
