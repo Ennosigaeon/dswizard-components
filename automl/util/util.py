@@ -61,3 +61,7 @@ def get_object(clazz: str, kwargs=None):
         kwargs = {}
 
     return get_type(clazz)(**kwargs)
+
+
+def object_log(X: np.ndarray):
+    return np.log(X.astype(float))
