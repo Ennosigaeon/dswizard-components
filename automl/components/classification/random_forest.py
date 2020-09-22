@@ -45,6 +45,7 @@ class RandomForest(PredictionAlgorithm):
     def fit(self, X, y, sample_weight=None):
         self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
         self.estimator.fit(X, y, sample_weight=sample_weight)
+        self.classes_ = self.estimator.classes_
         return self
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):

@@ -17,12 +17,11 @@ class MultinomialNB(PredictionAlgorithm):
         self.alpha = alpha
         self.fit_prior = fit_prior
         self.verbose = int(verbose)
-        self.classes_ = None
 
     def fit(self, X, y):
         self.estimator = self.to_sklearn(X.shape[0], X.shape[1], len(y.shape) > 1 and y.shape[1] > 1)
-        self.classes_ = np.unique(y.astype(int))
         self.estimator.fit(X, y)
+        self.classes_ = self.estimator.classes_
         return self
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, multilabel: bool = False, **kwargs):

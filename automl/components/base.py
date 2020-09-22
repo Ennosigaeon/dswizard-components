@@ -200,6 +200,7 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
         self.properties: Optional[Dict] = None
         # TODO generalize for other learning tasks
         self._estimator_type = "classifier"
+        self.classes_ = None
 
     def get_estimator(self):
         """Return the underlying estimator object.
@@ -213,6 +214,7 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
     def fit(self, X, Y):
         self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
         self.estimator.fit(X, Y)
+        self.classes_ = self.estimator.classes_
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:

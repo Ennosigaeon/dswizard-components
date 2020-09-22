@@ -26,6 +26,7 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
 
         self.estimator = self.to_sklearn(X.shape[0], X.shape[1], n_classes=len(np.unique(Y)))
         self.estimator.fit(X, Y)
+        self.classes_ = self.estimator.classes_
         return self
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, n_classes: int = 0, **kwargs):
