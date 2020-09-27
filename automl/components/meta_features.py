@@ -45,7 +45,7 @@ class MetaFeatureFactory(object):
         if wrapper.exit_status is pynisher2.TimeoutException or wrapper.exit_status is pynisher2.MemorylimitException:
             MetaFeatureFactory.logger.warning('Failed to extract MF due to resource constraints')
             return None, None
-        elif wrapper.exit_status is pynisher2.AnythingException:
+        elif wrapper.exit_status is pynisher2.AnythingException and isinstance(res, Tuple):
             MetaFeatureFactory.logger.warning('Failed to extract MF due to {}'.format(res[0]))
             return None, None
         elif wrapper.exit_status == 0 and res is not None:
@@ -54,6 +54,10 @@ class MetaFeatureFactory(object):
                 MetaFeatureFactory.logger.warning('MF are partially NaN: {}'.format(res))
                 return None, None
             return res, array
+        else:
+            # Last resort...
+            MetaFeatureFactory.logger.warning('Failed to extract MF due to unknown reasons')
+            return None, None
 
     @staticmethod
     def _calculate(X: np.ndarray,
