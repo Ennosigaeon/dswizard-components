@@ -158,7 +158,10 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
         cls = self.__class__
         return '.'.join([cls.__module__, cls.__qualname__])
 
-    def set_hyperparameters(self, configuration: dict, init_params=None) -> 'EstimatorComponent':
+    def set_hyperparameters(self, configuration: dict = None, init_params=None) -> 'EstimatorComponent':
+        if configuration is None:
+            configuration = self.get_hyperparameter_search_space().get_default_configuration().get_dictionary()
+
         for param, value in configuration.items():
             if not hasattr(self, param) and param != 'random_state':
                 raise ValueError('Cannot set hyperparameter %s for %s because '
