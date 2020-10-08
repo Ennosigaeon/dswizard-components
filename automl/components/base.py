@@ -232,7 +232,12 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
 
         # add class prediction as a synthetic feature
         # noinspection PyUnresolvedReferences
-        X_transformed = np.hstack((X_transformed, np.reshape(self.estimator.predict(X), (-1, 1))))
+        y = np.reshape(self.estimator.predict(X), (-1, 1))
+        try:
+            y = y.astype(float)
+        except ValueError:
+            pass
+        X_transformed = np.hstack((X_transformed, y))
 
         return X_transformed
 
