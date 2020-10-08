@@ -89,7 +89,7 @@ class MetaFeatureFactory(object):
         class_prob = MetaFeatureFactory.ft_class_prob(y)
 
         # Meta-Feature calculation does not work with missing data.
-        X = pd.DataFrame(X)
+        X = pd.DataFrame(X).infer_objects()
         numeric = X.select_dtypes(include=['number']).columns
         n = X.shape[0]
 
