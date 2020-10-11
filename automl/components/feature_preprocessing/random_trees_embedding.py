@@ -17,7 +17,6 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
                  max_leaf_nodes_factor: int = None,
                  min_impurity_decrease: float = 0.,
                  random_state=None,
-                 n_jobs: int = None,
                  bootstrap: bool = True
                  ):
         super().__init__()
