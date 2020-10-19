@@ -92,6 +92,7 @@ class MetaFeatureFactory(object):
         X = pd.DataFrame(X).infer_objects()
         numeric = X.select_dtypes(include=['number']).columns
         n = X.shape[0]
+        rs = np.random.RandomState(random_state)
 
         for i in X.columns:
             col = X[i]
@@ -101,13 +102,13 @@ class MetaFeatureFactory(object):
             elif np.sum(nan) / nan.size > max_nan_percentage:
                 X.drop(i, axis=1, inplace=True)
             elif i in numeric:
-                filler = np.random.normal(col.mean(), col.std(), n)
+                filler = rs.normal(col.mean(), col.std(), n)
                 X[i] = col.combine_first(pd.Series(filler))
             else:
                 items = col.dropna().unique()
                 probability = col.value_counts(dropna=True, normalize=True)
                 probability = probability.where(probability > 0).dropna()
-                filler = np.random.choice(items, n, p=probability)
+                filler = rs.choice(items, n, p=probability)
                 X[i] = col.combine_first(pd.Series(filler))
 
         for i in X.columns:
