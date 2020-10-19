@@ -38,7 +38,8 @@ class MetaFeatureFactory(object):
         :return:
         """
         MetaFeatureFactory.logger.debug('Calculating MF')
-        wrapper = pynisher2.enforce_limits(wall_time_in_s=timeout, mem_in_mb=memory)(MetaFeatureFactory._calculate)
+        wrapper = pynisher2.enforce_limits(wall_time_in_s=timeout, mem_in_mb=memory, logger=MetaFeatureFactory.logger)(
+            MetaFeatureFactory._calculate)
         res = wrapper(X, y, max_nan_percentage=max_nan_percentage, max_features=max_features,
                       random_state=random_state)
         # TODO improve error handling
@@ -90,6 +91,13 @@ class MetaFeatureFactory(object):
 
         # Meta-Feature calculation does not work with missing data.
         X = pd.DataFrame(X).infer_objects()
+        cols = X.columns
+        for c in cols:
+            try:
+                X[c] = pd.to_numeric(X[c])
+            except:
+                pass
+
         numeric = X.select_dtypes(include=['number']).columns
         n = X.shape[0]
         rs = np.random.RandomState(random_state)
