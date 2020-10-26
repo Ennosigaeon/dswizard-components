@@ -90,6 +90,13 @@ class MetaFeatureFactory(object):
 
         # Meta-Feature calculation does not work with missing data.
         X = pd.DataFrame(X).infer_objects()
+        cols = X.columns
+        for c in cols:
+            try:
+                X[c] = pd.to_numeric(X[c])
+            except:
+                pass
+
         numeric = X.select_dtypes(include=['number']).columns
         n = X.shape[0]
         rs = np.random.RandomState(random_state)
