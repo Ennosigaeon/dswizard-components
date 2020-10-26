@@ -23,8 +23,7 @@ class MetaFeatureFactory(object):
                   max_nan_percentage: float = 0.9,
                   max_features: int = 10000,
                   random_state: int = 42,
-                  timeout: int = 30,
-                  memory: int = 6144) -> Tuple[Optional[Dict[str, float]], Optional[MetaFeatures]]:
+                  timeout: int = 30) -> Tuple[Optional[Dict[str, float]], Optional[MetaFeatures]]:
         """
         Calculates the meta-features for the given DataFrame. The actual computation is dispatched to another process
         to prevent crashes due to extensive memory usage.
@@ -38,7 +37,8 @@ class MetaFeatureFactory(object):
         :return:
         """
         MetaFeatureFactory.logger.debug('Calculating MF')
-        wrapper = pynisher2.enforce_limits(wall_time_in_s=timeout, mem_in_mb=memory)(MetaFeatureFactory._calculate)
+        wrapper = pynisher2.enforce_limits(wall_time_in_s=timeout, grace_period_in_s=5,
+                                           logger=MetaFeatureFactory.logger)(MetaFeatureFactory._calculate)
         res = wrapper(X, y, max_nan_percentage=max_nan_percentage, max_features=max_features,
                       random_state=random_state)
         # TODO improve error handling
