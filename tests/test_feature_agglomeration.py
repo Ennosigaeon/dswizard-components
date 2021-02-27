@@ -1,8 +1,8 @@
 import numpy as np
 import sklearn
 
-from automl.components.feature_preprocessing.feature_agglomeration import FeatureAgglomerationComponent
-from automl.util.common import resolve_factor
+from dswizard.components.feature_preprocessing.feature_agglomeration import FeatureAgglomerationComponent
+from dswizard.components.util import resolve_factor
 from tests import base_test
 
 

@@ -1,8 +1,8 @@
 import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
-from automl.components.classification.excluded.qda import QuadraticDiscriminantAnalysis
 
+from dswizard.components.classification.excluded.qda import QuadraticDiscriminantAnalysis
 from tests import base_test
 
 

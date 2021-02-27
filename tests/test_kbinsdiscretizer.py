@@ -1,6 +1,6 @@
 import numpy as np
 import sklearn
-from automl.components.feature_preprocessing.kbinsdiscretizer import KBinsDiscretizer
+from dswizard.components.feature_preprocessing.kbinsdiscretizer import KBinsDiscretizer
 from scipy.sparse import csr_matrix
 
 from tests import base_test

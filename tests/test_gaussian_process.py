@@ -4,7 +4,7 @@ import sklearn.naive_bayes
 import sklearn.svm
 from sklearn.gaussian_process.kernels import RBF
 
-from automl.components.classification.excluded.gaussian_process import GaussianProcessClassifier
+from dswizard.components.classification.excluded.gaussian_process import GaussianProcessClassifier
 
 from tests import base_test
 

@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn
 
-from automl.components.data_preprocessing.knn_imputer import KNNImputerComponent
+from dswizard.components.data_preprocessing.knn_imputer import KNNImputerComponent
 from tests import base_test
 
 

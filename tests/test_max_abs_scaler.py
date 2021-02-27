@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn
 
-from automl.components.data_preprocessing.max_abs_scaler import MaxAbsScalerComponent
+from dswizard.components.data_preprocessing.max_abs_scaler import MaxAbsScalerComponent
 from tests import base_test
 
 

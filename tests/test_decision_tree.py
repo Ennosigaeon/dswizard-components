@@ -1,8 +1,8 @@
 import numpy as np
 import sklearn.tree
 
-from automl.components.classification.decision_tree import DecisionTree
-from automl.util.common import resolve_factor
+from dswizard.components.classification.decision_tree import DecisionTree
+from dswizard.components.util import resolve_factor
 from tests import base_test
 
 

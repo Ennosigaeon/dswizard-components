@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.preprocessing import RobustScaler
 
-from automl.components.data_preprocessing.robust_scaler import RobustScalerComponent
+from dswizard.components.data_preprocessing.robust_scaler import RobustScalerComponent
 from tests import base_test
 
 

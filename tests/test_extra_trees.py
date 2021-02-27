@@ -1,8 +1,8 @@
 import numpy as np
 import sklearn.tree
-from automl.components.classification.excluded.extra_trees import ExtraTreesClassifier
-from automl.util.common import resolve_factor
 
+from dswizard.components.classification.excluded.extra_trees import ExtraTreesClassifier
+from dswizard.components.util import resolve_factor
 from tests import base_test
 
 

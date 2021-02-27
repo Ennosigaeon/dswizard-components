@@ -1,9 +1,8 @@
 import numpy as np
-import pytest
 import sklearn
 
-from automl.components.feature_preprocessing.kpca import KernelPCAComponent
-from automl.util.common import resolve_factor
+from dswizard.components.feature_preprocessing.kpca import KernelPCAComponent
+from dswizard.components.util import resolve_factor
 from tests import base_test
 
 

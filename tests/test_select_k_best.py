@@ -1,8 +1,8 @@
 import numpy as np
 import sklearn
-from automl.util.common import resolve_factor
 
-from automl.components.feature_preprocessing.select_k_best import SelectKBestComponent
+from dswizard.components.feature_preprocessing.select_k_best import SelectKBestComponent
+from dswizard.components.util import resolve_factor
 from tests import base_test
 
 

@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import sklearn
 
-from automl.components.feature_preprocessing.multi_column_label_encoder import MultiColumnLabelEncoderComponent
+from dswizard.components.feature_preprocessing.multi_column_label_encoder import MultiColumnLabelEncoderComponent
 from tests import base_test
 
 

@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.impute import SimpleImputer
 import pandas as pd
 
-from automl.components.data_preprocessing.imputation import ImputationComponent
+from dswizard.components.data_preprocessing.imputation import ImputationComponent
 from tests import base_test
 
 

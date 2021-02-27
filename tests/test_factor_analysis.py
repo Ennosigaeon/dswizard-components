@@ -1,8 +1,8 @@
 import numpy as np
 import sklearn
-from automl.util.common import resolve_factor
 
-from automl.components.feature_preprocessing.factor_analysis import FactorAnalysisComponent
+from dswizard.components.feature_preprocessing.factor_analysis import FactorAnalysisComponent
+from dswizard.components.util import resolve_factor
 from tests import base_test
 
 

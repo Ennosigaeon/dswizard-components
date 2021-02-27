@@ -1,7 +1,7 @@
 import numpy as np
-from automl.components.feature_preprocessing.binarizer import BinarizerComponent
 from sklearn.preprocessing import Binarizer
 
+from dswizard.components.feature_preprocessing.binarizer import BinarizerComponent
 from tests import base_test
 
 

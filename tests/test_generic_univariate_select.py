@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn
 
-from automl.components.feature_preprocessing.generic_univariate_select import GenericUnivariateSelectComponent
+from dswizard.components.feature_preprocessing.generic_univariate_select import GenericUnivariateSelectComponent
 from tests import base_test
 
 

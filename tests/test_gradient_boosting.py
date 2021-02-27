@@ -1,8 +1,8 @@
 import numpy as np
 from sklearn.ensemble._hist_gradient_boosting.gradient_boosting import HistGradientBoostingClassifier
 
-from automl.components.classification.gradient_boosting import GradientBoostingClassifier
-from automl.util.common import resolve_factor
+from dswizard.components.classification.gradient_boosting import GradientBoostingClassifier
+from dswizard.components.util import resolve_factor
 from tests import base_test
 
 

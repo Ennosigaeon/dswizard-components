@@ -10,7 +10,7 @@
 import sys
 
 from pkg_resources import VersionConflict, require
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 try:
     require('setuptools>=38.3')
@@ -22,13 +22,13 @@ with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
 if __name__ == "__main__":
-    setup(name='automl',
+    setup(name='dswizard-components',
           version='0.1',
-          description='Contains sklearn algorithms',
+          description='Contains all base algorithms used by dswizard',
           author='Marc Zoeller',
           author_email='m.zoeller@usu.de',
           license='MIT',
-          packages=find_packages(),
+          packages=find_namespace_packages(include=['dswizard.*']),
           include_package_data=True,
           install_requires=requirements,
           zip_safe=False)

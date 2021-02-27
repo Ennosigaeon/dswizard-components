@@ -6,12 +6,12 @@ import pandas as pd
 from sklearn import datasets
 from sklearn.preprocessing import LabelEncoder
 
-from automl.util.common import HANDLES_MULTICLASS, HANDLES_MISSING, HANDLES_NOMINAL_CLASS
-from components.classification import ClassifierChoice
-from components.data_preprocessing import DataPreprocessorChoice
-from components.feature_preprocessing import FeaturePreprocessorChoice
-from automl.util.common import HANDLES_NUMERIC, HANDLES_NOMINAL
-from components.meta_features import MetaFeatureFactory
+from dswizard.components.classification import ClassifierChoice
+from dswizard.components.data_preprocessing import DataPreprocessorChoice
+from dswizard.components.feature_preprocessing import FeaturePreprocessorChoice
+from dswizard.components.meta_features import MetaFeatureFactory
+from dswizard.components.util import HANDLES_MULTICLASS, HANDLES_MISSING, HANDLES_NOMINAL_CLASS, HANDLES_NUMERIC, \
+    HANDLES_NOMINAL
 
 
 class CapabilitiesTest(TestCase):

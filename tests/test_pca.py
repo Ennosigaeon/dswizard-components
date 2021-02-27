@@ -1,8 +1,8 @@
 import numpy as np
 from sklearn.decomposition import PCA
-from automl.util.common import resolve_factor
 
-from automl.components.feature_preprocessing.pca import PCAComponent
+from dswizard.components.feature_preprocessing.pca import PCAComponent
+from dswizard.components.util import resolve_factor
 from tests import base_test
 
 

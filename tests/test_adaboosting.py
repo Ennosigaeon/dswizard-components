@@ -1,9 +1,8 @@
 import numpy as np
-import pytest
 import sklearn.naive_bayes
 import sklearn.svm
 
-from automl.components.classification.ada_boosting import AdaBoostingClassifier
+from dswizard.components.classification.ada_boosting import AdaBoostingClassifier
 from tests import base_test
 
 

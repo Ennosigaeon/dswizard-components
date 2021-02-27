@@ -2,7 +2,7 @@ import numpy as np
 import sklearn.naive_bayes
 import sklearn.svm
 
-from automl.components.classification.linear_discriminant_analysis import LinearDiscriminantAnalysis
+from dswizard.components.classification.linear_discriminant_analysis import LinearDiscriminantAnalysis
 from tests import base_test
 from util.common import resolve_factor
 

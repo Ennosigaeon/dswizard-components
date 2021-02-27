@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 
-from automl.components.data_preprocessing.minmax import MinMaxScalerComponent
+from dswizard.components.data_preprocessing.minmax import MinMaxScalerComponent
 from tests import base_test
 
 

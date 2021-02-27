@@ -1,6 +1,6 @@
 import numpy as np
 import sklearn.naive_bayes
-from automl.components.classification.excluded.gaussian_nb import GaussianNB
+from dswizard.components.classification.excluded.gaussian_nb import GaussianNB
 
 from tests import base_test
 

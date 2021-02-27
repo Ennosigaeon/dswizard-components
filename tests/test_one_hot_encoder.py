@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from automl.components.feature_preprocessing.one_hot_encoding import OneHotEncoderComponent
+from dswizard.components.feature_preprocessing.one_hot_encoding import OneHotEncoderComponent
 from tests import base_test
 
 
