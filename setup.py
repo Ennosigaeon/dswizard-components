@@ -1,36 +1,43 @@
 # -*- coding: utf-8 -*-
-"""
-    Setup file for scaffold.
-    Use setup.cfg to configure your project.
-
-    This file was generated with PyScaffold 3.2.3.
-    PyScaffold helps you to put up the scaffold of your new Python project.
-    Learn more under: https://pyscaffold.org/
-"""
-import sys
+import pathlib
 
 from pkg_resources import VersionConflict, require
-from setuptools import setup, find_namespace_packages
 
 try:
     require('setuptools>=38.3')
 except VersionConflict:
-    print("Error: version of setuptools is too old (<38.3)!")
+    import sys
+
+    print('Error: version of setuptools is too old (<38.3)!')
     sys.exit(1)
+
+from setuptools import setup, find_namespace_packages
 
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
-if __name__ == "__main__":
-    setup(name='dswizard-components',
-          version='0.1',
-          description='Contains all base algorithms used by dswizard',
-          author='Marc Zoeller',
-          author_email='m.zoeller@usu.de',
-          license='MIT',
-          packages=find_namespace_packages(include=['dswizard.*']),
-          include_package_data=True,
-          install_requires=requirements,
-          zip_safe=False)
+# The text of the README file
+README = (pathlib.Path(__file__).parent / 'README.md').read_text()
 
-    # setup(use_pyscaffold=True)
+if __name__ == '__main__':
+    setup(
+        name='dswizard-components',
+        version='0.1.0',
+        description='Contains all base algorithms used by dswizard',
+        long_description=README,
+        long_description_content_type='text/markdown',
+        author='Marc Zoeller',
+        author_email='m.zoeller@usu.de',
+        url='https://github.com/Ennosigaeon/dswizard-components',
+        license='MIT',
+        classifiers=[
+            'License :: OSI Approved :: MIT License',
+            'Programming Language :: Python :: 3',
+            'Programming Language :: Python :: 3.5'
+        ],
+        packages=find_namespace_packages(include=['dswizard.*']),
+        python_requires='>=3.5',
+        include_package_data=True,
+        install_requires=requirements,
+        keywords=['automl', 'machine learning', 'pipeline synthesis']
+    )
