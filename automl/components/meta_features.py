@@ -9,7 +9,7 @@ from pymfe.info_theory import MFEInfoTheory
 from pymfe.model_based import MFEModelBased
 from pymfe.statistical import MFEStatistical
 
-import pynisher2
+from automl import pynisher
 
 MetaFeatures = np.ndarray
 
@@ -37,15 +37,15 @@ class MetaFeatureFactory(object):
         :return:
         """
         MetaFeatureFactory.logger.debug('Calculating MF')
-        wrapper = pynisher2.enforce_limits(wall_time_in_s=timeout, grace_period_in_s=5,
+        wrapper = pynisher.enforce_limits(wall_time_in_s=timeout, grace_period_in_s=5,
                                            logger=MetaFeatureFactory.logger)(MetaFeatureFactory._calculate)
         res = wrapper(X, y, max_nan_percentage=max_nan_percentage, max_features=max_features,
                       random_state=random_state)
         # TODO improve error handling
-        if wrapper.exit_status is pynisher2.TimeoutException or wrapper.exit_status is pynisher2.MemorylimitException:
+        if wrapper.exit_status is pynisher.TimeoutException or wrapper.exit_status is pynisher.MemorylimitException:
             MetaFeatureFactory.logger.warning('Failed to extract MF due to resource constraints')
             return None, None
-        elif wrapper.exit_status is pynisher2.AnythingException and isinstance(res, Tuple):
+        elif wrapper.exit_status is pynisher.AnythingException and isinstance(res, Tuple):
             MetaFeatureFactory.logger.warning('Failed to extract MF due to {}'.format(res[0]))
             return None, None
         elif wrapper.exit_status == 0 and res is not None:
