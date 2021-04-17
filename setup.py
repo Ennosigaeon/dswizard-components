@@ -22,7 +22,7 @@ README = (pathlib.Path(__file__).parent / 'README.md').read_text()
 if __name__ == '__main__':
     setup(
         name='dswizard-components',
-        version='0.1.0',
+        version='0.1.1',
         description='Contains all base algorithms used by dswizard',
         long_description=README,
         long_description_content_type='text/markdown',

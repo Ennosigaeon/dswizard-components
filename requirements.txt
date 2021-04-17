@@ -1,3 +1,4 @@
+psutil==5.7.2
 pymfe==0.4.*
 ConfigSpace==0.4.*
 numpy==1.19.*
