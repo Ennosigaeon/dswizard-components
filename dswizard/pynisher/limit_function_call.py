@@ -209,6 +209,19 @@ class enforce_limits(object):
 
                 self2._reset_attributes()
 
+                # Synchronous shunt if no real limitations are provided
+                if (self.mem_in_mb is None or self.mem_in_mb <= 0) and \
+                        (self.cpu_time_in_s is None or self.cpu_time_in_s <= 0) and \
+                        (self.wall_time_in_s is None or self.wall_time_in_s <= 0):
+                    try:
+                        self2.result = self2.func(*args, **kwargs)
+                        self2.exit_status = 0
+                    except Exception as ex:
+                        self.logger.exception('Unhandled exception')
+                        self2.result = (ex, traceback.format_exc())
+                        self2.exit_status = AnythingException
+                    return self2.result
+
                 # create a pipe to retrieve the return value
                 parent_conn, child_conn = multiprocessing.Pipe(False)
                 # import pdb; pdb.set_trace()
