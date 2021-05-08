@@ -22,7 +22,7 @@ class TestPCA(base_test.BaseComponentTest):
         expected.fit(np.copy(X_train), np.copy(y_train))
         X_expected = expected.transform(np.copy(X_test))
 
-        assert repr(actual.preprocessor) == repr(expected)
+        assert repr(actual.estimator) == repr(expected)
         assert np.allclose(X_actual, X_expected)
 
     def test_configured(self):
@@ -42,5 +42,5 @@ class TestPCA(base_test.BaseComponentTest):
         expected.fit(np.copy(X_train), np.copy(y_train))
         X_expected = expected.transform(X_test)
 
-        assert repr(actual.preprocessor) == repr(expected)
+        assert repr(actual.estimator) == repr(expected)
         assert np.allclose(X_actual, X_expected)

@@ -14,8 +14,8 @@ class BinarizerComponent(PreprocessingAlgorithm):
         self.threshold = threshold
 
     def fit(self, X, y=None):
-        self.preprocessor = self.to_sklearn(X.shape[0], X.shape[1], np.mean(np.var(X)))
-        self.preprocessor = self.preprocessor.fit(X)
+        self.estimator = self.to_sklearn(X.shape[0], X.shape[1], np.mean(np.var(X)))
+        self.estimator = self.estimator.fit(X)
         return self
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, variance: float = 1, **kwargs):

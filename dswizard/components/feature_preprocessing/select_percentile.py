@@ -32,7 +32,7 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
         import scipy.sparse
         from sklearn.feature_selection import chi2
 
-        self.preprocessor = self.to_sklearn(X.shape[0], X.shape[1])
+        self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
         # Because the pipeline guarantees that each feature is positive,
         # clip all values below zero to zero
         if self.score_func == chi2:
@@ -41,7 +41,7 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
             else:
                 X[X < 0] = 0.0
 
-        self.preprocessor.fit(X, y)
+        self.estimator.fit(X, y)
         return self
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
@@ -72,9 +72,9 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
             else:
                 X[X < 0] = 0.0
 
-        if self.preprocessor is None:
+        if self.estimator is None:
             raise NotImplementedError()
-        Xt = self.preprocessor.transform(X)
+        Xt = self.estimator.transform(X)
         if Xt.shape[1] == 0:
             raise ValueError(
                 "%s removed all features." % self.__class__.__name__)

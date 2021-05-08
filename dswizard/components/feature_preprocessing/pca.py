@@ -24,10 +24,10 @@ class PCAComponent(PreprocessingAlgorithm):
         self.random_state = random_state
 
     def fit(self, X, Y=None):
-        self.preprocessor = self.to_sklearn(X.shape[0], X.shape[1])
-        self.preprocessor.fit(X)
+        self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
+        self.estimator.fit(X)
 
-        if not np.isfinite(self.preprocessor.components_).all():
+        if not np.isfinite(self.estimator.components_).all():
             raise ValueError("PCA found non-finite components.")
 
         return self

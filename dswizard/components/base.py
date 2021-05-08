@@ -258,26 +258,17 @@ class PreprocessingAlgorithm(EstimatorComponent, ABC):
     See :ref:`extending` for more information."""
 
     def __init__(self):
-        self.preprocessor: Optional[BaseEstimator] = None
-
-    def get_preprocessor(self) -> BaseEstimator:
-        """Return the underlying preprocessor object.
-
-        Returns
-        -------
-        preprocessor : the underlying preprocessor object
-        """
-        return self.preprocessor
+        self.estimator: Optional[BaseEstimator] = None
 
     def fit(self, X, Y):
-        self.preprocessor = self.to_sklearn(X.shape[0], X.shape[1])
-        self.preprocessor.fit(X, Y)
+        self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
+        self.estimator.fit(X, Y)
         return self
 
     def transform(self, X):
-        if self.preprocessor is None:
+        if self.estimator is None:
             raise ValueError()
-        return self.preprocessor.transform(X)
+        return self.estimator.transform(X)
 
     def fit_transform(self, X: np.ndarray, y: np.ndarray = None) -> np.ndarray:
         return self.fit(X, y).transform(X)
@@ -307,7 +298,7 @@ class NoopComponent(EstimatorComponent):
 # noinspection PyPep8Naming
 class ComponentChoice(EstimatorComponent):
 
-    def __init__(self, choice: Optional[BaseEstimator] = None, new_params: Dict = None, random_state=None):
+    def __init__(self, estimator: Optional[BaseEstimator] = None, new_params: Dict = None):
         if random_state is None:
             self.random_state = check_random_state(1)
         else:
@@ -316,7 +307,7 @@ class ComponentChoice(EstimatorComponent):
         # Since the pipeline will initialize the hyperparameters, it is not
         # necessary to do this upon the construction of this object
         # self.set_hyperparameters(self.configuration)
-        self.choice: Optional[BaseEstimator] = choice
+        self.estimator: Optional[BaseEstimator] = estimator
         self.new_params = new_params
         self.configuration_space_: Optional[ConfigurationSpace] = None
 
@@ -384,7 +375,7 @@ class ComponentChoice(EstimatorComponent):
         new_params['random_state'] = self.random_state
 
         self.new_params = new_params
-        self.choice = self.get_components()[choice]().set_hyperparameters(new_params)
+        self.estimator = self.get_components()[choice]().set_hyperparameters(new_params)
 
         return self
 
@@ -397,7 +388,7 @@ class ComponentChoice(EstimatorComponent):
 
     def transform(self, X: np.ndarray) -> np.ndarray:
         # noinspection PyUnresolvedReferences
-        return self.choice.transform(X)
+        return self.estimator.transform(X)
 
     @staticmethod
     def get_properties() -> Dict:

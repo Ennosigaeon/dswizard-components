@@ -41,10 +41,10 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
 
         categorical = (df.dtypes == object).to_numpy()
         if not categorical.any():
-            self.preprocessor = NoopComponent()
+            self.estimator = NoopComponent()
         else:
-            self.preprocessor = self.to_sklearn(X.shape[0], X.shape[1], categorical=categorical)
-            self.preprocessor.fit(X, y)
+            self.estimator = self.to_sklearn(X.shape[0], X.shape[1], categorical=categorical)
+            self.estimator.fit(X, y)
         return self
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, categorical: List[bool] = 'auto', **kwargs):
@@ -61,7 +61,7 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
         # X = pd.get_dummies(X, sparse=False, dummy_na=dummy_na)
         # return X.to_numpy()
 
-        return self.preprocessor.transform(X)
+        return self.estimator.transform(X)
 
     @staticmethod
     def get_properties():

@@ -51,13 +51,13 @@ class ImputationComponent(PreprocessingAlgorithm):
             X = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1]))
 
         if not np.any(pd.isna(X)):
-            self.preprocessor = NoopComponent()
+            self.estimator = NoopComponent()
             return self
         else:
             numeric = X.select_dtypes(include=['number']).columns
             categorical = X.select_dtypes(include=['category', 'object']).columns
 
-        self.preprocessor = ColumnTransformer(
+        self.estimator = ColumnTransformer(
             transformers=[
                 ('cat', SimpleImputer(missing_values=self.missing_values, strategy='most_frequent',
                                       add_indicator=False, copy=False), categorical),
@@ -65,7 +65,7 @@ class ImputationComponent(PreprocessingAlgorithm):
                                       add_indicator=False, copy=False), numeric)
             ]
         )
-        self.preprocessor.fit(X)
+        self.estimator.fit(X)
 
         return self
 
@@ -82,9 +82,9 @@ class ImputationComponent(PreprocessingAlgorithm):
                 else:
                     newdf = newdf.append({'missing': False}, ignore_index=True)
 
-        if self.preprocessor is None:
+        if self.estimator is None:
             raise NotImplementedError()
-        X_new = self.preprocessor.transform(X)
+        X_new = self.estimator.transform(X)
 
         if self.add_indicator:
             X_new = pd.concat([pd.DataFrame(X_new), newdf], axis=1, sort=False).to_numpy()
