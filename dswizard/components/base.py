@@ -8,11 +8,13 @@ from typing import Type, Dict, Optional, List
 
 import numpy as np
 import pandas as pd
-from ConfigSpace import ConfigurationSpace
+from ConfigSpace import ConfigurationSpace, CategoricalHyperparameter
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.utils import check_random_state, check_array
+from sklearn.utils import check_array
 
-from dswizard.components.util import HANDLES_NOMINAL, HANDLES_NUMERIC, HANDLES_MISSING
+from dswizard.components.meta_features import MetaFeaturesDict
+from dswizard.components.util import HANDLES_NOMINAL, HANDLES_NUMERIC, HANDLES_MISSING, HANDLES_MULTICLASS, \
+    HANDLES_NOMINAL_CLASS
 
 
 def find_components(package: str, directory: str, base_class: Type) -> Dict[str, Type]:
@@ -110,6 +112,9 @@ class PredictionMixin(ClassifierMixin):
 # noinspection PyPep8Naming
 class EstimatorComponent(BaseEstimator, MetaData, ABC):
 
+    def __init__(self, estimator: Optional[BaseEstimator] = None):
+        self.estimator: Optional[BaseEstimator] = estimator
+
     def fit(self, X: pd.DataFrame, y: pd.Series) -> 'EstimatorComponent':
         """The fit function calls the fit function of the underlying
         scikit-learn model and returns `self`.
@@ -199,7 +204,7 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
     See :ref:`extending` for more information."""
 
     def __init__(self):
-        self.estimator: Optional[BaseEstimator] = None
+        super().__init__()
         self.properties: Optional[Dict] = None
         # TODO generalize for other learning tasks
         self._estimator_type = "classifier"
@@ -221,10 +226,10 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
-        X = check_array(X)
-        # add class probabilities as a synthetic feature
-        # noinspection PyUnresolvedReferences
+        # noinspection PyTypeChecker
+        X: np.ndarray = check_array(X)
         try:
+            # add class probabilities as a synthetic feature
             X_transformed = np.hstack((X, self.estimator.predict_proba(X)))
         except AttributeError:
             # Some classifiers do not implement predict_proba
@@ -257,9 +262,6 @@ class PreprocessingAlgorithm(EstimatorComponent, ABC):
 
     See :ref:`extending` for more information."""
 
-    def __init__(self):
-        self.estimator: Optional[BaseEstimator] = None
-
     def fit(self, X, Y):
         self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
         self.estimator.fit(X, Y)
@@ -288,7 +290,14 @@ class NoopComponent(EstimatorComponent):
 
     @staticmethod
     def get_properties() -> dict:
-        return {}
+        return {'shortname': 'noop',
+                'name': 'No Operation',
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: True,
+                HANDLES_MISSING: True,
+                HANDLES_NOMINAL_CLASS: True
+                }
 
     @staticmethod
     def get_hyperparameter_search_space(**kwargs) -> ConfigurationSpace:
@@ -298,23 +307,16 @@ class NoopComponent(EstimatorComponent):
 # noinspection PyPep8Naming
 class ComponentChoice(EstimatorComponent):
 
-    def __init__(self, estimator: Optional[BaseEstimator] = None, new_params: Dict = None):
-        if random_state is None:
-            self.random_state = check_random_state(1)
-        else:
-            self.random_state = check_random_state(random_state)
-
-        # Since the pipeline will initialize the hyperparameters, it is not
-        # necessary to do this upon the construction of this object
-        # self.set_hyperparameters(self.configuration)
-        self.estimator: Optional[BaseEstimator] = estimator
+    def __init__(self, defaults: List[str], estimator: Optional[BaseEstimator] = None, new_params: Dict = None):
+        super().__init__(estimator)
+        self.defaults = defaults
         self.new_params = new_params
         self.configuration_space_: Optional[ConfigurationSpace] = None
 
     def get_components(self) -> Dict[str, Type[EstimatorComponent]]:
         raise NotImplementedError()
 
-    def get_available_components(self, mf: Dict[str, float] = None,
+    def get_available_components(self, mf: MetaFeaturesDict = None,
                                  include: List = None,
                                  exclude: List = None) -> Dict[str, Type[EstimatorComponent]]:
         if include is not None and exclude is not None:
@@ -356,7 +358,9 @@ class ComponentChoice(EstimatorComponent):
 
         return components_dict
 
-    def set_hyperparameters(self, configuration: dict, init_params=None) -> 'ComponentChoice':
+    def set_hyperparameters(self, configuration: dict = None, init_params=None) -> 'ComponentChoice':
+        if configuration is None:
+            raise ValueError('Default hyperparameters not available for ComponentChoice')
         new_params = {}
 
         choice = configuration['__choice__']
@@ -372,22 +376,48 @@ class ComponentChoice(EstimatorComponent):
                 param = param.replace(choice, '').replace(':', '')
                 new_params[param] = value
 
-        new_params['random_state'] = self.random_state
-
         self.new_params = new_params
         self.estimator = self.get_components()[choice]().set_hyperparameters(new_params)
 
         return self
 
-    def get_hyperparameter_search_space(self,
-                                        mf: np.ndarray = None,
+    def get_hyperparameter_search_space(self, mf: MetaFeaturesDict = None,
                                         default=None,
                                         include=None,
-                                        exclude=None) -> ConfigurationSpace:
-        raise NotImplementedError()
+                                        exclude=None,
+                                        **kwargs):
+        if include is not None and exclude is not None:
+            raise ValueError("The arguments include and exclude cannot be used together.")
+        cs = ConfigurationSpace()
+
+        # Compile a list of all estimator objects for this problem
+        available_estimators = self.get_available_components(mf=mf, include=include, exclude=exclude)
+
+        if len(available_estimators) == 0:
+            raise ValueError("No classifiers found")
+
+        if default is None:
+            for default_ in self.defaults:
+                if default_ in available_estimators:
+                    if include is not None and default_ not in include:
+                        continue
+                    if exclude is not None and default_ in exclude:
+                        continue
+                    default = default_
+                    break
+
+        estimator = CategoricalHyperparameter('__choice__', list(available_estimators.keys()), default_value=default)
+        cs.add_hyperparameter(estimator)
+        for estimator_name in available_estimators.keys():
+            estimator_configuration_space = available_estimators[estimator_name].get_hyperparameter_search_space()
+            parent_hyperparameter = {'parent': estimator, 'value': estimator_name}
+            cs.add_configuration_space(estimator_name, estimator_configuration_space,
+                                       parent_hyperparameter=parent_hyperparameter)
+
+        self.configuration_space_ = cs
+        return cs
 
     def transform(self, X: np.ndarray) -> np.ndarray:
-        # noinspection PyUnresolvedReferences
         return self.estimator.transform(X)
 
     @staticmethod

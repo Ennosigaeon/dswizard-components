@@ -1,11 +1,11 @@
 import os
 from collections import OrderedDict
-from typing import Dict, Type
+from typing import Dict, Type, Optional, List
 
-from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter
+from sklearn.base import BaseEstimator
 
-from dswizard.components.base import PreprocessingAlgorithm, find_components, ComponentChoice, EstimatorComponent
+from dswizard.components.base import PreprocessingAlgorithm, find_components, ComponentChoice, EstimatorComponent, \
+    NoopComponent
 
 preprocessor_directory = os.path.split(__file__)[0]
 _preprocessors = find_components(__package__,
@@ -15,45 +15,18 @@ _preprocessors = find_components(__package__,
 
 class DataPreprocessorChoice(ComponentChoice):
 
+    def __init__(self, defaults: Optional[List[str]] = None, estimator: Optional[BaseEstimator] = None,
+                 new_params: Dict = None):
+        if defaults is None:
+            defaults = ['minmax', 'normalize', 'imputation']
+        super().__init__(defaults, estimator, new_params)
+
     def get_components(self) -> Dict[str, Type[EstimatorComponent]]:
         components = OrderedDict()
+        components['noop'] = NoopComponent
+        # noinspection PyTypeChecker
         components.update(_preprocessors)
         return components
-
-    def get_hyperparameter_search_space(self, mf=None,
-                                        default=None,
-                                        include=None,
-                                        exclude=None,
-                                        **kwargs):
-        cs = ConfigurationSpace()
-
-        # Compile a list of legal preprocessors for this problem
-        available_preprocessors = self.get_available_components(mf=mf, include=include, exclude=exclude)
-
-        if len(available_preprocessors) == 0:
-            raise ValueError("No preprocessors found, please add NoPreprocessing")
-
-        if default is None:
-            defaults = ['no_preprocessing', 'select_percentile', 'pca', 'truncatedSVD']
-            for default_ in defaults:
-                if default_ in available_preprocessors:
-                    default = default_
-                    break
-
-        preprocessor = CategoricalHyperparameter('__choice__', list(available_preprocessors.keys()),
-                                                 default_value=default)
-        cs.add_hyperparameter(preprocessor)
-        for name in available_preprocessors:
-            preprocessor_configuration_space = available_preprocessors[name].get_hyperparameter_search_space()
-            parent_hyperparameter = {'parent': preprocessor, 'value': name}
-            cs.add_configuration_space(name, preprocessor_configuration_space,
-                                       parent_hyperparameter=parent_hyperparameter)
-
-        self.configuration_space_ = cs
-        return cs
-
-    def transform(self, X):
-        return self.estimator.transform(X)
 
     def fit_transform(self, X, y=None):
         return self.estimator.fit(X, y).transform(X)

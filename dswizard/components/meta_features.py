@@ -12,6 +12,7 @@ from pymfe.statistical import MFEStatistical
 from dswizard import pynisher
 
 MetaFeatures = np.ndarray
+MetaFeaturesDict = Dict[str, float]
 
 
 class MetaFeatureFactory(object):
@@ -23,7 +24,7 @@ class MetaFeatureFactory(object):
                   max_nan_percentage: float = 0.9,
                   max_features: int = 10000,
                   random_state: int = 42,
-                  timeout: int = 30) -> Tuple[Optional[Dict[str, float]], Optional[MetaFeatures]]:
+                  timeout: int = 30) -> Tuple[Optional[MetaFeaturesDict], Optional[MetaFeatures]]:
         """
         Calculates the meta-features for the given DataFrame. The actual computation is dispatched to another process
         to prevent crashes due to extensive memory usage.
