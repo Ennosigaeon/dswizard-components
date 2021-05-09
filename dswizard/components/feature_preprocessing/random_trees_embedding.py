@@ -17,7 +17,6 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
                  max_leaf_nodes_factor: int = None,
                  min_impurity_decrease: float = 0.,
                  random_state=None,
-                 bootstrap: bool = True
                  ):
         super().__init__()
         self.n_estimators = n_estimators
@@ -28,7 +27,6 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         self.max_leaf_nodes_factor = max_leaf_nodes_factor
         self.min_impurity_decrease = min_impurity_decrease
         self.random_state = random_state
-        self.bootstrap = bootstrap
         self.random_state = random_state
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
@@ -36,7 +34,6 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
 
         self.n_estimators = int(self.n_estimators)
         self.min_weight_fraction_leaf = float(self.min_weight_fraction_leaf)
-        self.bootstrap = check_for_bool(self.bootstrap)
 
         # Heuristic to set the tree depth
         if isinstance(self.max_depth_factor, int):
@@ -95,8 +92,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
         min_samples_leaf_factor = UniformFloatHyperparameter("min_samples_leaf_factor", 0.0001, 0.5,
                                                              default_value=0.0001)
         min_weight_fraction_leaf = UniformFloatHyperparameter("min_weight_fraction_leaf", 0., 0.5, default_value=0.)
-        bootstrap = CategoricalHyperparameter('bootstrap', [True, False])
 
         cs.add_hyperparameters([n_estimators, max_depth_factor, min_samples_split_factor, min_samples_leaf_factor,
-                                min_weight_fraction_leaf, bootstrap])
+                                min_weight_fraction_leaf])
         return cs

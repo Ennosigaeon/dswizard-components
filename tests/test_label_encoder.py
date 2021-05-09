@@ -23,8 +23,8 @@ class TestLabelEncoderComponent(base_test.BaseComponentTest):
     def test_categorical(self):
         actual = MultiColumnLabelEncoderComponent()
         X_before = pd.DataFrame([['Mann', np.nan], ['Frau', 2], [None, 1]], columns=['Gender', 'Label'],
-                                dtype='category')
-        y_before = pd.Series([1, 1, 0])
+                                dtype='category').to_numpy()
+        y_before = pd.Series([1, 1, 0]).to_numpy()
         actual.fit(X_before, y_before)
         X_after = actual.transform(X_before).astype(float)
 

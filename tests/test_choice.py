@@ -1,7 +1,7 @@
 import base_test
-from components.classification import ClassifierChoice
-from components.data_preprocessing import DataPreprocessorChoice
-from components.feature_preprocessing import FeaturePreprocessorChoice
+from dswizard.components.classification import ClassifierChoice
+from dswizard.components.data_preprocessing import DataPreprocessorChoice
+from dswizard.components.feature_preprocessing import FeaturePreprocessorChoice
 
 
 class ChoiceTest(base_test.BaseComponentTest):

@@ -80,10 +80,9 @@ def svc_example(n_samples=10000, n_features=4):
 
 
 def crash_unexpectedly(signum):
-    print(f"going to receive signal {signum}.")
-    pid = os.getpid()
-    time.sleep(1)
-    os.kill(pid, signum)
+    print(f"Provoking segfault")
+    import ctypes
+    ctypes.string_at(0)
     time.sleep(1)
 
 
@@ -103,7 +102,7 @@ def nested_pynisher(level=2, cputime=5, walltime=5, memlimit=10e24, increment=-1
         spawn_rogue_subprocess(10)
     else:
         func = pynisher.enforce_limits(mem_in_mb=memlimit, cpu_time_in_s=cputime, wall_time_in_s=walltime,
-                                        grace_period_in_s=grace_period)(nested_pynisher)
+                                       grace_period_in_s=grace_period)(nested_pynisher)
         func(level - 1, None, walltime + increment, memlimit, increment)
 
 
@@ -119,8 +118,8 @@ class test_limit_resources_module(unittest.TestCase):
         local_grace_period = None
 
         wrapped_function = pynisher.enforce_limits(mem_in_mb=local_mem_in_mb, wall_time_in_s=local_wall_time_in_s,
-                                                    cpu_time_in_s=local_cpu_time_in_s,
-                                                    grace_period_in_s=local_grace_period)(simulate_work)
+                                                   cpu_time_in_s=local_cpu_time_in_s,
+                                                   grace_period_in_s=local_grace_period)(simulate_work)
 
         for mem in [1, 2, 4, 8, 16]:
             self.assertEqual((mem, 0, 0), wrapped_function(mem, 0, 0))
@@ -135,8 +134,8 @@ class test_limit_resources_module(unittest.TestCase):
         local_grace_period = None
 
         wrapped_function = pynisher.enforce_limits(mem_in_mb=local_mem_in_mb, wall_time_in_s=local_wall_time_in_s,
-                                                    cpu_time_in_s=local_cpu_time_in_s,
-                                                    grace_period_in_s=local_grace_period)(simulate_work)
+                                                   cpu_time_in_s=local_cpu_time_in_s,
+                                                   grace_period_in_s=local_grace_period)(simulate_work)
 
         for mem in [1024, 2048, 4096]:
             self.assertIsNone(wrapped_function(mem, 0, 0))
@@ -151,8 +150,8 @@ class test_limit_resources_module(unittest.TestCase):
         local_grace_period = None
 
         wrapped_function = pynisher.enforce_limits(mem_in_mb=local_mem_in_mb, wall_time_in_s=local_wall_time_in_s,
-                                                    cpu_time_in_s=local_cpu_time_in_s,
-                                                    grace_period_in_s=local_grace_period)(simulate_work)
+                                                   cpu_time_in_s=local_cpu_time_in_s,
+                                                   grace_period_in_s=local_grace_period)(simulate_work)
 
         for mem in range(1, 10):
             self.assertIsNone(wrapped_function(mem, 10, 0))
@@ -161,7 +160,7 @@ class test_limit_resources_module(unittest.TestCase):
     @unittest.skipIf(not all_tests, "skipping unexpected signal test")
     def test_crash_unexpectedly(self):
         print("Testing an unexpected signal simulating a crash.")
-        wrapped_function = pynisher.enforce_limits()(crash_unexpectedly)
+        wrapped_function = pynisher.enforce_limits(cpu_time_in_s=5)(crash_unexpectedly)
         self.assertIsNone(wrapped_function(signal.SIGQUIT))
         self.assertEqual(wrapped_function.exit_status, pynisher.AnythingException)
 
@@ -221,7 +220,7 @@ class test_limit_resources_module(unittest.TestCase):
         grace_period = 1
 
         wrapped_function = pynisher.enforce_limits(cpu_time_in_s=time_limit, mem_in_mb=None,
-                                                    grace_period_in_s=grace_period, logger=logger)(svc_example)
+                                                   grace_period_in_s=grace_period, logger=logger)(svc_example)
         start = time.time()
         wrapped_function(16384, 1000)
         duration = time.time() - start
@@ -265,8 +264,8 @@ class test_limit_resources_module(unittest.TestCase):
                 time.sleep(1)
 
         wrapped_function = pynisher.enforce_limits(wall_time_in_s=time_limit, mem_in_mb=None,
-                                                    grace_period_in_s=grace_period, logger=logger,
-                                                    capture_output=True)(print_and_sleep)
+                                                   grace_period_in_s=grace_period, logger=logger,
+                                                   capture_output=True)(print_and_sleep)
         wrapped_function(5)
 
         self.assertTrue('0' in wrapped_function.stdout)
@@ -277,12 +276,9 @@ class test_limit_resources_module(unittest.TestCase):
             raise RuntimeError()
 
         wrapped_function = pynisher.enforce_limits(wall_time_in_s=time_limit, mem_in_mb=None,
-                                                    grace_period_in_s=grace_period, logger=logger,
-                                                    capture_output=True)(print_and_fail)
+                                                   grace_period_in_s=grace_period, logger=logger,
+                                                   capture_output=True)(print_and_fail)
         wrapped_function()
 
         self.assertTrue('0' in wrapped_function.stdout)
-        self.assertTrue('RuntimeError' in wrapped_function.stderr)
-
-
-unittest.main()
+        self.assertEqual(RuntimeError, type(wrapped_function.result[0]))

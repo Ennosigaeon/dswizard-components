@@ -29,12 +29,12 @@ class CapabilitiesTest(TestCase):
     components.update(DataPreprocessorChoice().get_components())
 
     @staticmethod
-    def synthetic_df(numeric: bool = True,
-                     nominal: bool = True,
-                     missing: bool = True,
-                     multi_class: bool = True,
-                     nominal_class: bool = True
-                     ):
+    def synthetic_data(numeric: bool = True,
+                       nominal: bool = True,
+                       missing: bool = True,
+                       multi_class: bool = True,
+                       nominal_class: bool = True
+                       ):
         df = {'base': [1, 2, 3, 4, 5, 6, 7, 8]}
         if numeric:
             df['numeric'] = [1, 0.25, 3, 5.1, 0.2, 0.77, 1.25, 2.8]
@@ -55,7 +55,7 @@ class CapabilitiesTest(TestCase):
                 y = ['a', 'a', 'a', 'a', 'b', 'b', 'b', 'b']
             else:
                 y = [1, 1, 1, 1, 2, 2, 2, 2]
-        return pd.DataFrame(df), np.array(y)
+        return pd.DataFrame(df).to_numpy(), np.array(y)
 
     @staticmethod
     def fit(component, X, y, success):
@@ -76,9 +76,9 @@ class CapabilitiesTest(TestCase):
                     continue
 
                 for y_req in itertools.product([False, True], repeat=2):
-                    X, y = self.synthetic_df(*X_req, *y_req)
+                    X, y = self.synthetic_data(*X_req, *y_req)
                     prop = component.get_properties()
-                    self.fit(component, X.copy(deep=True), np.copy(y),
+                    self.fit(component, np.copy(X), np.copy(y),
                              (prop[HANDLES_NUMERIC] or not X_req[0]) and
                              (prop[HANDLES_NOMINAL] or not X_req[1]) and
                              (prop[HANDLES_MISSING] or not X_req[2]) and
@@ -92,20 +92,20 @@ class CapabilitiesTest(TestCase):
 
                 for y_req in itertools.product([False, True], repeat=1):
                     # We do not have a meta-feature to check for nominal/numeric class
-                    X, y = self.synthetic_df(*X_req, y_req[0], False)
-                    mf = MetaFeatureFactory._calculate(X.to_numpy(), y)
+                    X, y = self.synthetic_data(*X_req, y_req[0], False)
+                    mf = MetaFeatureFactory._calculate(X, y)
                     assert mf is not None
-                    
+
                     print(*X_req, y_req[0], False)
 
                     tested = []
                     for name, component in choice.get_available_components(mf=mf).items():
                         print(name)
-                        self.fit(component, X.copy(deep=True), np.copy(y), True)
+                        self.fit(component, X.copy(), np.copy(y), True)
                         tested.append(name)
                     for name, component in choice.get_available_components(exclude=tested).items():
                         print(name)
-                        self.fit(component, X.copy(deep=True), np.copy(y), False)
+                        self.fit(component, X.copy(), np.copy(y), False)
 
     def test_1510(self):
         X, y = datasets.fetch_openml(data_id=1510, return_X_y=True, as_frame=True)

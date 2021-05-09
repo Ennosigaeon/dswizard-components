@@ -40,30 +40,28 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
     def fit(self, X, y=None):
         return self  # not relevant here
 
-    def transform(self, X: pd.DataFrame):
+    def transform(self, X: np.ndarray):
         """
         Transforms columns of X specified in self.columns using
         LabelEncoder(). If no columns specified, transforms all
         columns in X.
         """
 
-        if isinstance(X, np.ndarray):
-            X = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1]))
-
-        categorical = X.select_dtypes(include=['category', 'object']).columns
+        df = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1]))
+        categorical = df.select_dtypes(include=['category', 'object']).columns
         if len(categorical) == 0:
-            return X.to_numpy()
+            return df.to_numpy()
         else:
             for colname in categorical:
-                missing_vec = pd.isna(X[colname])
-                X[colname] = X[colname].astype('category')
-                X[colname].cat.add_categories(['<MISSING>'], inplace=True)
-                X.loc[missing_vec, colname] = '<MISSING>'
+                missing_vec = pd.isna(df[colname])
+                df[colname] = df[colname].astype('category')
+                df[colname].cat.add_categories(['<MISSING>'], inplace=True)
+                df.loc[missing_vec, colname] = '<MISSING>'
 
-                X[colname] = self.estimator.fit_transform(X[colname].astype(str))
-                X.loc[missing_vec, colname] = np.nan
+                df[colname] = self.estimator.fit_transform(df[colname].astype(str))
+                df.loc[missing_vec, colname] = np.nan
 
-        return X.to_numpy()
+        return df.to_numpy()
 
     def fit_transform(self, X, y=None):
         return self.fit(X, y).transform(X)

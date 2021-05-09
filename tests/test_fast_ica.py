@@ -2,8 +2,8 @@ import numpy as np
 import sklearn
 
 from dswizard.components.feature_preprocessing.fast_ica import FastICAComponent
+from dswizard.components.util import resolve_factor
 from tests import base_test
-from util.common import resolve_factor
 
 
 class TestFastICAComponent(base_test.BaseComponentTest):

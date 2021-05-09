@@ -17,7 +17,8 @@ class TestOneHotEncoderComponent(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(X_test.copy())
 
-        X_expected = pd.get_dummies(X_test, sparse=False)
+        df = pd.DataFrame(data=X_test, index=range(X_test.shape[0]), columns=range(X_test.shape[1]))
+        X_expected = pd.get_dummies(df, sparse=False)
 
         assert np.allclose(X_actual, X_expected)
 
@@ -25,7 +26,7 @@ class TestOneHotEncoderComponent(base_test.BaseComponentTest):
         actual = OneHotEncoderComponent()
         X_before = pd.DataFrame([['Mann', 1], ['Frau', 2], ['Frau', 1]], columns=['Gender', 'Label'])
         y_before = pd.Series([1, 1, 0])
-        X_after = actual.fit_transform(X_before, y_before).astype(float)
+        X_after = actual.fit_transform(X_before.to_numpy(), y_before.to_numpy()).astype(float)
 
         X_expected = np.array([[0.0, 1.0, 1.0], [1.0, 0.0, 2.0], [1.0, 0.0, 1.0]])
 
@@ -40,6 +41,7 @@ class TestOneHotEncoderComponent(base_test.BaseComponentTest):
         actual.set_hyperparameters(config)
         X_actual = actual.fit_transform(X_test.copy())
 
-        X_expected = pd.get_dummies(X_test, **config)
+        df = pd.DataFrame(data=X_test, index=range(X_test.shape[0]), columns=range(X_test.shape[1]))
+        X_expected = pd.get_dummies(df, **config)
 
         assert np.allclose(X_actual, X_expected)

@@ -34,11 +34,9 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
         super().__init__()
 
     def fit(self, X, y=None):
-        if isinstance(X, np.ndarray):
-            df = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1])).infer_objects()
-        else:
-            df = X
+        df = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1])).infer_objects()
 
+        # noinspection PyUnresolvedReferences
         categorical = (df.dtypes == object).to_numpy()
         if not categorical.any():
             self.estimator = NoopComponent()
@@ -53,13 +51,12 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
                                  remainder='passthrough')
         # return OneHotEncoder(sparse=False, categories=categorical_columns, handle_unknown='ignore')
 
-    def transform(self, X: pd.DataFrame):
-        # if isinstance(X, np.ndarray):
-        #     X = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1])).infer_objects()
+    def transform(self, X: np.ndarray):
+        # df = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1])).infer_objects()
         #
-        # dummy_na = np.any(pd.isna(X))
-        # X = pd.get_dummies(X, sparse=False, dummy_na=dummy_na)
-        # return X.to_numpy()
+        # dummy_na = np.any(pd.isna(df))
+        # df = pd.get_dummies(df, sparse=False, dummy_na=dummy_na)
+        # return df.to_numpy()
 
         return self.estimator.transform(X)
 

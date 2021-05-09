@@ -47,15 +47,14 @@ class ImputationComponent(PreprocessingAlgorithm):
         from sklearn.impute import SimpleImputer
         from sklearn.compose import ColumnTransformer
 
-        if isinstance(X, np.ndarray):
-            X = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1]))
+        df = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1]))
 
-        if not np.any(pd.isna(X)):
+        if not np.any(pd.isna(df)):
             self.estimator = NoopComponent()
             return self
         else:
-            numeric = X.select_dtypes(include=['number']).columns
-            categorical = X.select_dtypes(include=['category', 'object']).columns
+            numeric = df.select_dtypes(include=['number']).columns
+            categorical = df.select_dtypes(include=['category', 'object']).columns
 
         self.estimator = ColumnTransformer(
             transformers=[
@@ -65,12 +64,13 @@ class ImputationComponent(PreprocessingAlgorithm):
                                       add_indicator=False, copy=False), numeric)
             ]
         )
-        self.estimator.fit(X)
+        self.estimator.fit(df)
 
         return self
 
     def transform(self, X):
-
+        if self.estimator is None:
+            raise ValueError()
         if self.add_indicator:
             missingIndicator = MissingIndicator()
             X_missing = missingIndicator.fit_transform(X)
@@ -82,10 +82,7 @@ class ImputationComponent(PreprocessingAlgorithm):
                 else:
                     newdf = newdf.append({'missing': False}, ignore_index=True)
 
-        if self.estimator is None:
-            raise NotImplementedError()
         X_new = self.estimator.transform(X)
-
         if self.add_indicator:
             X_new = pd.concat([pd.DataFrame(X_new), newdf], axis=1, sort=False).to_numpy()
         return X_new

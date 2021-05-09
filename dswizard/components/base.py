@@ -7,7 +7,6 @@ from collections import OrderedDict
 from typing import Type, Dict, Optional, List
 
 import numpy as np
-import pandas as pd
 from ConfigSpace import ConfigurationSpace, CategoricalHyperparameter
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils import check_array
@@ -115,7 +114,7 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
     def __init__(self, estimator: Optional[BaseEstimator] = None):
         self.estimator: Optional[BaseEstimator] = estimator
 
-    def fit(self, X: pd.DataFrame, y: pd.Series) -> 'EstimatorComponent':
+    def fit(self, X: np.ndarray, y: np.ndarray) -> 'EstimatorComponent':
         """The fit function calls the fit function of the underlying
         scikit-learn model and returns `self`.
 
@@ -138,7 +137,7 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
         -learn-objects>`_ for further information."""
         return self
 
-    def transform(self, X: pd.DataFrame) -> np.ndarray:
+    def transform(self, X: np.ndarray) -> np.ndarray:
         """The transform function calls the transform function of the
         underlying scikit-learn model and returns the transformed array.
 
@@ -283,10 +282,8 @@ class PreprocessingAlgorithm(EstimatorComponent, ABC):
 
 class NoopComponent(EstimatorComponent):
 
-    def transform(self, X: pd.DataFrame) -> np.ndarray:
-        if isinstance(X, np.ndarray):
-            return X
-        return X.to_numpy()
+    def transform(self, X: np.ndarray) -> np.ndarray:
+        return X
 
     @staticmethod
     def get_properties() -> dict:
