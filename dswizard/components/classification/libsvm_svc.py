@@ -24,7 +24,7 @@ class LibSVM_SVC(PredictionAlgorithm):
                  break_ties: bool = False,
                  probability: bool = False
                  ):
-        super().__init__()
+        super().__init__('libsvm_svc')
         self.C = C
         self.kernel = kernel
         self.degree = degree
@@ -71,9 +71,9 @@ class LibSVM_SVC(PredictionAlgorithm):
                    )
 
     def predict_proba(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise NotImplementedError()
-        decision = self.estimator.decision_function(X)
+        decision = self.estimator_.decision_function(X)
         return softmax(decision)
 
     @staticmethod

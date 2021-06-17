@@ -38,7 +38,7 @@ class ImputationComponent(PreprocessingAlgorithm):
     """
 
     def __init__(self, missing_values=np.nan, strategy: str = 'mean', add_indicator: bool = False):
-        super().__init__()
+        super().__init__('imputation')
         self.strategy = strategy
         self.add_indicator = add_indicator
         self.missing_values = missing_values
@@ -50,13 +50,13 @@ class ImputationComponent(PreprocessingAlgorithm):
         df = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1]))
 
         if not np.any(pd.isna(df)):
-            self.estimator = NoopComponent()
+            self.estimator_ = NoopComponent()
             return self
         else:
             numeric = df.select_dtypes(include=['number']).columns
             categorical = df.select_dtypes(include=['category', 'object']).columns
 
-        self.estimator = ColumnTransformer(
+        self.estimator_ = ColumnTransformer(
             transformers=[
                 ('cat', SimpleImputer(missing_values=self.missing_values, strategy='most_frequent',
                                       add_indicator=False, copy=False), categorical),
@@ -64,12 +64,12 @@ class ImputationComponent(PreprocessingAlgorithm):
                                       add_indicator=False, copy=False), numeric)
             ]
         )
-        self.estimator.fit(df)
+        self.estimator_.fit(df)
 
         return self
 
     def transform(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise ValueError()
         if self.add_indicator:
             missingIndicator = MissingIndicator()
@@ -82,7 +82,7 @@ class ImputationComponent(PreprocessingAlgorithm):
                 else:
                     newdf = newdf.append({'missing': False}, ignore_index=True)
 
-        X_new = self.estimator.transform(X)
+        X_new = self.estimator_.transform(X)
         if self.add_indicator:
             X_new = pd.concat([pd.DataFrame(X_new), newdf], axis=1, sort=False).to_numpy()
         return X_new

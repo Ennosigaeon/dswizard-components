@@ -10,7 +10,7 @@ from dswizard.components.util import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLE
 class KNNImputerComponent(PreprocessingAlgorithm):
     def __init__(self, missing_values=np.nan, n_neighbors: int = 5, weights: str = "uniform",
                  metric: str = "nan_euclidean", add_indicator: bool = False):
-        super().__init__()
+        super().__init__('knn_imputer')
 
         # TODO what about missing values in categorical data?
         self.n_neighbors = n_neighbors

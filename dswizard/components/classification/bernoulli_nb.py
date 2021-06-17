@@ -12,16 +12,16 @@ class BernoulliNB(PredictionAlgorithm):
                  fit_prior: bool = True,
                  random_state=None,
                  verbose: int = 0):
-        super().__init__()
+        super().__init__('bernoulli_nb')
         self.alpha = alpha
         self.fit_prior = fit_prior
         self.random_state = random_state
         self.verbose = int(verbose)
 
     def fit(self, X, y):
-        self.estimator = self.to_sklearn(X.shape[0], X.shape[1], len(y.shape) > 1 and y.shape[1] > 1)
-        self.estimator.fit(X, y)
-        self.classes_ = self.estimator.classes_
+        self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1], len(y.shape) > 1 and y.shape[1] > 1)
+        self.estimator_.fit(X, y)
+        self.classes_ = self.estimator_.classes_
         return self
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, multilabel: bool = False, **kwargs):

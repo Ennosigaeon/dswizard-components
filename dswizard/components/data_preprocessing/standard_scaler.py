@@ -8,7 +8,7 @@ from dswizard.components.util import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HAN
 class StandardScalerComponent(PreprocessingAlgorithm):
 
     def __init__(self, with_mean: bool = True, with_std: bool = True):
-        super().__init__()
+        super().__init__('standard_scaler')
         self.with_mean = with_mean
         self.with_std = with_std
 

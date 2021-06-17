@@ -24,7 +24,7 @@ class KernelPCAComponent(PreprocessingAlgorithm):
                  max_iter: int = None,
                  remove_zero_eig: bool = False,
                  random_state=None):
-        super().__init__()
+        super().__init__('kpca')
         self.n_components_factor = n_components_factor
         self.kernel = kernel
         self.degree = degree
@@ -41,16 +41,16 @@ class KernelPCAComponent(PreprocessingAlgorithm):
     def fit(self, X, Y=None):
         import scipy.sparse
 
-        self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
+        self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1])
         if scipy.sparse.issparse(X):
             X = X.astype(np.float64)
         with warnings.catch_warnings():
             warnings.filterwarnings("error")
-            self.estimator.fit(X)
+            self.estimator_.fit(X)
 
         # Raise an informative error message, equation is based ~line 249 in
         # kernel_pca.py in scikit-learn
-        if len(self.estimator.alphas_ / self.estimator.lambdas_) == 0:
+        if len(self.estimator_.alphas_ / self.estimator_.lambdas_) == 0:
             raise ValueError('KernelPCA removed all features!')
         return self
 
@@ -79,11 +79,11 @@ class KernelPCAComponent(PreprocessingAlgorithm):
             copy_X=False)
 
     def transform(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise NotImplementedError()
         with warnings.catch_warnings():
             warnings.filterwarnings("error")
-            X_new = self.estimator.transform(X)
+            X_new = self.estimator_.transform(X)
 
             if X_new.shape[1] == 0:
                 raise ValueError("KernelPCA removed all features!")

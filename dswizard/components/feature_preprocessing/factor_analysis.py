@@ -16,7 +16,7 @@ class FactorAnalysisComponent(PreprocessingAlgorithm):
                  svd_method: str = "randomized",
                  iterated_power: int = 3,
                  tol: float = 1e-2):
-        super().__init__()
+        super().__init__('factor_analysis')
         self.n_components_factor = n_components_factor
         self.svd_method = svd_method
         self.iterated_power = iterated_power

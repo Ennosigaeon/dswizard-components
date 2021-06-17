@@ -31,7 +31,7 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
     """
 
     def __init__(self):
-        super().__init__()
+        super().__init__('one_hot_encoding')
 
     def fit(self, X, y=None):
         df = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1])).infer_objects()
@@ -39,10 +39,10 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
         # noinspection PyUnresolvedReferences
         categorical = (df.dtypes == object).to_numpy()
         if not categorical.any():
-            self.estimator = NoopComponent()
+            self.estimator_ = NoopComponent()
         else:
-            self.estimator = self.to_sklearn(X.shape[0], X.shape[1], categorical=categorical)
-            self.estimator.fit(X, y)
+            self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1], categorical=categorical)
+            self.estimator_.fit(X, y)
         return self
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, categorical: List[bool] = 'auto', **kwargs):
@@ -58,7 +58,7 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
         # df = pd.get_dummies(df, sparse=False, dummy_na=dummy_na)
         # return df.to_numpy()
 
-        return self.estimator.transform(X)
+        return self.estimator_.transform(X)
 
     @staticmethod
     def get_properties():

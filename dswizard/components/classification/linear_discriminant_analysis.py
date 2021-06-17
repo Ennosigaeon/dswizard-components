@@ -14,7 +14,7 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
                  tol: float = 1.0e-4,
                  n_components_factor: int = None
                  ):
-        super().__init__()
+        super().__init__('linear_discriminant_analysis')
         self.solver = solver
         self.shrinkage = shrinkage
         self.tol = tol
@@ -23,9 +23,9 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
     def fit(self, X, Y):
         import numpy as np
 
-        self.estimator = self.to_sklearn(X.shape[0], X.shape[1], n_classes=len(np.unique(Y)))
-        self.estimator.fit(X, Y)
-        self.classes_ = self.estimator.classes_
+        self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1], n_classes=len(np.unique(Y)))
+        self.estimator_.fit(X, Y)
+        self.classes_ = self.estimator_.classes_
         return self
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, n_classes: int = 0, **kwargs):
@@ -41,9 +41,9 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
                                           n_components=n_components)
 
     def predict_proba(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise NotImplementedError()
-        probas = self.estimator.predict_proba(X)
+        probas = self.estimator_.predict_proba(X)
         probas = convert_multioutput_multiclass_to_multilabel(probas)
         return probas
 

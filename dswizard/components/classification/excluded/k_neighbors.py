@@ -17,7 +17,7 @@ class KNeighborsClassifier(PredictionAlgorithm):
                  metric: str = "minkowski",
                  random_state=None
                  ):
-        super().__init__()
+        super().__init__('k_neighbors')
         self.n_neighbors = n_neighbors
         self.weights = weights
         self.algorithm = algorithm
@@ -38,9 +38,9 @@ class KNeighborsClassifier(PredictionAlgorithm):
         )
 
     def predict_proba(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise NotImplementedError()
-        probas = self.estimator.predict_proba(X)
+        probas = self.estimator_.predict_proba(X)
         probas = convert_multioutput_multiclass_to_multilabel(probas)
         return probas
 

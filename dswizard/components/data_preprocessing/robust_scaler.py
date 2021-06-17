@@ -9,7 +9,7 @@ from dswizard.components.util import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HAN
 class RobustScalerComponent(PreprocessingAlgorithm):
     def __init__(self, q_min: float = 25.0, q_max: float = 75.0, with_centering: bool = True,
                  with_scaling: bool = True):
-        super().__init__()
+        super().__init__('robust_scaler')
         self.with_centering = with_centering
         self.with_scaling = with_scaling
         self.q_min = q_min

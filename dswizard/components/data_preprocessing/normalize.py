@@ -7,7 +7,7 @@ from dswizard.components.util import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HAN
 
 class NormalizerComponent(PreprocessingAlgorithm):
     def __init__(self, norm: str = 'l2'):
-        super().__init__()
+        super().__init__('normalize')
         self.norm = norm
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):

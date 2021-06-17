@@ -23,7 +23,7 @@ class LogisticRegression(PredictionAlgorithm):
                  l1_ratio: float = None,
                  random_state=None
                  ):
-        super().__init__()
+        super().__init__('logistic_regression')
         self.penalty = penalty
         self.solver = solver
         self.dual = dual
@@ -37,8 +37,8 @@ class LogisticRegression(PredictionAlgorithm):
         self.random_state = random_state
 
     def fit(self, X, y, sample_weight=None):
-        self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
-        self.estimator.fit(X, y, sample_weight=sample_weight)
+        self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1])
+        self.estimator_.fit(X, y, sample_weight=sample_weight)
         return self
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
@@ -62,9 +62,9 @@ class LogisticRegression(PredictionAlgorithm):
             l1_ratio=self.l1_ratio)
 
     def predict_proba(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise NotImplementedError()
-        probas = self.estimator.predict_proba(X)
+        probas = self.estimator_.predict_proba(X)
         probas = convert_multioutput_multiclass_to_multilabel(probas)
         return probas
 

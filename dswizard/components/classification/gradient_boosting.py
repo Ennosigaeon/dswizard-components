@@ -23,7 +23,7 @@ class GradientBoostingClassifier(PredictionAlgorithm):
                  n_iter_no_change: int = 10,
                  validation_fraction: float = 0.1,
                  random_state=None):
-        super().__init__()
+        super().__init__('gradient_boosting')
         self.loss = loss
         self.learning_rate = learning_rate
         self.max_iter = max_iter

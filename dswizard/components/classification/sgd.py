@@ -30,7 +30,7 @@ class SGDClassifier(PredictionAlgorithm):
                  average: bool = False,
                  random_state=None
                  ):
-        super().__init__()
+        super().__init__('sgd')
         self.loss = loss
         self.penalty = penalty
         self.alpha = alpha
@@ -74,9 +74,9 @@ class SGDClassifier(PredictionAlgorithm):
         )
 
     def predict_proba(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise NotImplementedError()
-        probas = self.estimator.predict_proba(X)
+        probas = self.estimator_.predict_proba(X)
         probas = convert_multioutput_multiclass_to_multilabel(probas)
         return probas
 

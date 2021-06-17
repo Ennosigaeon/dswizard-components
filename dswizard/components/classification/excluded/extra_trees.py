@@ -22,7 +22,7 @@ class ExtraTreesClassifier(PredictionAlgorithm):
                  ccp_alpha: float = 0.,
                  random_state=None,
                  class_weight=None):
-        super().__init__()
+        super().__init__('extra_trees')
         self.n_estimators = n_estimators
         self.criterion = criterion
         self.max_features = max_features
@@ -38,8 +38,8 @@ class ExtraTreesClassifier(PredictionAlgorithm):
         self.class_weight = class_weight
 
     def fit(self, X, y, sample_weight=None):
-        self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
-        self.estimator.fit(X, y, sample_weight=sample_weight)
+        self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1])
+        self.estimator_.fit(X, y, sample_weight=sample_weight)
         return self
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
@@ -76,9 +76,9 @@ class ExtraTreesClassifier(PredictionAlgorithm):
             class_weight=self.class_weight)
 
     def predict_proba(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise NotImplementedError()
-        probas = self.estimator.predict_proba(X)
+        probas = self.estimator_.predict_proba(X)
         probas = convert_multioutput_multiclass_to_multilabel(probas)
         return probas
 

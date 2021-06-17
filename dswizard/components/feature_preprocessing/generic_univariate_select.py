@@ -14,7 +14,7 @@ class GenericUnivariateSelectComponent(PreprocessingAlgorithm):
     def __init__(self, param: float = 1e-05,
                  score_func: str = "f_classif",
                  mode: str = "percentile"):
-        super().__init__()
+        super().__init__('generic_univariate_select')
         self.param = param
         self.mode = mode
         self.score_func = score_func

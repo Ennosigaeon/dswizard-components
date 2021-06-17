@@ -17,7 +17,7 @@ class GaussianProcessClassifier(PredictionAlgorithm):
                  multi_class: str = "one_vs_rest",
                  random_state=None
                  ):
-        super().__init__()
+        super().__init__('gaussian_process')
         self.kernel = kernel
         self.optimizer = optimizer
         self.n_restarts_optimizer = n_restarts_optimizer
@@ -60,9 +60,9 @@ class GaussianProcessClassifier(PredictionAlgorithm):
         )
 
     def predict_proba(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise NotImplementedError()
-        probas = self.estimator.predict_proba(X)
+        probas = self.estimator_.predict_proba(X)
         probas = convert_multioutput_multiclass_to_multilabel(probas)
         return probas
 

@@ -12,17 +12,16 @@ class GaussianNB(PredictionAlgorithm):
     def __init__(self, random_state=None,
                  var_smoothing: float = 1e-9,
                  verbose: int = 0):
-        super().__init__()
+        super().__init__('gaussian_nb')
         self.random_state = random_state
         self.verbose = int(verbose)
-        self.estimator = None
         self.classes_ = None
         self.var_smoothing = var_smoothing
 
     def fit(self, X, y):
-        self.estimator = self.to_sklearn(X.shape[0], X.shape[1], len(y.shape) > 1 and y.shape[1] > 1)
+        self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1], len(y.shape) > 1 and y.shape[1] > 1)
         self.classes_ = np.unique(y.astype(int))
-        self.estimator.fit(X, y)
+        self.estimator_.fit(X, y)
         return self
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, multilabel: bool = False, **kwargs):

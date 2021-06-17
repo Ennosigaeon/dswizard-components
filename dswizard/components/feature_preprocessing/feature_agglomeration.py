@@ -15,7 +15,7 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
                  linkage: str = "ward",
                  pooling_func: str = "mean",
                  distance_threshold: float = None):
-        super().__init__()
+        super().__init__('feature_agglomeration')
         self.n_clusters_factor = n_clusters_factor
         self.affinity = affinity
         self.compute_full_tree = compute_full_tree

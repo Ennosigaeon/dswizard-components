@@ -13,7 +13,7 @@ class QuadraticDiscriminantAnalysis(PredictionAlgorithm):
                  store_covariance: bool = False,
                  tol: float = 1e-4
                  ):
-        super().__init__()
+        super().__init__('qda')
         self.reg_param = reg_param
         self.store_covariance = store_covariance
         self.tol = tol
@@ -28,9 +28,9 @@ class QuadraticDiscriminantAnalysis(PredictionAlgorithm):
         )
 
     def predict_proba(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise NotImplementedError()
-        probas = self.estimator.predict_proba(X)
+        probas = self.estimator_.predict_proba(X)
         probas = convert_multioutput_multiclass_to_multilabel(probas)
         return probas
 

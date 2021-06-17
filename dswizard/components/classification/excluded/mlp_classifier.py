@@ -34,7 +34,7 @@ class MLPClassifier(PredictionAlgorithm):
                  layer_2_size: int = None,
                  random_state=None
                  ):
-        super().__init__()
+        super().__init__('mlp_classifier')
         self.layer_1_size = layer_1_size
         self.layer_2_size = layer_2_size
         self.activation = activation
@@ -90,9 +90,9 @@ class MLPClassifier(PredictionAlgorithm):
         )
 
     def predict_proba(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise NotImplementedError()
-        probas = self.estimator.predict_proba(X)
+        probas = self.estimator_.predict_proba(X)
         probas = convert_multioutput_multiclass_to_multilabel(probas)
         return probas
 

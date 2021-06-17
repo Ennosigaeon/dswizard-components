@@ -14,7 +14,7 @@ class AdaBoostingClassifier(PredictionAlgorithm):
                  n_estimators: int = 50,
                  random_state=None,
                  ):
-        super().__init__()
+        super().__init__('ada_boosting')
         self.algorithm = algorithm
         self.learning_rate = learning_rate
         self.n_estimators = n_estimators

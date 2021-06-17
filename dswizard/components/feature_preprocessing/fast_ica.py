@@ -16,7 +16,7 @@ class FastICAComponent(PreprocessingAlgorithm):
                  max_iter: int = 200,
                  random_state=None,
                  tol: float = 0.0001):
-        super().__init__()
+        super().__init__('fast_ica')
         self.n_components_factor = n_components_factor
         self.algorithm = algorithm
         self.whiten = whiten

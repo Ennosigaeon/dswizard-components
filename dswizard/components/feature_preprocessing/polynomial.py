@@ -9,7 +9,7 @@ from dswizard.components.util import check_for_bool, HANDLES_NOMINAL_CLASS, HAND
 
 class PolynomialFeaturesComponent(PreprocessingAlgorithm):
     def __init__(self, degree: int = 2, interaction_only: bool = False, include_bias: bool = True, order: str = "C"):
-        super().__init__()
+        super().__init__('polynomial')
         self.degree = degree
         self.interaction_only = interaction_only
         self.include_bias = include_bias

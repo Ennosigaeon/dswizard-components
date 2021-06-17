@@ -10,7 +10,7 @@ class QuantileTransformerComponent(PreprocessingAlgorithm):
 
     def __init__(self, n_quantiles: int = 1000, output_distribution: str = "uniform",
                  ignore_implicit_zeros: bool = False, subsample: int = int(1e5), random_state=None):
-        super().__init__()
+        super().__init__('quantile_transformer')
         self.n_quantiles = n_quantiles
         self.output_distribution = output_distribution
         self.ignore_implicit_zeros = ignore_implicit_zeros

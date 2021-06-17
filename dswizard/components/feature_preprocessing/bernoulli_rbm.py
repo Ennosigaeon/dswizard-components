@@ -9,7 +9,7 @@ from dswizard.components.util import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HAN
 class BernoulliRBM(PreprocessingAlgorithm):
     def __init__(self, n_components: int = 256, learning_rate: float = 0.1, batch_size: int = 10, n_iter: int = 10,
                  random_state=None):
-        super().__init__()
+        super().__init__('bernoulli_rbm')
         self.n_components = n_components
         self.learning_rate = learning_rate
         self.batch_size = batch_size

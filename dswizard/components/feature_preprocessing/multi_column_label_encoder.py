@@ -19,7 +19,7 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
 
     Attributes
     ----------
-    estimator : LabelEncoder
+    estimator_ : LabelEncoder
         The used LabelEncoder
 
     See also
@@ -32,10 +32,10 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
 
     def __init__(self,
                  columns=None):
-        super().__init__()
+        super().__init__('multi_column_label_encoder')
         self.columns = columns
         from sklearn.preprocessing import LabelEncoder
-        self.estimator = LabelEncoder()
+        self.estimator_ = LabelEncoder()
 
     def fit(self, X, y=None):
         return self  # not relevant here
@@ -58,7 +58,7 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
                 df[colname].cat.add_categories(['<MISSING>'], inplace=True)
                 df.loc[missing_vec, colname] = '<MISSING>'
 
-                df[colname] = self.estimator.fit_transform(df[colname].astype(str))
+                df[colname] = self.estimator_.fit_transform(df[colname].astype(str))
                 df.loc[missing_vec, colname] = np.nan
 
         return df.to_numpy()

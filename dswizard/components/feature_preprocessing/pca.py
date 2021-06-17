@@ -15,7 +15,7 @@ class PCAComponent(PreprocessingAlgorithm):
                  tol: float = 0.,
                  iterated_power: int = "auto",
                  random_state=None):
-        super().__init__()
+        super().__init__('pca')
         self.keep_variance = keep_variance
         self.whiten = whiten
         self.svd_solver = svd_solver
@@ -24,10 +24,10 @@ class PCAComponent(PreprocessingAlgorithm):
         self.random_state = random_state
 
     def fit(self, X, Y=None):
-        self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
-        self.estimator.fit(X)
+        self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1])
+        self.estimator_.fit(X)
 
-        if not np.isfinite(self.estimator.components_).all():
+        if not np.isfinite(self.estimator_.components_).all():
             raise ValueError("PCA found non-finite components.")
 
         return self

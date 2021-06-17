@@ -10,7 +10,7 @@ class SelectKBestComponent(PreprocessingAlgorithm):
     def __init__(self,
                  score_func: str = "f_classif",
                  k_factor: float = 0.5):
-        super().__init__()
+        super().__init__('select_k_best')
         self.score_func = score_func
         self.k_factor = k_factor
 
@@ -44,9 +44,9 @@ class SelectKBestComponent(PreprocessingAlgorithm):
             else:
                 X[X < 0] = 0.0
 
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise NotImplementedError()
-        Xt = self.estimator.transform(X)
+        Xt = self.estimator_.transform(X)
         if Xt.shape[1] == 0:
             raise ValueError("%s removed all features." % self.__class__.__name__)
         return Xt

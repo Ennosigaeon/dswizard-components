@@ -24,7 +24,7 @@ class RandomForest(PredictionAlgorithm):
                  max_samples: float = None,
                  random_state=None,
                  class_weight=None):
-        super().__init__()
+        super().__init__('random_forest')
         self.n_estimators = n_estimators
         self.criterion = criterion
         self.max_features = max_features
@@ -42,9 +42,9 @@ class RandomForest(PredictionAlgorithm):
         self.max_samples = max_samples
 
     def fit(self, X, y, sample_weight=None):
-        self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
-        self.estimator.fit(X, y, sample_weight=sample_weight)
-        self.classes_ = self.estimator.classes_
+        self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1])
+        self.estimator_.fit(X, y, sample_weight=sample_weight)
+        self.classes_ = self.estimator_.classes_
         return self
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
@@ -79,9 +79,9 @@ class RandomForest(PredictionAlgorithm):
             ccp_alpha=self.ccp_alpha)
 
     def predict_proba(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise NotImplementedError()
-        probas = self.estimator.predict_proba(X)
+        probas = self.estimator_.predict_proba(X)
         probas = convert_multioutput_multiclass_to_multilabel(probas)
         return probas
 

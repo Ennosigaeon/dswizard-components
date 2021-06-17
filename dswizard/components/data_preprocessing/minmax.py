@@ -8,7 +8,7 @@ from dswizard.components.util import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLE
 class MinMaxScalerComponent(PreprocessingAlgorithm):
 
     def __init__(self):
-        super().__init__()
+        super().__init__('minmax')
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.preprocessing import MinMaxScaler

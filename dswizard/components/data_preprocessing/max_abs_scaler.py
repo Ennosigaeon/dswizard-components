@@ -8,7 +8,7 @@ from dswizard.components.util import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HAN
 class MaxAbsScalerComponent(PreprocessingAlgorithm):
 
     def __init__(self):
-        super().__init__()
+        super().__init__('max_abs_scaler')
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.preprocessing import MaxAbsScaler

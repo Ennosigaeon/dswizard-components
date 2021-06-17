@@ -18,7 +18,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
                  min_impurity_decrease: float = 0.,
                  random_state=None,
                  ):
-        super().__init__()
+        super().__init__('random_trees_embedding')
         self.n_estimators = n_estimators
         self.max_depth_factor = max_depth_factor
         self.min_samples_split_factor = min_samples_split_factor

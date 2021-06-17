@@ -12,7 +12,7 @@ class VarianceThresholdComponent(PreprocessingAlgorithm):
     features with non-zero variance, i.e. remove the features that have the same value in all samples."""
 
     def __init__(self, threshold: float = 0.):
-        super().__init__()
+        super().__init__('variance_threshold')
         self.threshold = threshold
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):

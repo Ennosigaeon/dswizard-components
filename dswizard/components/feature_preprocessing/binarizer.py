@@ -10,12 +10,12 @@ from dswizard.components.util import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HAN
 class BinarizerComponent(PreprocessingAlgorithm):
 
     def __init__(self, threshold: float = 0.0):
-        super().__init__()
+        super().__init__('binarizer')
         self.threshold = threshold
 
     def fit(self, X, y=None):
-        self.estimator = self.to_sklearn(X.shape[0], X.shape[1], np.mean(np.var(X)))
-        self.estimator = self.estimator.fit(X)
+        self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1], np.mean(np.var(X)))
+        self.estimator_ = self.estimator_.fit(X)
         return self
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, variance: float = 1, **kwargs):

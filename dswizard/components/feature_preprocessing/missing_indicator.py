@@ -9,7 +9,7 @@ from dswizard.components.util import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HAN
 
 class MissingIndicatorComponent(PreprocessingAlgorithm):
     def __init__(self, missing_values=np.nan, features: str = "missing-only"):
-        super().__init__()
+        super().__init__('missing_indicator')
 
         self.features = features
         self.missing_values = missing_values

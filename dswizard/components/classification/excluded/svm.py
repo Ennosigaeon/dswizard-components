@@ -22,7 +22,7 @@ class SVCClassifier(PredictionAlgorithm):
                  max_iter: int = 1000,
                  random_state=None
                  ):
-        super().__init__()
+        super().__init__('svm')
         self.penalty = penalty
         self.loss = loss
         self.dual = dual
@@ -55,9 +55,9 @@ class SVCClassifier(PredictionAlgorithm):
         )
 
     def predict_proba(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise NotImplementedError()
-        probas = self.estimator.predict_proba(X)
+        probas = self.estimator_.predict_proba(X)
         probas = convert_multioutput_multiclass_to_multilabel(probas)
         return probas
 

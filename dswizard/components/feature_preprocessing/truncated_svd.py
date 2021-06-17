@@ -13,7 +13,7 @@ class TruncatedSVDComponent(PreprocessingAlgorithm):
                  n_iter: int = 5,
                  tol: float = 0.,
                  random_state: int = None):
-        super().__init__()
+        super().__init__('truncated_svd')
         self.n_components_factor = n_components_factor
         self.algorithm = algorithm
         self.n_iter = n_iter

@@ -25,7 +25,7 @@ class TestGaussianProcessClassifier(base_test.BaseComponentTest):
         expected.fit(X_train, y_train)
         y_expected = expected.predict(X_test)
 
-        assert repr(actual.estimator) == repr(expected)
+        assert repr(actual.estimator_) == repr(expected)
         assert np.allclose(y_actual, y_expected)
 
     @pytest.mark.skip
@@ -65,5 +65,5 @@ class TestGaussianProcessClassifier(base_test.BaseComponentTest):
         expected.fit(X_train, y_train)
         y_expected = expected.predict(X_test)
 
-        assert repr(actual.estimator) == repr(expected)
+        assert repr(actual.estimator_) == repr(expected)
         assert np.allclose(y_actual, y_expected)

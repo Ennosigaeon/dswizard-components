@@ -23,7 +23,7 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
                  average: int = False,
                  random_state=None
                  ):
-        super().__init__()
+        super().__init__('passive_aggressive')
         self.C = C
         self.fit_intercept = fit_intercept
         self.tol = tol
@@ -56,9 +56,9 @@ class PassiveAggressiveClassifier(PredictionAlgorithm):
         )
 
     def predict_proba(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise NotImplementedError()
-        probas = self.estimator.predict_proba(X)
+        probas = self.estimator_.predict_proba(X)
         probas = convert_multioutput_multiclass_to_multilabel(probas)
         return probas
 

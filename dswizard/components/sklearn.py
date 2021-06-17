@@ -34,37 +34,37 @@ class StackingEstimator(BaseEstimator, PredictionMixin):
     """
 
     def __init__(self, estimator: PredictionMixin):
-        self.estimator = estimator
+        self.estimator_ = estimator
 
     def fit(self, *args):
-        self.estimator.fit(*args)
+        self.estimator_.fit(*args)
         return self
 
     def transform(self, X, *args) -> np.ndarray:
         # add class probabilities as a synthetic feature
         # noinspection PyUnresolvedReferences
         try:
-            X_transformed = np.hstack((X, self.estimator.predict_proba(X)))
+            X_transformed = np.hstack((X, self.estimator_.predict_proba(X)))
         except AttributeError:
             X_transformed = X
 
         # add class prediction as a synthetic feature
         # noinspection PyUnresolvedReferences
-        X_transformed = np.hstack((X_transformed, np.reshape(self.estimator.predict(X), (-1, 1))))
+        X_transformed = np.hstack((X_transformed, np.reshape(self.estimator_.predict(X), (-1, 1))))
 
         return X_transformed
 
     def predict(self, X: np.ndarray) -> np.ndarray:
-        return self.estimator.predict(X)
+        return self.estimator_.predict(X)
 
     def predict_proba(self, X: np.ndarray) -> np.ndarray:
-        return self.estimator.predict_proba(X)
+        return self.estimator_.predict_proba(X)
 
     def get_params(self, deep=True):
-        return {'estimator': self.estimator}
+        return {'estimator': self.estimator_}
 
     def set_params(self, **params):
-        self.estimator = params['estimator']
+        self.estimator_ = params['estimator']
 
     def __repr__(self, N_CHAR_MAX=700):
-        return f'Stacking({self.estimator.__repr__()})'
+        return f'Stacking({self.estimator_.__repr__()})'

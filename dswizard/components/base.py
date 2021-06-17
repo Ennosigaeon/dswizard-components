@@ -30,8 +30,7 @@ def find_components(package: str, directory: str, base_class: Type) -> Dict[str,
                     # TODO test if the obj implements the interface
                     # Keep in mind that this only instantiates the ensemble_wrapper,
                     # but not the real target classifier
-                    classifier = obj
-                    components[module_name] = classifier
+                    components[module_name] = obj
 
     return components
 
@@ -111,8 +110,9 @@ class PredictionMixin(ClassifierMixin):
 # noinspection PyPep8Naming
 class EstimatorComponent(BaseEstimator, MetaData, ABC):
 
-    def __init__(self, estimator: Optional[BaseEstimator] = None):
-        self.estimator: Optional[BaseEstimator] = estimator
+    def __init__(self, component_name: str = ''):
+        self.estimator_: Optional[BaseEstimator] = None
+        self.component_name_ = component_name
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> 'EstimatorComponent':
         """The fit function calls the fit function of the underlying
@@ -202,8 +202,8 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
 
     See :ref:`extending` for more information."""
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, component_name: str):
+        super().__init__(component_name)
         self.properties: Optional[Dict] = None
         # TODO generalize for other learning tasks
         self._estimator_type = "classifier"
@@ -216,12 +216,12 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
         -------
         estimator : the underlying estimator object
         """
-        return self.estimator
+        return self.estimator_
 
     def fit(self, X, Y):
-        self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
-        self.estimator.fit(X, Y)
-        self.classes_ = self.estimator.classes_
+        self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1])
+        self.estimator_.fit(X, Y)
+        self.classes_ = self.estimator_.classes_
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
@@ -229,14 +229,14 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
         X: np.ndarray = check_array(X)
         try:
             # add class probabilities as a synthetic feature
-            X_transformed = np.hstack((X, self.estimator.predict_proba(X)))
+            X_transformed = np.hstack((X, self.estimator_.predict_proba(X)))
         except AttributeError:
             # Some classifiers do not implement predict_proba
             X_transformed = X
 
         # add class prediction as a synthetic feature
         # noinspection PyUnresolvedReferences
-        y = np.reshape(self.estimator.predict(X), (-1, 1))
+        y = np.reshape(self.estimator_.predict(X), (-1, 1))
         try:
             y = y.astype(float)
         except ValueError:
@@ -246,14 +246,14 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
         return X_transformed
 
     def predict(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise ValueError()
-        return self.estimator.predict(X)
+        return self.estimator_.predict(X)
 
     def predict_proba(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise ValueError()
-        return self.estimator.predict_proba(X)
+        return self.estimator_.predict_proba(X)
 
 
 class PreprocessingAlgorithm(EstimatorComponent, ABC):
@@ -262,14 +262,14 @@ class PreprocessingAlgorithm(EstimatorComponent, ABC):
     See :ref:`extending` for more information."""
 
     def fit(self, X, Y):
-        self.estimator = self.to_sklearn(X.shape[0], X.shape[1])
-        self.estimator.fit(X, Y)
+        self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1])
+        self.estimator_.fit(X, Y)
         return self
 
     def transform(self, X):
-        if self.estimator is None:
+        if self.estimator_ is None:
             raise ValueError()
-        return self.estimator.transform(X)
+        return self.estimator_.transform(X)
 
     def fit_transform(self, X: np.ndarray, y: np.ndarray = None) -> np.ndarray:
         return self.fit(X, y).transform(X)
@@ -281,6 +281,9 @@ class PreprocessingAlgorithm(EstimatorComponent, ABC):
 
 
 class NoopComponent(EstimatorComponent):
+
+    def __init__(self):
+        super().__init__('noop')
 
     def transform(self, X: np.ndarray) -> np.ndarray:
         return X
@@ -304,8 +307,8 @@ class NoopComponent(EstimatorComponent):
 # noinspection PyPep8Naming
 class ComponentChoice(EstimatorComponent):
 
-    def __init__(self, defaults: List[str], estimator: Optional[BaseEstimator] = None, new_params: Dict = None):
-        super().__init__(estimator)
+    def __init__(self, component_name: str, defaults: List[str], new_params: Dict = None):
+        super().__init__(component_name)
         self.defaults = defaults
         self.new_params = new_params
         self.configuration_space_: Optional[ConfigurationSpace] = None
@@ -374,7 +377,8 @@ class ComponentChoice(EstimatorComponent):
                 new_params[param] = value
 
         self.new_params = new_params
-        self.estimator = self.get_components()[choice]().set_hyperparameters(new_params)
+        # noinspection PyArgumentList
+        self.estimator_ = self.get_components()[choice]().set_hyperparameters(new_params)
 
         return self
 
@@ -414,8 +418,14 @@ class ComponentChoice(EstimatorComponent):
         self.configuration_space_ = cs
         return cs
 
+    def fit(self, X, y):
+        return self.estimator_.fit(X, y)
+
     def transform(self, X: np.ndarray) -> np.ndarray:
-        return self.estimator.transform(X)
+        return self.estimator_.transform(X)
+
+    def fit_transform(self, X, y=None):
+        return self.estimator_.fit(X, y).transform(X)
 
     @staticmethod
     def get_properties() -> Dict:
