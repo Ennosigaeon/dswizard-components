@@ -22,8 +22,8 @@ class RobustScalerComponent(PreprocessingAlgorithm):
             self.q_min = help
 
         from sklearn.preprocessing import RobustScaler
-        return RobustScaler(quantile_range=(self.q_min, self.q_max), copy=False,
-                            with_centering=self.with_centering, with_scaling=self.with_scaling)
+        return RobustScaler(quantile_range=(self.q_min, self.q_max), with_centering=self.with_centering,
+                            with_scaling=self.with_scaling)
 
     @staticmethod
     def get_properties():

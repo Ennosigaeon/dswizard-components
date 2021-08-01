@@ -23,8 +23,7 @@ class KNNImputerComponent(PreprocessingAlgorithm):
         from sklearn.impute import KNNImputer
 
         return KNNImputer(missing_values=self.missing_values, n_neighbors=self.n_neighbors,
-                          weights=self.weights, metric=self.metric, add_indicator=self.add_indicator,
-                          copy=False)
+                          weights=self.weights, metric=self.metric, add_indicator=self.add_indicator)
 
     @staticmethod
     def get_properties():

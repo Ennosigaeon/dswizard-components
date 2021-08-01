@@ -17,7 +17,7 @@ class TestBinarizer(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = Binarizer(copy=False)
+        expected = Binarizer()
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
@@ -34,7 +34,7 @@ class TestBinarizer(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = Binarizer(**config, copy=False)
+        expected = Binarizer(**config)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 

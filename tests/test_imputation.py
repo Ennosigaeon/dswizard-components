@@ -18,7 +18,7 @@ class TestImputation(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(X_train)
 
-        expected = SimpleImputer(copy=False)
+        expected = SimpleImputer()
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_train)
 
@@ -33,7 +33,7 @@ class TestImputation(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(X_train)
 
-        expected = SimpleImputer(**config, copy=False)
+        expected = SimpleImputer(**config)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_train)
 
@@ -46,7 +46,7 @@ class TestImputation(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(X_test)
 
-        expected = SimpleImputer(copy=False)
+        expected = SimpleImputer()
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 

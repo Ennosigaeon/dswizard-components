@@ -22,7 +22,7 @@ class BinarizerComponent(PreprocessingAlgorithm):
         from sklearn.preprocessing import Binarizer
 
         # threshold = max(0., int(np.round(variance * self.threshold_factor, 0)))
-        return Binarizer(threshold=self.threshold, copy=False)
+        return Binarizer(threshold=self.threshold)
 
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):

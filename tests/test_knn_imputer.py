@@ -17,7 +17,7 @@ class TestKNNImputerComponent(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = sklearn.impute.KNNImputer(copy=False)
+        expected = sklearn.impute.KNNImputer()
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
@@ -34,7 +34,7 @@ class TestKNNImputerComponent(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = sklearn.impute.KNNImputer(**config, copy=False)
+        expected = sklearn.impute.KNNImputer(**config)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 

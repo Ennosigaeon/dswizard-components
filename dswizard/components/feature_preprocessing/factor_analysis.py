@@ -33,8 +33,7 @@ class FactorAnalysisComponent(PreprocessingAlgorithm):
                               max_iter=self.max_iter,
                               iterated_power=self.iterated_power,
                               tol=self.tol,
-                              random_state=self.random_state,
-                              copy=False)
+                              random_state=self.random_state)
 
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):

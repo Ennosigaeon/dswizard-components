@@ -20,8 +20,7 @@ class QuantileTransformerComponent(PreprocessingAlgorithm):
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.preprocessing import QuantileTransformer
 
-        return QuantileTransformer(copy=False,
-                                   n_quantiles=self.n_quantiles,
+        return QuantileTransformer(n_quantiles=self.n_quantiles,
                                    output_distribution=self.output_distribution,
                                    ignore_implicit_zeros=self.ignore_implicit_zeros,
                                    subsample=self.subsample, random_state=self.random_state)

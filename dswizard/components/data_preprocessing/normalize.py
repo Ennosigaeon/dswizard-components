@@ -12,7 +12,7 @@ class NormalizerComponent(PreprocessingAlgorithm):
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.preprocessing import Normalizer
-        return Normalizer(norm=self.norm, copy=False)
+        return Normalizer(norm=self.norm)
 
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):

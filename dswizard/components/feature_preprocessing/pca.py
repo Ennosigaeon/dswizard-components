@@ -40,8 +40,7 @@ class PCAComponent(PreprocessingAlgorithm):
                    random_state=self.random_state,
                    svd_solver=self.svd_solver,
                    tol=self.tol,
-                   iterated_power=self.iterated_power,
-                   copy=False)
+                   iterated_power=self.iterated_power)
 
     @staticmethod
     def get_properties():

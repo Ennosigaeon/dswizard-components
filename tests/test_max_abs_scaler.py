@@ -17,7 +17,7 @@ class TestMaxAbsScalerComponent(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = sklearn.preprocessing.MaxAbsScaler(copy=False)
+        expected = sklearn.preprocessing.MaxAbsScaler()
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
@@ -34,7 +34,7 @@ class TestMaxAbsScalerComponent(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = sklearn.preprocessing.MaxAbsScaler(**config, copy=False)
+        expected = sklearn.preprocessing.MaxAbsScaler(**config)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 

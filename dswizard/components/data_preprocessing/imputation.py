@@ -59,9 +59,9 @@ class ImputationComponent(PreprocessingAlgorithm):
         self.estimator_ = ColumnTransformer(
             transformers=[
                 ('cat', SimpleImputer(missing_values=self.missing_values, strategy='most_frequent',
-                                      add_indicator=False, copy=False), categorical),
+                                      add_indicator=False), categorical),
                 ('num', SimpleImputer(missing_values=self.missing_values, strategy=self.strategy,
-                                      add_indicator=False, copy=False), numeric)
+                                      add_indicator=False), numeric)
             ]
         )
         self.estimator_.fit(df)

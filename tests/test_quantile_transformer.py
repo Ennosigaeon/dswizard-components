@@ -17,7 +17,7 @@ class TestQuantileTransformerComponent(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = sklearn.preprocessing.QuantileTransformer(copy=False, random_state=42)
+        expected = sklearn.preprocessing.QuantileTransformer(random_state=42)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
@@ -34,7 +34,7 @@ class TestQuantileTransformerComponent(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = sklearn.preprocessing.QuantileTransformer(**config, copy=False, random_state=42)
+        expected = sklearn.preprocessing.QuantileTransformer(**config, random_state=42)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 

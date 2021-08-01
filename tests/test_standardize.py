@@ -17,7 +17,7 @@ class TestStandardScaler(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = StandardScaler(copy=False)
+        expected = StandardScaler()
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
@@ -34,7 +34,7 @@ class TestStandardScaler(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = StandardScaler(**config, copy=False)
+        expected = StandardScaler(**config)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 

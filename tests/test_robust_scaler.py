@@ -17,7 +17,7 @@ class TestRobustScaler(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = RobustScaler(copy=False)
+        expected = RobustScaler()
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
@@ -39,7 +39,7 @@ class TestRobustScaler(base_test.BaseComponentTest):
             config['q_max'] = config['q_min']
             config['q_min'] = help
 
-        expected = RobustScaler(quantile_range=(config['q_min'], config['q_max']), copy=False)
+        expected = RobustScaler(quantile_range=(config['q_min'], config['q_max']))
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 

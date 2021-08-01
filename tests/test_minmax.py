@@ -17,7 +17,7 @@ class TestMinMax(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = MinMaxScaler(copy=False)
+        expected = MinMaxScaler()
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
@@ -34,7 +34,7 @@ class TestMinMax(base_test.BaseComponentTest):
         actual.fit(X_train, y_train)
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = MinMaxScaler(**config, copy=False)
+        expected = MinMaxScaler(**config)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 

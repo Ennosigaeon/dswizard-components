@@ -18,7 +18,7 @@ class TestFactorAnalysisComponent(base_test.BaseComponentTest):
         actual.fit(np.copy(X_train), np.copy(y_train))
         X_actual = actual.transform(np.copy(X_test))
 
-        expected = sklearn.decomposition.FactorAnalysis(n_components=40, random_state=42, copy=False)
+        expected = sklearn.decomposition.FactorAnalysis(n_components=40, random_state=42)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
@@ -38,7 +38,7 @@ class TestFactorAnalysisComponent(base_test.BaseComponentTest):
         config['n_components'] = resolve_factor(config['n_components_factor'], X_train.shape[1])
         del config['n_components_factor']
 
-        expected = sklearn.decomposition.FactorAnalysis(**config, random_state=42, copy=False)
+        expected = sklearn.decomposition.FactorAnalysis(**config, random_state=42)
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 

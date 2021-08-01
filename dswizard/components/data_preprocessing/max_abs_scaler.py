@@ -12,7 +12,7 @@ class MaxAbsScalerComponent(PreprocessingAlgorithm):
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
         from sklearn.preprocessing import MaxAbsScaler
-        return MaxAbsScaler(copy=False)
+        return MaxAbsScaler()
 
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
