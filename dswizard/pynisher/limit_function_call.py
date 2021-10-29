@@ -209,6 +209,8 @@ class enforce_limits(object):
 
                 self2._reset_attributes()
 
+                start = time.time()
+
                 # Synchronous shunt if no real limitations are provided
                 if (self.mem_in_mb is None or self.mem_in_mb <= 0) and \
                         (self.cpu_time_in_s is None or self.cpu_time_in_s <= 0) and \
@@ -220,6 +222,8 @@ class enforce_limits(object):
                         self.logger.exception('Unhandled exception')
                         self2.result = (ex, traceback.format_exc())
                         self2.exit_status = AnythingException
+                    finally:
+                        self2.wall_clock_time = time.time() - start
                     return self2.result
 
                 # create a pipe to retrieve the return value
@@ -240,7 +244,6 @@ class enforce_limits(object):
                                           kwargs=kwargs)
 
                 # start the process
-                start = time.time()
                 subproc.start()
                 child_conn.close()
 
