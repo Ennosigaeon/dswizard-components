@@ -114,6 +114,19 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
         self.estimator_: Optional[BaseEstimator] = None
         self.component_name_ = component_name
 
+        try:
+            current_frame = inspect.currentframe()
+            prev_frame = current_frame.f_back
+
+            names, b, c, local = inspect.getargvalues(prev_frame)
+
+            args = {k: local[k] for k in names}
+            del args['self']
+
+            self.args = args
+        except Exception:
+            self.args = {}
+
     def fit(self, X: np.ndarray, y: np.ndarray) -> 'EstimatorComponent':
         """The fit function calls the fit function of the underlying
         scikit-learn model and returns `self`.
@@ -158,9 +171,8 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
         raise NotImplementedError()
 
     def serialize(self):
-        # TODO kwargs for __init__ not persisted
         cls = self.__class__
-        return '.'.join([cls.__module__, cls.__qualname__])
+        return {'clazz': '.'.join([cls.__module__, cls.__qualname__]), 'args': self.args.copy()}
 
     def set_hyperparameters(self, configuration: dict = None, init_params=None) -> 'EstimatorComponent':
         if configuration is None:
@@ -202,12 +214,11 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
 
     See :ref:`extending` for more information."""
 
-    def __init__(self, component_name: str):
-        super().__init__(component_name)
-        self.properties: Optional[Dict] = None
-        # TODO generalize for other learning tasks
-        self._estimator_type = "classifier"
-        self.classes_ = None
+    # Intentionally not set in constructor due to __init__ argument extraction in EstimatorComponent
+    properties: Optional[Dict] = None
+    # TODO generalize for other learning tasks
+    _estimator_type = "classifier"
+    classes_ = None
 
     def get_estimator(self):
         """Return the underlying estimator object.

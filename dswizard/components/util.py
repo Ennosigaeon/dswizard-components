@@ -1,4 +1,6 @@
 # -*- encoding: utf-8 -*-
+import importlib
+import inspect
 from typing import Optional
 
 import numpy as np
@@ -8,6 +10,28 @@ HANDLES_NUMERIC = 'handles_numeric'
 HANDLES_NOMINAL = 'handles_nominal'
 HANDLES_MISSING = 'handles_missing'
 HANDLES_NOMINAL_CLASS = 'handles_nominal_class'
+
+
+def get_type(clazz: str) -> type:
+    module_name = clazz.rpartition(".")[0]
+    class_name = clazz.split(".")[-1]
+
+    module = importlib.import_module(module_name)
+    class_ = getattr(module, class_name)
+    return class_
+
+
+def deserialize(clazz: str, args=None):
+    if args is None:
+        args = {}
+
+    type_ = get_type(clazz)
+    try:
+        inspect.getattr_static(type_, "deserialize")
+        # noinspection PyUnresolvedReferences
+        return type_.deserialize(**args)
+    except AttributeError:
+        return type_(**args)
 
 
 def check_true(p):
