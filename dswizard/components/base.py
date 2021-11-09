@@ -4,10 +4,10 @@ import pkgutil
 import sys
 from abc import ABC
 from collections import OrderedDict
-from typing import Type, Dict, Optional, List
+from typing import Type, Dict, Optional, List, Tuple
 
 import numpy as np
-from ConfigSpace import ConfigurationSpace, CategoricalHyperparameter
+from ConfigSpace import ConfigurationSpace, CategoricalHyperparameter, Configuration
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils import check_array
 
@@ -441,3 +441,46 @@ class ComponentChoice(EstimatorComponent):
     @staticmethod
     def get_properties() -> Dict:
         return {}
+
+
+class HasChildComponents:
+
+    def get_child_hyperparameter_search_space(self,
+                                              children: list[Tuple[str, EstimatorComponent]],
+                                              mf: Optional[MetaFeaturesDict] = None) -> ConfigurationSpace:
+        cs = ConfigurationSpace()
+        for name, step in children:
+            step_configuration_space = step.get_hyperparameter_search_space(mf=mf)
+            cs.add_configuration_space(name, step_configuration_space)
+        return cs
+
+    def set_child_hyperparameters(self,
+                                  children: list[Tuple[str, EstimatorComponent]],
+                                  configuration: dict = None,
+                                  init_params=None):
+        for node_idx, (node_name, node) in enumerate(children):
+            sub_configuration_space = node.get_hyperparameter_search_space()
+            sub_config_dict = {}
+            for param in configuration:
+                if param.startswith(f'{node_name}:'):
+                    value = configuration[param]
+                    new_name = param.replace(f'{node_name}:', '', 1)
+                    sub_config_dict[new_name] = value
+
+            sub_configuration = Configuration(sub_configuration_space, values=sub_config_dict)
+
+            if init_params is not None:
+                sub_init_params_dict = {}
+                for param in init_params:
+                    if param.startswith(f'{node_name}:'):
+                        value = init_params[param]
+                        new_name = param.replace(f'{node_name}:', '', 1)
+                        sub_init_params_dict[new_name] = value
+            else:
+                sub_init_params_dict = None
+
+            if isinstance(node, (ComponentChoice, EstimatorComponent)):
+                node.set_hyperparameters(configuration=sub_configuration.get_dictionary(),
+                                         init_params=sub_init_params_dict)
+            else:
+                raise NotImplementedError('Not supported yet!')

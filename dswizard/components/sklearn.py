@@ -1,7 +1,14 @@
+from typing import List, Tuple, Optional, Dict, Any
+
 import numpy as np
 from sklearn.base import BaseEstimator
+from sklearn.pipeline import FeatureUnion
 
-from dswizard.components.base import PredictionMixin
+from dswizard.components import util
+from dswizard.components.base import PredictionMixin, PreprocessingAlgorithm, EstimatorComponent, HasChildComponents
+from dswizard.components.meta_features import MetaFeaturesDict
+from dswizard.components.util import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
+    HANDLES_NOMINAL_CLASS
 
 
 class StackingEstimator(BaseEstimator, PredictionMixin):
@@ -68,3 +75,43 @@ class StackingEstimator(BaseEstimator, PredictionMixin):
 
     def __repr__(self, N_CHAR_MAX=700):
         return f'Stacking({self.estimator_.__repr__()})'
+
+
+class FeatureUnionComponent(FeatureUnion, PreprocessingAlgorithm, HasChildComponents):
+
+    def __init__(self, transformer_list: List[Tuple[str, EstimatorComponent]], **kwargs):
+        self.args = {
+            'transformer_list': [(label, comp.serialize()) for label, comp in transformer_list],
+            **kwargs
+        }
+        super().__init__(transformer_list, **kwargs)
+
+    @staticmethod
+    def deserialize(transformer_list: List[Dict[str, Any]], **kwargs) -> 'FeatureUnionComponent':
+        transformer_list_ = []
+        for name, value in transformer_list:
+            transformer_list_.append((name, util.deserialize(**value)))
+        return FeatureUnionComponent(transformer_list_, **kwargs)
+
+    @staticmethod
+    def get_properties() -> dict:
+        return {'shortname': 'parallel',
+                'name': 'Feature Union',
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: True,
+                HANDLES_MISSING: True,
+                HANDLES_NOMINAL_CLASS: True
+                }
+
+    def get_hyperparameter_search_space(self, mf: Optional[MetaFeaturesDict] = None):
+        return self.get_child_hyperparameter_search_space(self.transformer_list, mf)
+
+    def set_hyperparameters(self, configuration: dict = None, init_params=None) -> 'FeatureUnionComponent':
+        self.set_child_hyperparameters(self.transformer_list, configuration, init_params)
+        return self
+
+    def fit_transform(self, X, y=None, **fit_params):
+        res = super(FeatureUnionComponent, self).fit_transform(X, y, **fit_params)
+        self.estimator_ = self
+        return res
