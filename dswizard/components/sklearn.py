@@ -2,6 +2,7 @@ from typing import List, Tuple, Optional, Dict, Any
 
 import numpy as np
 from sklearn.base import BaseEstimator
+from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import FeatureUnion
 
 from dswizard.components import util
@@ -75,6 +76,47 @@ class StackingEstimator(BaseEstimator, PredictionMixin):
 
     def __repr__(self, N_CHAR_MAX=700):
         return f'Stacking({self.estimator_.__repr__()})'
+
+
+class ColumnTransformerComponent(ColumnTransformer, PreprocessingAlgorithm, HasChildComponents):
+
+    def __init__(self, transformers: List[Tuple[str, EstimatorComponent, Any]], **kwargs):
+        self.args = {
+            'transformers': [(label, comp.serialize(), columns) for label, comp, columns in transformers],
+            **kwargs
+        }
+        super().__init__(transformers, **kwargs)
+
+    @staticmethod
+    def get_properties() -> dict:
+        return {'shortname': 'ct',
+                'name': 'Column Transformer',
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: True,
+                HANDLES_MISSING: True,
+                HANDLES_NOMINAL_CLASS: True
+                }
+
+    @staticmethod
+    def deserialize(transformers: List[Dict[str, Any]], **kwargs) -> 'ColumnTransformerComponent':
+        transformers_ = []
+        for name, value, columns in transformers:
+            transformers_.append((name, util.deserialize(**value), columns))
+        return ColumnTransformerComponent(transformers_, **kwargs)
+
+    def get_hyperparameter_search_space(self, mf: Optional[MetaFeaturesDict] = None):
+        return self.get_child_hyperparameter_search_space([(name, comp) for name, comp, _ in self.transformers], mf)
+
+    def set_hyperparameters(self, configuration: dict = None, init_params=None) -> 'ColumnTransformerComponent':
+        self.set_child_hyperparameters([(name, comp) for name, comp, _ in self.transformers], configuration,
+                                       init_params)
+        return self
+
+    def fit_transform(self, X, y=None):
+        res = super(ColumnTransformerComponent, self).fit_transform(X, y)
+        self.estimator_ = self
+        return res
 
 
 class FeatureUnionComponent(FeatureUnion, PreprocessingAlgorithm, HasChildComponents):
