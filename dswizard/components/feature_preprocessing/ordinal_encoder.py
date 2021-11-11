@@ -6,34 +6,27 @@ from dswizard.components.util import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HAN
     HANDLES_MULTICLASS
 
 
-class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
-    """MultiColumnLabelEncoderComponent
+class OrdinalEncoderComponent(PreprocessingAlgorithm):
+    """OrdinalEncoderComponent
 
     A ColumnEncoder that can handle missing values and multiple categorical columns.
     Read more in the :ref:`User Guide`.
 
-    Parameters
-    ----------
-    columns : List[str] (optional)
-        List of column to be encoded
-
     Attributes
     ----------
-    estimator_ : LabelEncoder
-        The used LabelEncoder
+    estimator_ : OrdinalEncoder
+        The used OrdinalEncoder
 
     See also
     --------
-    LabelEncoder
+    OrdinalEncoder
 
     References
     ----------
     """
 
-    def __init__(self,
-                 columns=None):
-        super().__init__('multi_column_label_encoder')
-        self.columns = columns
+    def __init__(self):
+        super().__init__('ordinal_encoder')
         from sklearn.preprocessing import LabelEncoder
         self.estimator_ = LabelEncoder()
 
@@ -48,14 +41,13 @@ class MultiColumnLabelEncoderComponent(PreprocessingAlgorithm):
         """
 
         df = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1]))
-        categorical = df.select_dtypes(include=['category', 'object']).columns
+        categorical = df.select_dtypes(exclude=np.number).columns
         if len(categorical) == 0:
             return df.to_numpy()
         else:
             for colname in categorical:
                 missing_vec = pd.isna(df[colname])
-                df[colname] = df[colname].astype('category')
-                df[colname].cat.add_categories(['<MISSING>'], inplace=True)
+                df[colname] = df[colname].astype('category').cat.add_categories(['<MISSING>'])
                 df.loc[missing_vec, colname] = '<MISSING>'
 
                 df[colname] = self.estimator_.fit_transform(df[colname].astype(str))

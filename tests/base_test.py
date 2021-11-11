@@ -19,9 +19,9 @@ class BaseComponentTest(TestCase):
         if categorical:
             X, y = datasets.fetch_openml(data_id=23381, return_X_y=True)
         elif multiclass:
-            X, y = datasets.load_iris(True)
+            X, y = datasets.load_iris(return_X_y=True)
         else:
-            X, y = datasets.load_breast_cancer(True)
+            X, y = datasets.load_breast_cancer(return_X_y=True)
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=random_state)
         return X_train, X_test, y_train, y_test
