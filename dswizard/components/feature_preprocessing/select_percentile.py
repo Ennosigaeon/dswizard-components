@@ -28,7 +28,7 @@ class SelectPercentileClassification(PreprocessingAlgorithm):
         self.percentile = percentile
         self.score_func = score_func
 
-    def fit(self, X, y):
+    def fit(self, X, y=None):
         import scipy.sparse
         from sklearn.feature_selection import chi2
 

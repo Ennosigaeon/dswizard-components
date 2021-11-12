@@ -229,9 +229,9 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
         """
         return self.estimator_
 
-    def fit(self, X, Y):
+    def fit(self, X, y):
         self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1])
-        self.estimator_.fit(X, Y)
+        self.estimator_.fit(X, y)
         self.classes_ = self.estimator_.classes_
         return self
 
@@ -272,9 +272,9 @@ class PreprocessingAlgorithm(EstimatorComponent, ABC):
 
     See :ref:`extending` for more information."""
 
-    def fit(self, X, Y):
+    def fit(self, X, y=None):
         self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1])
-        self.estimator_.fit(X, Y)
+        self.estimator_.fit(X, y)
         return self
 
     def transform(self, X):

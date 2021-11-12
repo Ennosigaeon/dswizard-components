@@ -38,7 +38,7 @@ class KernelPCAComponent(PreprocessingAlgorithm):
         self.remove_zero_eig = remove_zero_eig
         self.random_state = random_state
 
-    def fit(self, X, Y=None):
+    def fit(self, X, y=None):
         import scipy.sparse
 
         self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1])

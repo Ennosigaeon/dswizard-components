@@ -1,3 +1,6 @@
+from typing import List
+
+import numpy as np
 from ConfigSpace.conditions import InCondition
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
@@ -20,11 +23,9 @@ class LinearDiscriminantAnalysis(PredictionAlgorithm):
         self.tol = tol
         self.n_components_factor = n_components_factor
 
-    def fit(self, X, Y):
-        import numpy as np
-
-        self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1], n_classes=len(np.unique(Y)))
-        self.estimator_.fit(X, Y)
+    def fit(self, X, y, feature_names: List[str] = None):
+        self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1], n_classes=len(np.unique(y)))
+        self.estimator_.fit(X, y)
         self.classes_ = self.estimator_.classes_
         return self
 

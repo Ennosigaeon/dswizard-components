@@ -1,18 +1,17 @@
 from typing import List, Tuple, Optional, Dict, Any
 
 import numpy as np
-from sklearn.base import BaseEstimator
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import FeatureUnion
 
 from dswizard.components import util
-from dswizard.components.base import PredictionMixin, PreprocessingAlgorithm, EstimatorComponent, HasChildComponents
+from dswizard.components.base import PreprocessingAlgorithm, EstimatorComponent, HasChildComponents, PredictionAlgorithm
 from dswizard.components.meta_features import MetaFeaturesDict
 from dswizard.components.util import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
     HANDLES_NOMINAL_CLASS
 
 
-class StackingEstimator(BaseEstimator, PredictionMixin):
+class StackingEstimator(PreprocessingAlgorithm, PredictionAlgorithm):
     """StackingEstimator
 
     A shallow wrapper around a classification algorithm to implement the transform method. Allows stacking of
@@ -41,11 +40,12 @@ class StackingEstimator(BaseEstimator, PredictionMixin):
         <https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.133.8090&rep=rep1&type=pdf>`_
     """
 
-    def __init__(self, estimator: PredictionMixin):
+    def __init__(self, estimator: PredictionAlgorithm):
+        super().__init__(estimator.component_name_)
         self.estimator_ = estimator
 
-    def fit(self, *args):
-        self.estimator_.fit(*args)
+    def fit(self, X, y=None):
+        self.estimator_.fit(X, y)
         return self
 
     def transform(self, X, *args) -> np.ndarray:

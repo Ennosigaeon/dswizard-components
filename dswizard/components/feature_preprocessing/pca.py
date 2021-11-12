@@ -23,7 +23,7 @@ class PCAComponent(PreprocessingAlgorithm):
         self.iterated_power = iterated_power
         self.random_state = random_state
 
-    def fit(self, X, Y=None):
+    def fit(self, X, y=None):
         self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1])
         self.estimator_.fit(X)
 

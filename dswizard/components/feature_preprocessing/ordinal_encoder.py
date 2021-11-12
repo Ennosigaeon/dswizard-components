@@ -55,9 +55,6 @@ class OrdinalEncoderComponent(PreprocessingAlgorithm):
 
         return df.to_numpy()
 
-    def fit_transform(self, X, y=None):
-        return self.fit(X, y).transform(X)
-
     @staticmethod
     def get_properties():
         return {'shortname': 'MultiColumnLabelEncoder',
