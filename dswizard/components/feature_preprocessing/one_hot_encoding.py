@@ -1,10 +1,7 @@
-from typing import List
-
 import numpy as np
 import pandas as pd
-from sklearn.compose import ColumnTransformer
+from sklearn.compose import make_column_selector
 
-from dswizard.components.base import NoopComponent
 from dswizard.components.base import PreprocessingAlgorithm
 from dswizard.components.util import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
     HANDLES_MULTICLASS
@@ -34,30 +31,19 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
         super().__init__('one_hot_encoding')
 
     def fit(self, X, y=None):
-        df = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1])).infer_objects()
+        from sklearn.compose import ColumnTransformer
+        from sklearn.preprocessing import OneHotEncoder
 
-        # noinspection PyUnresolvedReferences
-        categorical = (df.dtypes == object).to_numpy()
-        if not categorical.any():
-            self.estimator_ = NoopComponent()
-        else:
-            self.estimator_ = self.to_sklearn(X.shape[0], X.shape[1], categorical=categorical)
-            self.estimator_.fit(X, y)
+        df = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1])).infer_objects()
+        categorical = make_column_selector(dtype_exclude=np.number)
+
+        self.estimator_ = ColumnTransformer(
+            [('ohe', OneHotEncoder(sparse=False, handle_unknown='ignore'), categorical)],
+            remainder='passthrough')
+        self.estimator_.fit(df, y)
         return self
 
-    def to_sklearn(self, n_samples: int = 0, n_features: int = 0, categorical: List[bool] = 'auto', **kwargs):
-        from sklearn.preprocessing import OneHotEncoder
-        return ColumnTransformer([('ohe', OneHotEncoder(sparse=False, handle_unknown='ignore'), categorical)],
-                                 remainder='passthrough')
-        # return OneHotEncoder(sparse=False, categories=categorical_columns, handle_unknown='ignore')
-
     def transform(self, X: np.ndarray):
-        # df = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1])).infer_objects()
-        #
-        # dummy_na = np.any(pd.isna(df))
-        # df = pd.get_dummies(df, sparse=False, dummy_na=dummy_na)
-        # return df.to_numpy()
-
         return self.estimator_.transform(X)
 
     @staticmethod

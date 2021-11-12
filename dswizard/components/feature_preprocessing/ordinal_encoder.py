@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from sklearn.compose import make_column_selector
 
 from dswizard.components.base import PreprocessingAlgorithm
 from dswizard.components.util import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
@@ -31,29 +32,17 @@ class OrdinalEncoderComponent(PreprocessingAlgorithm):
         self.estimator_ = LabelEncoder()
 
     def fit(self, X, y=None):
-        return self  # not relevant here
+        from sklearn.compose import ColumnTransformer
+        from sklearn.preprocessing import OrdinalEncoder
 
-    def transform(self, X: np.ndarray):
-        """
-        Transforms columns of X specified in self.columns using
-        LabelEncoder(). If no columns specified, transforms all
-        columns in X.
-        """
+        df = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1])).infer_objects()
+        categorical = make_column_selector(dtype_exclude=np.number)
 
-        df = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1]))
-        categorical = df.select_dtypes(exclude=np.number).columns
-        if len(categorical) == 0:
-            return df.to_numpy()
-        else:
-            for colname in categorical:
-                missing_vec = pd.isna(df[colname])
-                df[colname] = df[colname].astype('category').cat.add_categories(['<MISSING>'])
-                df.loc[missing_vec, colname] = '<MISSING>'
-
-                df[colname] = self.estimator_.fit_transform(df[colname].astype(str))
-                df.loc[missing_vec, colname] = np.nan
-
-        return df.to_numpy()
+        self.estimator_ = ColumnTransformer(
+            [('ordinal', OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1), categorical)],
+            remainder='passthrough')
+        self.estimator_.fit(df, y)
+        return self
 
     @staticmethod
     def get_properties():
