@@ -2,9 +2,10 @@ import numpy as np
 import pandas as pd
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter
-from sklearn.impute import MissingIndicator
+from sklearn.pipeline import FeatureUnion
 
 from dswizard.components.base import PreprocessingAlgorithm, NoopComponent
+from dswizard.components.feature_preprocessing.missing_indicator import MissingIndicatorComponent
 from dswizard.components.util import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
     HANDLES_NOMINAL_CLASS
 
@@ -56,7 +57,7 @@ class ImputationComponent(PreprocessingAlgorithm):
             numeric = df.select_dtypes(include=['number']).columns
             categorical = df.select_dtypes(include=['category', 'object']).columns
 
-        self.estimator_ = ColumnTransformer(
+        imputer = ColumnTransformer(
             transformers=[
                 ('cat', SimpleImputer(missing_values=self.missing_values, strategy='most_frequent',
                                       add_indicator=False), categorical),
@@ -64,28 +65,14 @@ class ImputationComponent(PreprocessingAlgorithm):
                                       add_indicator=False), numeric)
             ]
         )
+        if self.add_indicator:
+            self.estimator_ = FeatureUnion(transformer_list=[
+                ('imputation', imputer), ('indicator', MissingIndicatorComponent())])
+        else:
+            self.estimator_ = imputer
         self.estimator_.fit(df)
 
         return self
-
-    def transform(self, X):
-        if self.estimator_ is None:
-            raise ValueError()
-        if self.add_indicator:
-            missingIndicator = MissingIndicator()
-            X_missing = missingIndicator.fit_transform(X)
-            X_missing = pd.DataFrame(X_missing)
-            newdf = pd.DataFrame()
-            for index, row in X_missing.iterrows():
-                if row.any():
-                    newdf = newdf.append({'missing': True}, ignore_index=True)
-                else:
-                    newdf = newdf.append({'missing': False}, ignore_index=True)
-
-        X_new = self.estimator_.transform(X)
-        if self.add_indicator:
-            X_new = pd.concat([pd.DataFrame(X_new), newdf], axis=1, sort=False).to_numpy()
-        return X_new
 
     def get_feature_names_out(self, input_features: list[str] = None):
         output_features = super().get_feature_names_out(input_features)

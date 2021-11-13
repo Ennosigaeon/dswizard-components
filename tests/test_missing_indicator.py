@@ -1,7 +1,4 @@
-import unittest
-
 import numpy as np
-import sklearn
 
 from dswizard.components.feature_preprocessing.missing_indicator import MissingIndicatorComponent
 from tests import base_test
@@ -9,40 +6,33 @@ from tests import base_test
 
 class TestMissingIndicatorComponent(base_test.BaseComponentTest):
 
-    @unittest.skip
-    def test_default(self):
+    def test_missing(self):
+        X = np.array([[np.nan, 1, 3],
+                      [4, 0, np.nan],
+                      [8, 1, 0],
+                      [8, 1, 0],
+                      [4, 0, np.nan]])
+        feature_names = ['1', '2', '3']
+
+        actual = MissingIndicatorComponent()
+        config: dict = self.get_default(actual)
+
+        actual.set_hyperparameters(config)
+        actual.fit(X)
+        X_actual = actual.transform(np.copy(X))
+
+        assert actual.get_feature_names_out(feature_names).tolist() == ['missing_values']
+        assert np.allclose(X_actual, np.array([[1, 1, 0, 0, 1]]).T)
+
+    def test_no_missing(self):
         X_train, X_test, y_train, y_test, feature_names = self.load_data()
 
         actual = MissingIndicatorComponent()
         config: dict = self.get_default(actual)
 
         actual.set_hyperparameters(config)
-        actual.fit(X_train, y_train)
-        X_actual = actual.transform(np.copy(X_test))
+        actual.fit(X_train)
+        X_actual = actual.transform(np.copy(X_train))
 
-        expected = sklearn.impute.MissingIndicator()
-        expected.fit(X_train, y_train)
-        X_expected = expected.transform(X_test)
-
-        assert actual.get_feature_names_out(feature_names).tolist() == ['prediction']
-        assert repr(actual.estimator_) == repr(expected)
-        assert np.allclose(X_actual, X_expected)
-
-    @unittest.skip
-    def test_configured(self):
-        X_train, X_test, y_train, y_test, feature_names = self.load_data()
-
-        actual = MissingIndicatorComponent()
-        config: dict = self.get_config(actual)
-
-        actual.set_hyperparameters(config)
-        actual.fit(X_train, y_train)
-        X_actual = actual.transform(np.copy(X_test))
-
-        expected = sklearn.impute.MissingIndicator(**config)
-        expected.fit(X_train, y_train)
-        X_expected = expected.transform(X_test)
-
-        assert actual.get_feature_names_out(feature_names).tolist() == ['prediction']
-        assert repr(actual.estimator_) == repr(expected)
-        assert np.allclose(X_actual, X_expected)
+        assert actual.get_feature_names_out(feature_names).tolist() == ['missing_values']
+        assert np.allclose(X_actual, np.zeros((100, 1)))

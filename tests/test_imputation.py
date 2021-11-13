@@ -9,7 +9,7 @@ from tests import base_test
 class TestImputation(base_test.BaseComponentTest):
 
     def test_default(self):
-        X_train = pd.DataFrame([[1.0], [np.nan]])
+        X_train = pd.DataFrame([[1.0], [np.nan]], columns=['foo'])
         y_train = pd.Series([1, 0])
         actual = ImputationComponent()
         config: dict = self.get_default(actual)
@@ -22,10 +22,11 @@ class TestImputation(base_test.BaseComponentTest):
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_train)
 
+        assert actual.get_feature_names_out(['foo']).tolist() == ['foo']
         assert np.allclose(X_actual, X_expected)
 
     def test_configured(self):
-        X_train = pd.DataFrame([[1.0], [np.nan], [5.0]])
+        X_train = pd.DataFrame([[1.0], [np.nan], [5.0]], columns=['foo'])
         y_train = pd.Series([1, 0, 1])
         actual = ImputationComponent()
         config: dict = self.get_config(actual)
@@ -37,6 +38,7 @@ class TestImputation(base_test.BaseComponentTest):
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_train)
 
+        assert actual.get_feature_names_out(['foo']).tolist() == ['foo']
         assert np.allclose(X_actual, X_expected)
 
     def test_empty(self):

@@ -2,13 +2,31 @@ from typing import List, Tuple, Optional, Dict, Any
 
 import numpy as np
 from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
 from sklearn.pipeline import FeatureUnion
+from sklearn.preprocessing import OrdinalEncoder
+from sklearn.utils.validation import _check_feature_names_in
 
 from dswizard.components import util
 from dswizard.components.base import PreprocessingAlgorithm, EstimatorComponent, HasChildComponents, PredictionAlgorithm
 from dswizard.components.meta_features import MetaFeaturesDict
 from dswizard.components.util import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
     HANDLES_NOMINAL_CLASS
+
+
+def monkey_patch_get_feature_names_out():
+    # Some transformers do not implement get_feature_names_out, monkey-patch it in
+    if 'get_feature_names_out_patched' not in globals():
+        func = lambda est, input_features=None: _check_feature_names_in(est, input_features)
+        SimpleImputer.get_feature_names_out = func
+        OrdinalEncoder.get_feature_names_out = func
+
+        # add marker to globals to prevent second execution
+        global get_feature_names_out_patched
+        get_feature_names_out_patched = True
+
+
+monkey_patch_get_feature_names_out()
 
 
 class StackingEstimator(PreprocessingAlgorithm, PredictionAlgorithm):
