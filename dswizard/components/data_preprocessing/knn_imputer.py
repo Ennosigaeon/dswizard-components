@@ -25,6 +25,10 @@ class KNNImputerComponent(PreprocessingAlgorithm):
         return KNNImputer(missing_values=self.missing_values, n_neighbors=self.n_neighbors,
                           weights=self.weights, metric=self.metric, add_indicator=self.add_indicator)
 
+    def get_feature_names_out(self, input_features: list[str] = None):
+        from sklearn.utils.validation import _check_feature_names_in
+        return _check_feature_names_in(self, input_features)
+
     @staticmethod
     def get_properties():
         return {'shortname': 'Imputation',

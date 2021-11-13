@@ -78,6 +78,9 @@ class KernelPCAComponent(PreprocessingAlgorithm):
             n_jobs=1,
             copy_X=False)
 
+    def get_feature_names_out(self, input_features: list[str] = None):
+        return np.array(['principal_component_{}'.format(i) for i in range(self.estimator_.eigenvalues_.shape[0])])
+
     def transform(self, X):
         if self.estimator_ is None:
             raise NotImplementedError()

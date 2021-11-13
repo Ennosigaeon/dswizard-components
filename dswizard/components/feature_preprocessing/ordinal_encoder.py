@@ -34,15 +34,25 @@ class OrdinalEncoderComponent(PreprocessingAlgorithm):
     def fit(self, X, y=None):
         from sklearn.compose import ColumnTransformer
         from sklearn.preprocessing import OrdinalEncoder
+        from sklearn.utils.validation import _check_feature_names_in
 
         df = pd.DataFrame(data=X, index=range(X.shape[0]), columns=range(X.shape[1])).infer_objects()
         categorical = make_column_selector(dtype_exclude=np.number)
 
+        # OrdinalEncoder does not implement get_feature_names_out, monkey-patch it in
+        OrdinalEncoder.get_feature_names_out = lambda est, input_features=None: _check_feature_names_in(est,
+                                                                                                        input_features)
+        encoder = OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)
+
         self.estimator_ = ColumnTransformer(
-            [('ordinal', OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1), categorical)],
+            [('ordinal', encoder, categorical)],
             remainder='passthrough')
         self.estimator_.fit(df, y)
         return self
+
+    def get_feature_names_out(self, input_features: list[str] = None):
+        output_features = super().get_feature_names_out(input_features)
+        return np.array([f.split('__')[-1] for f in output_features])
 
     @staticmethod
     def get_properties():

@@ -10,6 +10,7 @@ import numpy as np
 from ConfigSpace import ConfigurationSpace, CategoricalHyperparameter, Configuration
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils import check_array
+from sklearn.utils.validation import _check_feature_names_in
 
 from dswizard.components.meta_features import MetaFeaturesDict
 from dswizard.components.util import HANDLES_NOMINAL, HANDLES_NUMERIC, HANDLES_MISSING, HANDLES_MULTICLASS, \
@@ -170,6 +171,12 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
         -learn-objects>`_ for further information."""
         raise NotImplementedError()
 
+    def get_feature_names_out(self, input_features: list[str] = None):
+        if hasattr(self.estimator_, "get_feature_names_out"):
+            return self.estimator_.get_feature_names_out(input_features)
+        else:
+            raise AttributeError('{}.get_feature_names_out'.format(self.component_name_))
+
     def serialize(self):
         cls = self.__class__
         return {'clazz': '.'.join([cls.__module__, cls.__qualname__]), 'args': self.args.copy()}
@@ -266,6 +273,12 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
             raise ValueError()
         return self.estimator_.predict_proba(X)
 
+    def get_feature_names_out(self, input_features: list[str] = None):
+        if hasattr(self.estimator_, "get_feature_names_out"):
+            return self.estimator_.get_feature_names_out(input_features)
+        else:
+            return np.array(['prediction'])
+
 
 class PreprocessingAlgorithm(EstimatorComponent, ABC):
     """Provide an abstract interface for preprocessing algorithms in auto-sklearn.
@@ -298,6 +311,9 @@ class NoopComponent(EstimatorComponent):
 
     def transform(self, X: np.ndarray) -> np.ndarray:
         return X
+
+    def get_feature_names_out(self, input_features: list[str] = None):
+        return _check_feature_names_in(self, input_features)
 
     @staticmethod
     def get_properties() -> dict:

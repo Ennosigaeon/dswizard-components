@@ -2,6 +2,7 @@ import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter
 
+from components.base import NoopComponent
 from dswizard.components.base import PreprocessingAlgorithm
 from dswizard.components.util import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
     HANDLES_MULTICLASS
@@ -15,8 +16,12 @@ class MissingIndicatorComponent(PreprocessingAlgorithm):
         self.missing_values = missing_values
 
     def to_sklearn(self, n_samples: int = 0, n_features: int = 0, **kwargs):
-        from sklearn.impute import MissingIndicator
-        return MissingIndicator(missing_values=self.missing_values, features=self.features)
+        # TODO: Note that this component typically should not be used in a vanilla Pipeline consisting of transformers
+        #  and a classifier, but rather could be added using a FeatureUnion or ColumnTransformer.
+
+        # from sklearn.impute import MissingIndicator
+        # return MissingIndicator(missing_values=self.missing_values, features=self.features)
+        return NoopComponent()
 
     @staticmethod
     def get_properties():

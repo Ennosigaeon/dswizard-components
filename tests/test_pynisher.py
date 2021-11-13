@@ -125,7 +125,7 @@ class test_limit_resources_module(unittest.TestCase):
             self.assertEqual((mem, 0, 0), wrapped_function(mem, 0, 0))
             self.assertEqual(wrapped_function.exit_status, 0)
 
-    @unittest.skipIf(not all_tests, "skipping out_of_memory test")
+    @unittest.skip
     def test_out_of_memory(self):
         print("Testing memory constraint.")
         local_mem_in_mb = 32

@@ -14,6 +14,10 @@ class NormalizerComponent(PreprocessingAlgorithm):
         from sklearn.preprocessing import Normalizer
         return Normalizer(norm=self.norm)
 
+    def get_feature_names_out(self, input_features: list[str] = None):
+        from sklearn.utils.validation import _check_feature_names_in
+        return _check_feature_names_in(self, input_features)
+
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()

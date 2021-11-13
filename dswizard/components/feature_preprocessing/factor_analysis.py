@@ -1,3 +1,4 @@
+import numpy as np
 from ConfigSpace.conditions import InCondition
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, \
@@ -34,6 +35,9 @@ class FactorAnalysisComponent(PreprocessingAlgorithm):
                               iterated_power=self.iterated_power,
                               tol=self.tol,
                               random_state=self.random_state)
+
+    def get_feature_names_out(self, input_features: list[str] = None):
+        return np.array(['factor_{}'.format(i) for i in range(self.estimator_.n_features_in_)])
 
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):

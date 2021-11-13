@@ -1,3 +1,4 @@
+import numpy as np
 from ConfigSpace.conditions import EqualsCondition
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter
@@ -36,6 +37,9 @@ class FastICAComponent(PreprocessingAlgorithm):
                        max_iter=self.max_iter,
                        random_state=self.random_state,
                        tol=self.tol)
+
+    def get_feature_names_out(self, input_features: list[str] = None):
+        return np.array(['independent_component_{}'.format(i) for i in range(self.estimator_.n_features_in_)])
 
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):

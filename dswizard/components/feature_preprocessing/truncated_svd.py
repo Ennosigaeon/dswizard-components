@@ -1,3 +1,4 @@
+import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
@@ -30,6 +31,9 @@ class TruncatedSVDComponent(PreprocessingAlgorithm):
                             n_iter=self.n_iter,
                             tol=self.tol,
                             random_state=self.random_state)
+    
+    def get_feature_names_out(self, input_features: list[str] = None):
+        return np.array(['singular_value_{}'.format(i) for i in range(self.estimator_.explained_variance_.shape[0])])
 
     @staticmethod
     def get_properties():

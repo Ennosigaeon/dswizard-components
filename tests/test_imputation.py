@@ -40,7 +40,7 @@ class TestImputation(base_test.BaseComponentTest):
         assert np.allclose(X_actual, X_expected)
 
     def test_empty(self):
-        X_train, X_test, y_train, y_test = self.load_data()
+        X_train, X_test, y_train, y_test, feature_names = self.load_data()
 
         actual = ImputationComponent()
         actual.fit(X_train, y_train)

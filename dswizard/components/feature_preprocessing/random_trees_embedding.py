@@ -70,6 +70,10 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
             n_jobs=1,
             random_state=self.random_state
         )
+    
+    def get_feature_names_out(self, input_features: list[str] = None):
+        # TODO: generate valid output names
+        return None
 
     @staticmethod
     def get_properties():

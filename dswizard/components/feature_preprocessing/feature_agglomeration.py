@@ -52,6 +52,9 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
                                     distance_threshold=self.distance_threshold,
                                     pooling_func=pooling_func)
 
+    def get_feature_names_out(self, input_features: list[str] = None):
+        return np.array(['cluster_{}'.format(i) for i in range(self.estimator_.n_clusters)])
+
     @staticmethod
     def get_properties():
         return {'shortname': 'FA',

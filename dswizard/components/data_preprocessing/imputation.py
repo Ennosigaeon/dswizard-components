@@ -87,6 +87,10 @@ class ImputationComponent(PreprocessingAlgorithm):
             X_new = pd.concat([pd.DataFrame(X_new), newdf], axis=1, sort=False).to_numpy()
         return X_new
 
+    def get_feature_names_out(self, input_features: list[str] = None):
+        output_features = super().get_feature_names_out(input_features)
+        return np.array([f.split('__')[-1] for f in output_features])
+
     @staticmethod
     def get_properties():
         return {'shortname': 'Imputation',
