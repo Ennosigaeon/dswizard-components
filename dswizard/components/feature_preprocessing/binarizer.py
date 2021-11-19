@@ -1,6 +1,5 @@
 import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UnParametrizedHyperparameter
 
 from dswizard.components.base import PreprocessingAlgorithm
 from dswizard.components.util import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HANDLES_NOMINAL, HANDLES_NUMERIC, \
@@ -31,8 +30,6 @@ class BinarizerComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
-        threshold = UnParametrizedHyperparameter("threshold", 0.)
-        cs.add_hyperparameter(threshold)
         return cs
 
     @staticmethod

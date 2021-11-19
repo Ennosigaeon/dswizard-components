@@ -1,6 +1,6 @@
 import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntegerHyperparameter, Constant
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntegerHyperparameter
 
 from dswizard.components.base import PreprocessingAlgorithm
 from dswizard.components.util import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
@@ -43,9 +43,8 @@ class KNNImputerComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(**kwargs):
         n_neighbors = UniformIntegerHyperparameter("n_neighbors", 2, 50, default_value=5)
         weights = CategoricalHyperparameter("weights", ["uniform", "distance"], default_value="uniform")
-        metric = Constant("metric", "nan_euclidean")
         add_indicator = CategoricalHyperparameter("add_indicator", [True, False], default_value=False)
 
         cs = ConfigurationSpace()
-        cs.add_hyperparameters([n_neighbors, weights, metric, add_indicator])
+        cs.add_hyperparameters([n_neighbors, weights, add_indicator])
         return cs

@@ -1,6 +1,5 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter, Constant, \
-    UnParametrizedHyperparameter
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
 
 from dswizard.components.base import PredictionAlgorithm
 from dswizard.components.util import resolve_factor, HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, \
@@ -111,12 +110,7 @@ class DecisionTree(PredictionAlgorithm):
         max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 0, 2, default_value=1.)
         min_samples_split = UniformFloatHyperparameter("min_samples_split_factor", 1e-7, 0.25, default_value=0.0001)
         min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf_factor", 1e-7, 0.25, default_value=0.0001)
-        min_weight_fraction_leaf = Constant("min_weight_fraction_leaf", 0.0)
-        max_features = UnParametrizedHyperparameter('max_features_factor', 1.0)
-        min_impurity_decrease = UnParametrizedHyperparameter('min_impurity_decrease', 0.0)
 
-        cs.add_hyperparameters(
-            [criterion, max_features, max_depth_factor, min_samples_split, min_samples_leaf, min_weight_fraction_leaf,
-             min_impurity_decrease])
+        cs.add_hyperparameters([criterion, max_depth_factor, min_samples_split, min_samples_leaf])
 
         return cs

@@ -1,6 +1,5 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter, \
-    Constant, UnParametrizedHyperparameter
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter
 
 from dswizard.components.base import PredictionAlgorithm
 from dswizard.components.util import check_none, resolve_factor, HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, \
@@ -101,25 +100,20 @@ class GradientBoostingClassifier(PredictionAlgorithm):
     def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
-        loss = Constant("loss", "auto")
         learning_rate = UniformFloatHyperparameter(name="learning_rate", lower=0.01, upper=1, default_value=0.1,
                                                    log=True)
         min_samples_leaf = UniformFloatHyperparameter("min_samples_leaf_factor", 0.0001, 0.25, default_value=0.0001,
                                                       log=True)
         max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 2.5, default_value=1.)
         max_leaf_nodes_factor = UniformFloatHyperparameter("max_leaf_nodes_factor", 1e-5, 1., default_value=1.)
-        max_iter = Constant("max_iter", 512)
-        max_bins = Constant("max_bins", 255)
         l2_regularization = UniformFloatHyperparameter(name="l2_regularization", lower=1e-10, upper=1., log=True,
                                                        default_value=1e-10)
-        tol = UnParametrizedHyperparameter(name="tol", value=1e-7)
-        scoring = UnParametrizedHyperparameter(name="scoring", value="loss")
         n_iter_no_change = UniformIntegerHyperparameter(name="n_iter_no_change", lower=1, upper=20, default_value=10)
         validation_fraction = UniformFloatHyperparameter(name="validation_fraction", lower=0.01, upper=0.4,
                                                          default_value=0.1)
 
         cs.add_hyperparameters(
-            [loss, learning_rate, min_samples_leaf, max_depth_factor, max_leaf_nodes_factor, max_bins, max_iter,
-             l2_regularization, tol, scoring, n_iter_no_change, validation_fraction, ])
+            [learning_rate, min_samples_leaf, max_depth_factor, max_leaf_nodes_factor, l2_regularization,
+             n_iter_no_change, validation_fraction])
 
         return cs

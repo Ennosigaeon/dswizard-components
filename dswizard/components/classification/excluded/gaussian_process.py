@@ -1,6 +1,5 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
-    CategoricalHyperparameter, Constant
+from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, CategoricalHyperparameter
 
 from dswizard.components.base import PredictionAlgorithm
 from dswizard.components.util import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
@@ -83,12 +82,11 @@ class GaussianProcessClassifier(PredictionAlgorithm):
         kernel = CategoricalHyperparameter("kernel",
                                            ["constant", "rbf", "matern", "rational_quadratic", "exp_sine_squared",
                                             "white", "dot"], default_value="rbf")
-        optimizer = Constant("optimizer", "fmin_l_bfgs_b")
         n_restarts_optimizer = UniformIntegerHyperparameter("n_restarts_optimizer", 0, 500, default_value=0)
         max_iter_predict = UniformIntegerHyperparameter("max_iter_predict", 1, 1000, default_value=100)
         multi_class = CategoricalHyperparameter("multi_class", ["one_vs_rest", "one_vs_one"],
                                                 default_value="one_vs_rest")
 
-        cs.add_hyperparameters([n_restarts_optimizer, max_iter_predict, multi_class, kernel, optimizer])
+        cs.add_hyperparameters([n_restarts_optimizer, max_iter_predict, multi_class, kernel])
 
         return cs
