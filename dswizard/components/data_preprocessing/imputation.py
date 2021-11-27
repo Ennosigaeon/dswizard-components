@@ -40,6 +40,12 @@ class ImputationComponent(PreprocessingAlgorithm):
 
     def __init__(self, missing_values=np.nan, strategy: str = 'mean', add_indicator: bool = False):
         super().__init__('imputation')
+        try:
+            if np.isnan(missing_values):
+                self.args['missing_values'] = 'NaN'
+        except TypeError:
+            pass
+
         self.strategy = strategy
         self.add_indicator = add_indicator
         self.missing_values = missing_values
@@ -87,6 +93,12 @@ class ImputationComponent(PreprocessingAlgorithm):
                 HANDLES_NOMINAL: True,
                 HANDLES_MISSING: True,
                 HANDLES_NOMINAL_CLASS: True}
+
+    @staticmethod
+    def deserialize(**kwargs) -> 'ImputationComponent':
+        if 'missing_values' in kwargs and kwargs['missing_values'] == 'NaN':
+            kwargs['missing_values'] = np.nan
+        return ImputationComponent(**kwargs)
 
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):

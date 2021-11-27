@@ -9,6 +9,11 @@ from dswizard.components.util import HANDLES_NOMINAL_CLASS, HANDLES_MISSING, HAN
 class MissingIndicatorComponent(PreprocessingAlgorithm):
     def __init__(self, missing_values=np.nan, features: str = "all"):
         super().__init__('missing_indicator')
+        try:
+            if np.isnan(missing_values):
+                self.args['missing_values'] = 'NaN'
+        except TypeError:
+            pass
 
         self.features = features
         self.missing_values = missing_values
@@ -35,6 +40,12 @@ class MissingIndicatorComponent(PreprocessingAlgorithm):
                 HANDLES_NOMINAL: True,
                 HANDLES_MISSING: True,
                 HANDLES_NOMINAL_CLASS: True}
+    
+    @staticmethod
+    def deserialize(**kwargs) -> 'MissingIndicatorComponent':
+        if 'missing_values' in kwargs and kwargs['missing_values'] == 'NaN':
+            kwargs['missing_values'] = np.nan
+        return MissingIndicatorComponent(**kwargs)
 
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):

@@ -11,6 +11,11 @@ class KNNImputerComponent(PreprocessingAlgorithm):
     def __init__(self, missing_values=np.nan, n_neighbors: int = 5, weights: str = "uniform",
                  metric: str = "nan_euclidean", add_indicator: bool = False):
         super().__init__('knn_imputer')
+        try:
+            if np.isnan(missing_values):
+                self.args['missing_values'] = 'NaN'
+        except TypeError:
+            pass
 
         # TODO what about missing values in categorical data?
         self.n_neighbors = n_neighbors
@@ -38,6 +43,12 @@ class KNNImputerComponent(PreprocessingAlgorithm):
                 HANDLES_NOMINAL: False,
                 HANDLES_MISSING: True,
                 HANDLES_NOMINAL_CLASS: True}
+
+    @staticmethod
+    def deserialize(**kwargs) -> 'KNNImputerComponent':
+        if 'missing_values' in kwargs and kwargs['missing_values'] == 'NaN':
+            kwargs['missing_values'] = np.nan
+        return KNNImputerComponent(**kwargs)
 
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
