@@ -206,6 +206,9 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
         """Transforms this Component to a standard sklearn component if possible"""
         return self
 
+    def __sklearn_is_fitted__(self):
+        return self.estimator_ is not None
+
     def __str__(self):
         cls = self.__class__
         return '.'.join([cls.__module__, cls.__qualname__])
@@ -292,7 +295,7 @@ class PreprocessingAlgorithm(EstimatorComponent, ABC):
 
     def transform(self, X):
         if self.estimator_ is None:
-            raise ValueError()
+            raise ValueError('{} not fitted'.format(self.__class__))
         return self.estimator_.transform(X)
 
     def fit_transform(self, X: np.ndarray, y: np.ndarray = None) -> np.ndarray:
