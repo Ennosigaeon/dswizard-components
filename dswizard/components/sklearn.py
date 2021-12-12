@@ -100,7 +100,7 @@ class ColumnTransformerComponent(ColumnTransformer, PreprocessingAlgorithm, HasC
 
     def __init__(self, transformers: List[Tuple[str, EstimatorComponent, Any]], **kwargs):
         self.args = {
-            'transformers': [(label, comp.serialize(), columns) for label, comp, columns in transformers],
+            'transformers': [(label, util.serialize(comp), columns) for label, comp, columns in transformers],
             **kwargs
         }
         super().__init__(transformers, **kwargs)
@@ -141,7 +141,7 @@ class FeatureUnionComponent(FeatureUnion, PreprocessingAlgorithm, HasChildCompon
 
     def __init__(self, transformer_list: List[Tuple[str, EstimatorComponent]], **kwargs):
         self.args = {
-            'transformer_list': [(label, comp.serialize()) for label, comp in transformer_list],
+            'transformer_list': [(label, util.serialize(comp)) for label, comp in transformer_list],
             **kwargs
         }
         super().__init__(transformer_list, **kwargs)

@@ -21,6 +21,14 @@ def get_type(clazz: str) -> type:
     return class_
 
 
+def serialize(object_) -> dict:
+    try:
+        return object_.serialize()
+    except AttributeError:
+        cls = object_.__class__
+        return {'clazz': '.'.join([cls.__module__, cls.__qualname__]), 'args': {}}
+
+
 def deserialize(clazz: str, args=None):
     if args is None:
         args = {}
