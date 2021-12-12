@@ -469,7 +469,14 @@ class HasChildComponents:
                                               mf: Optional[MetaFeaturesDict] = None) -> ConfigurationSpace:
         cs = ConfigurationSpace()
         for name, step in children:
-            step_configuration_space = step.get_hyperparameter_search_space(mf=mf)
+            try:
+                step_configuration_space = step.get_hyperparameter_search_space(mf=mf)
+            except TypeError:
+                step_configuration_space = step.get_hyperparameter_search_space()
+            except AttributeError:
+                # Provided step does not provide a configuration space the expected way.
+                # Simply pretend it is not configurable
+                step_configuration_space = ConfigurationSpace()
             cs.add_configuration_space(name, step_configuration_space)
         return cs
 
