@@ -229,6 +229,7 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
     # TODO generalize for other learning tasks
     _estimator_type = "classifier"
     classes_ = None
+    is_transformator_ = False
 
     def get_estimator(self):
         """Return the underlying estimator object.
@@ -246,6 +247,8 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
+        self.is_transformator_ = True
+
         # noinspection PyTypeChecker
         X: np.ndarray = check_array(X)
         try:
@@ -278,9 +281,14 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
 
     def get_feature_names_out(self, input_features: list[str] = None):
         if hasattr(self.estimator_, "get_feature_names_out"):
-            return self.estimator_.get_feature_names_out(input_features)
+            output_features = self.estimator_.get_feature_names_out(input_features)
         else:
-            return np.array(['prediction'])
+            output_features = np.array(['prediction'])
+
+        if self.is_transformator_:
+            return np.hstack((input_features, ['prob_class_{}'.format(c) for c in self.classes_], output_features))
+        else:
+            return output_features
 
 
 class PreprocessingAlgorithm(EstimatorComponent, ABC):

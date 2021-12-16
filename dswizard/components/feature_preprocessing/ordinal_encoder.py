@@ -45,7 +45,13 @@ class OrdinalEncoderComponent(PreprocessingAlgorithm):
         return self
 
     def get_feature_names_out(self, input_features: list[str] = None):
-        output_features = super().get_feature_names_out(input_features)
+        # OrdinalEncoder does not support get_feature_names_out yet
+        mask = np.zeros(len(input_features))
+        mask[self.estimator_.transformers_[0][2]] = 1
+
+        features = np.array(input_features)
+        output_features = np.hstack((features[mask == 1], features[mask == 0]))
+
         return np.array([f.split('__')[-1] for f in output_features])
 
     @staticmethod
