@@ -184,6 +184,7 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
     def set_hyperparameters(self, configuration: dict = None, init_params=None) -> 'EstimatorComponent':
         if configuration is None:
             configuration = self.get_hyperparameter_search_space().get_default_configuration().get_dictionary()
+            configuration.origin = 'Default'
 
         for param, value in configuration.items():
             if not hasattr(self, param) and param != 'random_state':
