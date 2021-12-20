@@ -210,13 +210,6 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
     def __sklearn_is_fitted__(self):
         return self.estimator_ is not None
 
-    def __str__(self):
-        cls = self.__class__
-        return '.'.join([cls.__module__, cls.__qualname__])
-
-    def __repr__(self, **kwargs):
-        return self.__class__.__qualname__
-
 
 # noinspection PyPep8Naming
 class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
