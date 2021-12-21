@@ -4,8 +4,7 @@ from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter
 from sklearn.pipeline import FeatureUnion
 
-from dswizard.components.base import PreprocessingAlgorithm, NoopComponent
-from dswizard.components.feature_preprocessing.missing_indicator import MissingIndicatorComponent
+from dswizard.components.base import PreprocessingAlgorithm
 from dswizard.components.util import HANDLES_MULTICLASS, HANDLES_NUMERIC, HANDLES_NOMINAL, HANDLES_MISSING, \
     HANDLES_NOMINAL_CLASS
 
@@ -51,6 +50,8 @@ class ImputationComponent(PreprocessingAlgorithm):
         self.missing_values = missing_values
 
     def fit(self, X, y=None):
+        from dswizard.components.feature_preprocessing.missing_indicator import MissingIndicatorComponent
+        from dswizard.components.base import NoopComponent
         from sklearn.impute import SimpleImputer
         from sklearn.compose import ColumnTransformer
 
