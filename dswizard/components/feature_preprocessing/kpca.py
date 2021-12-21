@@ -50,7 +50,7 @@ class KernelPCAComponent(PreprocessingAlgorithm):
 
         # Raise an informative error message, equation is based ~line 249 in
         # kernel_pca.py in scikit-learn
-        if len(self.estimator_.alphas_ / self.estimator_.lambdas_) == 0:
+        if len(self.estimator_.eigenvectors_ / self.estimator_.eigenvalues_) == 0:
             raise ValueError('KernelPCA removed all features!')
         return self
 
