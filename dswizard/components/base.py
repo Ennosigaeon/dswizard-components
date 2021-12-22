@@ -66,7 +66,10 @@ class MetaData:
     @classmethod
     def name(cls, short: bool = False) -> str:
         if short:
-            return cls.__qualname__
+            label = cls.__qualname__
+            if label.endswith('Component'):
+                label = label[:-9]
+            return label
         else:
             return '.'.join([cls.__module__, cls.__qualname__])
 
