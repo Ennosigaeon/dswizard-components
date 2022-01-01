@@ -45,7 +45,6 @@ class KernelPCAComponent(PreprocessingAlgorithm):
         if scipy.sparse.issparse(X):
             X = X.astype(np.float64)
         with warnings.catch_warnings():
-            warnings.filterwarnings("error")
             self.estimator_.fit(X)
 
         # Raise an informative error message, equation is based ~line 249 in
@@ -85,7 +84,6 @@ class KernelPCAComponent(PreprocessingAlgorithm):
         if self.estimator_ is None:
             raise NotImplementedError()
         with warnings.catch_warnings():
-            warnings.filterwarnings("error")
             X_new = self.estimator_.transform(X)
 
             if X_new.shape[1] == 0:
