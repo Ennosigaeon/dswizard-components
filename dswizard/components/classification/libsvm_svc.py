@@ -89,7 +89,7 @@ class LibSVM_SVC(PredictionAlgorithm):
 
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
-        C = UniformFloatHyperparameter("C", 0.03125, 32768, log=True, default_value=1.0)
+        C = UniformFloatHyperparameter("C", 0.03125, 100, log=True, default_value=1.0)
         # No linear kernel here, because we have liblinear
         kernel = CategoricalHyperparameter(name="kernel", choices=["rbf", "poly", "sigmoid"], default_value="rbf")
         degree = UniformIntegerHyperparameter("degree", 2, 5, default_value=3)
