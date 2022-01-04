@@ -87,8 +87,8 @@ class ImputationComponent(PreprocessingAlgorithm):
 
     @staticmethod
     def get_properties():
-        return {'shortname': 'Imputation',
-                'name': 'Imputation',
+        return {'shortname': 'Simple Imputation',
+                'name': 'Simple Imputation',
                 HANDLES_MULTICLASS: True,
                 HANDLES_NUMERIC: True,
                 HANDLES_NOMINAL: True,

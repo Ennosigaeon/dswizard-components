@@ -32,12 +32,17 @@ class KNNImputerComponent(PreprocessingAlgorithm):
 
     def get_feature_names_out(self, input_features: list[str] = None):
         from sklearn.utils.validation import _check_feature_names_in
-        return _check_feature_names_in(self, input_features)
+        names = _check_feature_names_in(self, input_features)
+
+        if self.add_indicator:
+            names = np.append(names, 'Missing Indicator')
+
+        return names
 
     @staticmethod
     def get_properties():
-        return {'shortname': 'Imputation',
-                'name': 'Imputation',
+        return {'shortname': 'KNN Imputation',
+                'name': 'KNN Imputation',
                 HANDLES_MULTICLASS: True,
                 HANDLES_NUMERIC: True,
                 HANDLES_NOMINAL: False,
