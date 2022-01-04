@@ -95,8 +95,8 @@ class SGDClassifier(PredictionAlgorithm):
     def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
-        loss = CategoricalHyperparameter("loss", ["hinge", "log", "modified_huber", "squared_hinge", "perceptron"],
-                                         default_value="hinge")
+        loss = CategoricalHyperparameter("loss", ["log", "modified_huber", "squared_hinge", "perceptron"],
+                                         default_value="log")
         penalty = CategoricalHyperparameter("penalty", ["l2", "l1", "elasticnet"], default_value="l2")
         alpha = UniformFloatHyperparameter("alpha", 1e-7, 1e-1, default_value=0.0001, log=True)
         l1_ratio = UniformFloatHyperparameter("l1_ratio", 1e-9, 1., default_value=0.15, log=True)

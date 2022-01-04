@@ -8,7 +8,7 @@ import unittest
 
 import psutil
 
-from dswizard import pynisher
+from dswizard import pynisher2 as pynisher
 
 try:
     import sklearn

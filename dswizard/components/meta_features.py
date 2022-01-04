@@ -9,7 +9,7 @@ from pymfe.info_theory import MFEInfoTheory
 from pymfe.model_based import MFEModelBased
 from pymfe.statistical import MFEStatistical
 
-from dswizard import pynisher
+from dswizard import pynisher2 as pynisher
 
 MetaFeatures = np.ndarray
 MetaFeaturesDict = Dict[str, float]
