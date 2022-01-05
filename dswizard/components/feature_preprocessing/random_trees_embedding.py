@@ -1,15 +1,15 @@
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
-    UniformFloatHyperparameter, CategoricalHyperparameter
+    UniformFloatHyperparameter
 
 from dswizard.components.base import PreprocessingAlgorithm
-from dswizard.components.util import check_for_bool, resolve_factor, HANDLES_NOMINAL_CLASS, HANDLES_MISSING, \
+from dswizard.components.util import resolve_factor, HANDLES_NOMINAL_CLASS, HANDLES_MISSING, \
     HANDLES_NOMINAL, HANDLES_NUMERIC, HANDLES_MULTICLASS
 
 
 class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
     def __init__(self,
-                 n_estimators: int = 100,
+                 n_estimators: int = 25,
                  max_depth_factor: int = 5,
                  min_samples_split_factor: int = 2,
                  min_samples_leaf_factor: int = 1,
@@ -89,7 +89,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
     def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
 
-        n_estimators = UniformIntegerHyperparameter(name="n_estimators", lower=10, upper=400, default_value=100)
+        n_estimators = UniformIntegerHyperparameter(name="n_estimators", lower=10, upper=50, default_value=25)
         max_depth_factor = UniformFloatHyperparameter("max_depth_factor", 1e-5, 2.5, default_value=1.)
         min_samples_split_factor = UniformFloatHyperparameter("min_samples_split_factor", 0.0001, 0.5,
                                                               default_value=0.0001)
