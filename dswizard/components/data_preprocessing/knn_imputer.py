@@ -35,7 +35,8 @@ class KNNImputerComponent(PreprocessingAlgorithm):
         names = _check_feature_names_in(self, input_features)
 
         if self.add_indicator:
-            names = np.append(names, 'Missing Indicator')
+            columns = [f'missing_{input_features[idx]}' for idx in self.estimator_.indicator_.features_]
+            names = np.append(names, columns)
 
         return names
 
