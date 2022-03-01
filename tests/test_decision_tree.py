@@ -12,7 +12,7 @@ class TestDecisionTree(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test, feature_names = self.load_data()
 
         actual = DecisionTree(random_state=42)
-        config: dict = self.get_default(actual)
+        config = self.get_default(actual)
 
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
@@ -38,9 +38,6 @@ class TestDecisionTree(base_test.BaseComponentTest):
 
         config['max_depth'] = max(resolve_factor(config['max_depth_factor'], X_train.shape[1]), 2)
         del config['max_depth_factor']
-
-        config['max_features'] = resolve_factor(config['max_features_factor'], X_train.shape[1], cs_default=1., default=None)
-        del config['max_features_factor']
 
         config['min_samples_split'] = resolve_factor(config['min_samples_split_factor'], X_train.shape[0])
         del config['min_samples_split_factor']

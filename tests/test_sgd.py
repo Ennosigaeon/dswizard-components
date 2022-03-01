@@ -12,13 +12,14 @@ class TestSGDClassifier(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test, feature_names = self.load_data()
 
         actual = SGDClassifier(random_state=42)
-        config: dict = self.get_default(actual)
+        config = self.get_default(actual)
 
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         y_actual = actual.predict(X_test)
 
-        expected = sklearn.linear_model.SGDClassifier(random_state=42, n_jobs=1, eta0=0.01, learning_rate='invscaling', tol=0.0001)
+        expected = sklearn.linear_model.SGDClassifier(random_state=42, n_jobs=1, eta0=0.01, learning_rate='invscaling',
+                                                      loss='log', tol=0.0001)
         expected.fit(X_train, y_train)
         y_expected = expected.predict(X_test)
 
@@ -30,7 +31,7 @@ class TestSGDClassifier(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test, feature_names = self.load_data()
 
         actual = SGDClassifier(random_state=42)
-        config: dict = self.get_config(actual)
+        config = self.get_config(actual)
 
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)

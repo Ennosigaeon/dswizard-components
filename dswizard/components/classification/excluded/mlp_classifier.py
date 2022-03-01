@@ -64,7 +64,8 @@ class MLPClassifier(PredictionAlgorithm):
         batch_size = 'auto' if self.batch_size == 200 else self.batch_size
 
         return MLPClassifier(
-            hidden_layer_sizes=(self.layer_1_size, self.layer_2_size) if self.layer_2_size is not None and self.layer_2_size != 150
+            hidden_layer_sizes=(
+            self.layer_1_size, self.layer_2_size) if self.layer_2_size is not None and self.layer_2_size != 150
             else (self.layer_1_size,),
             activation=self.activation,
             solver=self.solver,

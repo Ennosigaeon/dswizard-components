@@ -1,3 +1,5 @@
+from typing import List
+
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
     UniformFloatHyperparameter
@@ -71,7 +73,7 @@ class RandomTreesEmbeddingComponent(PreprocessingAlgorithm):
             random_state=self.random_state
         )
     
-    def get_feature_names_out(self, input_features: list[str] = None):
+    def get_feature_names_out(self, input_features: List[str] = None):
         # TODO: generate valid output names
         return None
 

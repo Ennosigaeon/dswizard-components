@@ -19,7 +19,7 @@ class ConfigurablePipeline(Pipeline, EstimatorComponent, HasChildComponents):
 
     def __init__(self,
                  steps: List[Tuple[str, EstimatorComponent]],
-                 configuration: Optional[dict] = None):
+                 configuration: Optional[Dict] = None):
         self.args = {'steps': [(label, util.serialize(comp)) for label, comp in steps], 'configuration': configuration}
 
         self.configuration = configuration
@@ -37,7 +37,7 @@ class ConfigurablePipeline(Pipeline, EstimatorComponent, HasChildComponents):
             self.set_hyperparameters(configuration)
 
     @staticmethod
-    def get_properties() -> dict:
+    def get_properties() -> Dict:
         return {'shortname': 'pipeline',
                 'name': 'Configurable Pipeline',
                 HANDLES_MULTICLASS: True,
@@ -60,7 +60,7 @@ class ConfigurablePipeline(Pipeline, EstimatorComponent, HasChildComponents):
             predecessor = name
         return g
 
-    def set_hyperparameters(self, configuration: dict = None, init_params=None):
+    def set_hyperparameters(self, configuration: Dict = None, init_params=None):
         self.configuration = configuration
         self.set_child_hyperparameters(self.steps, configuration, init_params)
         return self

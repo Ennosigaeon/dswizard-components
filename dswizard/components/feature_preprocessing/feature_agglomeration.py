@@ -1,3 +1,5 @@
+from typing import List
+
 import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.forbidden import ForbiddenAndConjunction, ForbiddenInClause, ForbiddenEqualsClause
@@ -52,7 +54,7 @@ class FeatureAgglomerationComponent(PreprocessingAlgorithm):
                                     distance_threshold=self.distance_threshold,
                                     pooling_func=pooling_func)
 
-    def get_feature_names_out(self, input_features: list[str] = None):
+    def get_feature_names_out(self, input_features: List[str] = None):
         return np.array(['cluster_{}'.format(i) for i in range(self.estimator_.n_clusters)])
 
     @staticmethod

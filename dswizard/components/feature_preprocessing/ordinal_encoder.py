@@ -1,3 +1,5 @@
+from typing import List
+
 import numpy as np
 import pandas as pd
 from sklearn.compose import make_column_selector
@@ -44,7 +46,7 @@ class OrdinalEncoderComponent(PreprocessingAlgorithm):
         self.estimator_.fit(df, y)
         return self
 
-    def get_feature_names_out(self, input_features: list[str] = None):
+    def get_feature_names_out(self, input_features: List[str] = None):
         # OrdinalEncoder does not support get_feature_names_out yet
         mask = np.zeros(len(input_features))
         mask[self.estimator_.transformers_[0][2]] = 1

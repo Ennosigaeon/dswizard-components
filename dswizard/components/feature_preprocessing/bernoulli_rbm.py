@@ -1,3 +1,5 @@
+from typing import List
+
 import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, UniformFloatHyperparameter
@@ -23,7 +25,7 @@ class BernoulliRBM(PreprocessingAlgorithm):
         return BernoulliRBM(n_components=self.n_components, learning_rate=self.learning_rate,
                             batch_size=self.batch_size, n_iter=self.n_iter, random_state=self.random_state)
 
-    def get_feature_names_out(self, input_features: list[str] = None):
+    def get_feature_names_out(self, input_features: List[str] = None):
         return np.array(['rbm_{}'.format(i) for i in range(self.n_components)])
 
     @staticmethod

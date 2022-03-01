@@ -11,7 +11,7 @@ class TestOrdinalEncoderComponent(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test, feature_names = self.load_data()
 
         actual = OrdinalEncoderComponent()
-        config: dict = self.get_default(actual)
+        config = self.get_default(actual)
 
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
@@ -20,11 +20,12 @@ class TestOrdinalEncoderComponent(base_test.BaseComponentTest):
         assert actual.get_feature_names_out(feature_names).tolist() == feature_names
         assert np.allclose(X_actual, X_test)
 
+    # noinspection PyUnusedLocal
     def test_default_categorical(self):
         X_train, X_test, y_train, y_test, feature_names = self.load_data(categorical=True)
 
         actual = OrdinalEncoderComponent()
-        config: dict = self.get_default(actual)
+        config = self.get_default(actual)
 
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)

@@ -12,7 +12,7 @@ class TestImputation(base_test.BaseComponentTest):
         X_train = pd.DataFrame([[1.0], [np.nan]], columns=['foo'])
         y_train = pd.Series([1, 0])
         actual = ImputationComponent()
-        config: dict = self.get_default(actual)
+        config = self.get_default(actual)
 
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
@@ -29,7 +29,7 @@ class TestImputation(base_test.BaseComponentTest):
         X_train = pd.DataFrame([[1.0], [np.nan], [5.0]], columns=['foo'])
         y_train = pd.Series([1, 0, 1])
         actual = ImputationComponent()
-        config: dict = self.get_config(actual)
+        config = self.get_config(actual)
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
         X_actual = actual.transform(X_train)
@@ -38,8 +38,11 @@ class TestImputation(base_test.BaseComponentTest):
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_train)
 
-        assert actual.get_feature_names_out(['foo']).tolist() == ['foo']
-        assert np.allclose(X_actual, X_expected)
+        if config['missing_indicator']:
+            assert actual.get_feature_names_out(['foo']).tolist() == ['foo', 'missing_indicator']
+        else:
+            assert actual.get_feature_names_out(['foo']).tolist() == ['foo']
+            assert np.allclose(X_actual, X_expected)
 
     def test_empty(self):
         X_train, X_test, y_train, y_test, feature_names = self.load_data()

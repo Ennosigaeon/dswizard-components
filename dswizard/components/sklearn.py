@@ -22,6 +22,7 @@ def monkey_patch_get_feature_names_out():
         OrdinalEncoder.get_feature_names_out = func
 
         # add marker to globals to prevent second execution
+        # noinspection PyGlobalUndefined
         global get_feature_names_out_patched
         get_feature_names_out_patched = True
 
@@ -61,6 +62,17 @@ class StackingEstimator(PreprocessingAlgorithm, PredictionAlgorithm):
     def __init__(self, estimator: PredictionAlgorithm):
         super().__init__(estimator.component_name_)
         self.estimator_ = estimator
+
+    @staticmethod
+    def get_properties() -> Dict:
+        return {'shortname': 'se',
+                'name': 'Stacking Estimator',
+                HANDLES_MULTICLASS: True,
+                HANDLES_NUMERIC: True,
+                HANDLES_NOMINAL: True,
+                HANDLES_MISSING: True,
+                HANDLES_NOMINAL_CLASS: True
+                }
 
     def fit(self, X, y=None):
         self.estimator_.fit(X, y)
@@ -106,7 +118,7 @@ class ColumnTransformerComponent(ColumnTransformer, PreprocessingAlgorithm, HasC
         super().__init__(transformers, **kwargs)
 
     @staticmethod
-    def get_properties() -> dict:
+    def get_properties() -> Dict:
         return {'shortname': 'ct',
                 'name': 'Column Transformer',
                 HANDLES_MULTICLASS: True,
@@ -126,7 +138,7 @@ class ColumnTransformerComponent(ColumnTransformer, PreprocessingAlgorithm, HasC
     def get_hyperparameter_search_space(self, mf: Optional[MetaFeaturesDict] = None):
         return self.get_child_hyperparameter_search_space([(name, comp) for name, comp, _ in self.transformers], mf)
 
-    def set_hyperparameters(self, configuration: dict = None, init_params=None) -> 'ColumnTransformerComponent':
+    def set_hyperparameters(self, configuration: Dict = None, init_params=None) -> 'ColumnTransformerComponent':
         self.set_child_hyperparameters([(name, comp) for name, comp, _ in self.transformers], configuration,
                                        init_params)
         return self
@@ -154,7 +166,7 @@ class FeatureUnionComponent(FeatureUnion, PreprocessingAlgorithm, HasChildCompon
         return FeatureUnionComponent(transformer_list_, **kwargs)
 
     @staticmethod
-    def get_properties() -> dict:
+    def get_properties() -> Dict:
         return {'shortname': 'parallel',
                 'name': 'Feature Union',
                 HANDLES_MULTICLASS: True,
@@ -167,7 +179,7 @@ class FeatureUnionComponent(FeatureUnion, PreprocessingAlgorithm, HasChildCompon
     def get_hyperparameter_search_space(self, mf: Optional[MetaFeaturesDict] = None):
         return self.get_child_hyperparameter_search_space(self.transformer_list, mf)
 
-    def set_hyperparameters(self, configuration: dict = None, init_params=None) -> 'FeatureUnionComponent':
+    def set_hyperparameters(self, configuration: Dict = None, init_params=None) -> 'FeatureUnionComponent':
         self.set_child_hyperparameters(self.transformer_list, configuration, init_params)
         return self
 

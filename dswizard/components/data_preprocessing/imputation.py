@@ -1,3 +1,5 @@
+from typing import List
+
 import numpy as np
 import pandas as pd
 from ConfigSpace.configuration_space import ConfigurationSpace
@@ -81,9 +83,19 @@ class ImputationComponent(PreprocessingAlgorithm):
 
         return self
 
-    def get_feature_names_out(self, input_features: list[str] = None):
-        output_features = super().get_feature_names_out(input_features)
-        return np.array([f.split('__')[-1] for f in output_features])
+    def get_feature_names_out(self, input_features: List[str] = None):
+        from sklearn.utils.validation import _check_feature_names_in
+
+        names = _check_feature_names_in(self, input_features)
+        if self.add_indicator:
+            imp = self.estimator_.transformer_list[0][1]
+            mis = self.estimator_.transformer_list[1][1]
+            names = np.append(names[imp._columns[0]], names[imp._columns[1]])
+            names = np.append(names, mis.get_feature_names_out())
+        else:
+            names = np.append(names[self.estimator_._columns[0]], names[self.estimator_._columns[1]])
+
+        return names
 
     @staticmethod
     def get_properties():

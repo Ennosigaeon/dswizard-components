@@ -34,12 +34,11 @@ class MetaFeatureFactory(object):
         :param max_features:
         :param random_state:
         :param timeout:
-        :param memory:
         :return:
         """
         MetaFeatureFactory.logger.debug('Calculating MF')
         wrapper = pynisher.enforce_limits(wall_time_in_s=timeout, grace_period_in_s=5,
-                                           logger=MetaFeatureFactory.logger)(MetaFeatureFactory._calculate)
+                                          logger=MetaFeatureFactory.logger)(MetaFeatureFactory._calculate)
         res = wrapper(X, y, max_nan_percentage=max_nan_percentage, max_features=max_features,
                       random_state=random_state)
         # TODO improve error handling
@@ -95,7 +94,7 @@ class MetaFeatureFactory(object):
         for c in cols:
             try:
                 X[c] = pd.to_numeric(X[c])
-            except:
+            except Exception:
                 pass
 
         numeric = X.select_dtypes(include=['number']).columns

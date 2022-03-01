@@ -131,6 +131,7 @@ def subprocess_func(func: Callable,
         os.sched_setaffinity(0, affinity)
 
     os.setsid()
+    return_value = 0
     # the actual function call
     try:
         return_value = (func(*args, **kwargs), 0)
@@ -187,10 +188,12 @@ class enforce_limits(object):
     def __call__(self, func):
 
         class function_wrapper(object):
+            # noinspection PyMethodParameters
             def __init__(self2, func):
                 self2.func = func
                 self2._reset_attributes()
 
+            # noinspection PyMethodParameters
             def _reset_attributes(self2):
                 self2.result = None
                 self2.exit_status = None
@@ -205,6 +208,7 @@ class enforce_limits(object):
                     signal.SIGTERM: signal.getsignal(signal.SIGTERM)
                 }
 
+            # noinspection PyMethodParameters
             def __call__(self2, *args, **kwargs):
 
                 self2._reset_attributes()
@@ -234,6 +238,7 @@ class enforce_limits(object):
                     tmp_dir = tempfile.TemporaryDirectory()
                     tmp_dir_name = tmp_dir.name
                 else:
+                    tmp_dir = None
                     tmp_dir_name = None
 
                 # create and start the process

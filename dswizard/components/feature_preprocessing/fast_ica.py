@@ -1,3 +1,5 @@
+from typing import List
+
 import numpy as np
 from ConfigSpace.conditions import EqualsCondition
 from ConfigSpace.configuration_space import ConfigurationSpace
@@ -38,7 +40,7 @@ class FastICAComponent(PreprocessingAlgorithm):
                        random_state=self.random_state,
                        tol=self.tol)
 
-    def get_feature_names_out(self, input_features: list[str] = None):
+    def get_feature_names_out(self, input_features: List[str] = None):
         return np.array(['independent_component_{}'.format(i) for i in range(self.estimator_.n_features_in_)])
 
     @staticmethod

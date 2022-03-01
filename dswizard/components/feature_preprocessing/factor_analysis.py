@@ -1,3 +1,5 @@
+from typing import List
+
 import numpy as np
 from ConfigSpace.conditions import InCondition
 from ConfigSpace.configuration_space import ConfigurationSpace
@@ -36,7 +38,7 @@ class FactorAnalysisComponent(PreprocessingAlgorithm):
                               tol=self.tol,
                               random_state=self.random_state)
 
-    def get_feature_names_out(self, input_features: list[str] = None):
+    def get_feature_names_out(self, input_features: List[str] = None):
         return np.array(['factor_{}'.format(i) for i in range(self.estimator_.n_features_in_)])
 
     @staticmethod

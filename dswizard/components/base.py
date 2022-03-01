@@ -38,7 +38,7 @@ def find_components(package: str, directory: str, base_class: Type) -> Dict[str,
 
 class MetaData:
     @staticmethod
-    def get_properties() -> dict:
+    def get_properties() -> Dict:
         """Get the properties of the underlying algorithm.
 
         Find more information at :ref:`get_properties`
@@ -90,7 +90,7 @@ class PredictionMixin(ClassifierMixin):
         Notes
         -----
         Please see the `scikit-learn API documentation
-        <http://scikit-learn.org/dev/developers/index.html#apis-of-scikit
+        <https://scikit-learn.org/dev/developers/index.html#apis-of-scikit
         -learn-objects>`_ for further information."""
         raise NotImplementedError()
 
@@ -147,7 +147,7 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
         Notes
         -----
         Please see the `scikit-learn API documentation
-        <http://scikit-learn.org/dev/developers/index.html#apis-of-scikit
+        <https://scikit-learn.org/dev/developers/index.html#apis-of-scikit
         -learn-objects>`_ for further information."""
         return self
 
@@ -167,11 +167,11 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
         Notes
         -----
         Please see the `scikit-learn API documentation
-        <http://scikit-learn.org/dev/developers/index.html#apis-of-scikit
+        <https://scikit-learn.org/dev/developers/index.html#apis-of-scikit
         -learn-objects>`_ for further information."""
         raise NotImplementedError()
 
-    def get_feature_names_out(self, input_features: list[str] = None):
+    def get_feature_names_out(self, input_features: List[str] = None):
         if hasattr(self.estimator_, "get_feature_names_out"):
             return self.estimator_.get_feature_names_out(input_features)
         else:
@@ -181,7 +181,7 @@ class EstimatorComponent(BaseEstimator, MetaData, ABC):
         cls = self.__class__
         return {'clazz': '.'.join([cls.__module__, cls.__qualname__]), 'args': self.args.copy()}
 
-    def set_hyperparameters(self, configuration: dict = None, init_params=None) -> 'EstimatorComponent':
+    def set_hyperparameters(self, configuration: Dict = None, init_params=None) -> 'EstimatorComponent':
         if configuration is None:
             configuration = self.get_hyperparameter_search_space().get_default_configuration().get_dictionary()
             configuration.origin = 'Default'
@@ -273,7 +273,7 @@ class PredictionAlgorithm(EstimatorComponent, PredictionMixin, ABC):
             raise ValueError()
         return self.estimator_.predict_proba(X)
 
-    def get_feature_names_out(self, input_features: list[str] = None):
+    def get_feature_names_out(self, input_features: List[str] = None):
         if hasattr(self.estimator_, "get_feature_names_out"):
             output_features = self.estimator_.get_feature_names_out(input_features)
         else:
@@ -317,11 +317,11 @@ class NoopComponent(EstimatorComponent):
     def transform(self, X: np.ndarray) -> np.ndarray:
         return X
 
-    def get_feature_names_out(self, input_features: list[str] = None):
+    def get_feature_names_out(self, input_features: List[str] = None):
         return _check_feature_names_in(self, input_features)
 
     @staticmethod
-    def get_properties() -> dict:
+    def get_properties() -> Dict:
         return {'shortname': 'noop',
                 'name': 'No Operation',
                 HANDLES_MULTICLASS: True,
@@ -390,7 +390,7 @@ class ComponentChoice(EstimatorComponent):
 
         return components_dict
 
-    def set_hyperparameters(self, configuration: dict = None, init_params=None) -> 'ComponentChoice':
+    def set_hyperparameters(self, configuration: Dict = None, init_params=None) -> 'ComponentChoice':
         if configuration is None:
             raise ValueError('Default hyperparameters not available for ComponentChoice')
         new_params = {}
@@ -466,8 +466,8 @@ class ComponentChoice(EstimatorComponent):
 
 class HasChildComponents:
 
-    def get_child_hyperparameter_search_space(self,
-                                              children: list[Tuple[str, EstimatorComponent]],
+    @staticmethod
+    def get_child_hyperparameter_search_space(children: List[Tuple[str, EstimatorComponent]],
                                               mf: Optional[MetaFeaturesDict] = None) -> ConfigurationSpace:
         cs = ConfigurationSpace()
         for name, step in children:
@@ -483,8 +483,8 @@ class HasChildComponents:
         return cs
 
     def set_child_hyperparameters(self,
-                                  children: list[Tuple[str, EstimatorComponent]],
-                                  configuration: dict = None,
+                                  children: List[Tuple[str, EstimatorComponent]],
+                                  configuration: Dict = None,
                                   init_params=None):
         for node_idx, (node_name, node) in enumerate(children):
             sub_configuration_space = node.get_hyperparameter_search_space()

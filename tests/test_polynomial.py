@@ -11,7 +11,7 @@ class TestPolynomial(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test, feature_names = self.load_data()
 
         actual = PolynomialFeaturesComponent()
-        config: dict = self.get_default(actual)
+        config = self.get_default(actual)
 
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
@@ -43,7 +43,7 @@ class TestPolynomial(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test, feature_names = self.load_data()
 
         actual = PolynomialFeaturesComponent()
-        config: dict = self.get_config(actual, seed=0)
+        config = self.get_config(actual, seed=0)
 
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
@@ -53,39 +53,40 @@ class TestPolynomial(base_test.BaseComponentTest):
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
-        assert actual.get_feature_names_out(feature_names).tolist() == ['sepal length (cm)',
-                                                                        'sepal width (cm)',
-                                                                        'petal length (cm)',
-                                                                        'petal width (cm)',
-                                                                        'sepal length (cm)^2',
-                                                                        'sepal length (cm) sepal width (cm)',
-                                                                        'sepal length (cm) petal length (cm)',
-                                                                        'sepal length (cm) petal width (cm)',
-                                                                        'sepal width (cm)^2',
-                                                                        'sepal width (cm) petal length (cm)',
-                                                                        'sepal width (cm) petal width (cm)',
-                                                                        'petal length (cm)^2',
-                                                                        'petal length (cm) petal width (cm)',
-                                                                        'petal width (cm)^2',
-                                                                        'sepal length (cm)^3',
-                                                                        'sepal length (cm)^2 sepal width (cm)',
-                                                                        'sepal length (cm)^2 petal length (cm)',
-                                                                        'sepal length (cm)^2 petal width (cm)',
-                                                                        'sepal length (cm) sepal width (cm)^2',
-                                                                        'sepal length (cm) sepal width (cm) petal length (cm)',
-                                                                        'sepal length (cm) sepal width (cm) petal width (cm)',
-                                                                        'sepal length (cm) petal length (cm)^2',
-                                                                        'sepal length (cm) petal length (cm) petal width (cm)',
-                                                                        'sepal length (cm) petal width (cm)^2',
-                                                                        'sepal width (cm)^3',
-                                                                        'sepal width (cm)^2 petal length (cm)',
-                                                                        'sepal width (cm)^2 petal width (cm)',
-                                                                        'sepal width (cm) petal length (cm)^2',
-                                                                        'sepal width (cm) petal length (cm) petal width (cm)',
-                                                                        'sepal width (cm) petal width (cm)^2',
-                                                                        'petal length (cm)^3',
-                                                                        'petal length (cm)^2 petal width (cm)',
-                                                                        'petal length (cm) petal width (cm)^2',
-                                                                        'petal width (cm)^3']
+        actual_feature_names = actual.get_feature_names_out(feature_names).tolist()
+        assert actual_feature_names == ['sepal length (cm)',
+                                        'sepal width (cm)',
+                                        'petal length (cm)',
+                                        'petal width (cm)',
+                                        'sepal length (cm)^2',
+                                        'sepal length (cm) sepal width (cm)',
+                                        'sepal length (cm) petal length (cm)',
+                                        'sepal length (cm) petal width (cm)',
+                                        'sepal width (cm)^2',
+                                        'sepal width (cm) petal length (cm)',
+                                        'sepal width (cm) petal width (cm)',
+                                        'petal length (cm)^2',
+                                        'petal length (cm) petal width (cm)',
+                                        'petal width (cm)^2',
+                                        'sepal length (cm)^3',
+                                        'sepal length (cm)^2 sepal width (cm)',
+                                        'sepal length (cm)^2 petal length (cm)',
+                                        'sepal length (cm)^2 petal width (cm)',
+                                        'sepal length (cm) sepal width (cm)^2',
+                                        'sepal length (cm) sepal width (cm) petal length (cm)',
+                                        'sepal length (cm) sepal width (cm) petal width (cm)',
+                                        'sepal length (cm) petal length (cm)^2',
+                                        'sepal length (cm) petal length (cm) petal width (cm)',
+                                        'sepal length (cm) petal width (cm)^2',
+                                        'sepal width (cm)^3',
+                                        'sepal width (cm)^2 petal length (cm)',
+                                        'sepal width (cm)^2 petal width (cm)',
+                                        'sepal width (cm) petal length (cm)^2',
+                                        'sepal width (cm) petal length (cm) petal width (cm)',
+                                        'sepal width (cm) petal width (cm)^2',
+                                        'petal length (cm)^3',
+                                        'petal length (cm)^2 petal width (cm)',
+                                        'petal length (cm) petal width (cm)^2',
+                                        'petal width (cm)^3']
         assert repr(actual.estimator_) == repr(expected)
         assert np.allclose(X_actual, X_expected)

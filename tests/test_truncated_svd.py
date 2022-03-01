@@ -12,7 +12,7 @@ class TestTruncatedSVDComponent(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test, feature_names = self.load_data()
 
         actual = TruncatedSVDComponent(random_state=42)
-        config: dict = self.get_default(actual)
+        config = self.get_default(actual)
 
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
@@ -30,7 +30,7 @@ class TestTruncatedSVDComponent(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test, feature_names = self.load_data()
 
         actual = TruncatedSVDComponent(random_state=42)
-        config: dict = self.get_config(actual)
+        config = self.get_config(actual)
 
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
@@ -45,6 +45,7 @@ class TestTruncatedSVDComponent(base_test.BaseComponentTest):
         expected.fit(X_train, y_train)
         X_expected = expected.transform(X_test)
 
-        assert actual.get_feature_names_out(feature_names).tolist() == ['singular_value_{}'.format(i) for i in range(expected.explained_variance_.shape[0])]
+        assert actual.get_feature_names_out(feature_names).tolist() == ['singular_value_{}'.format(i) for i in
+                                                                        range(expected.explained_variance_.shape[0])]
         assert repr(actual.estimator_) == repr(expected)
         assert np.allclose(X_actual, X_expected)

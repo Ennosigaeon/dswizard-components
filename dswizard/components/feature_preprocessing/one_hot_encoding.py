@@ -1,3 +1,5 @@
+from typing import List
+
 import numpy as np
 import pandas as pd
 from sklearn.compose import make_column_selector
@@ -46,7 +48,7 @@ class OneHotEncoderComponent(PreprocessingAlgorithm):
     def transform(self, X: np.ndarray):
         return self.estimator_.transform(X)
 
-    def get_feature_names_out(self, input_features: list[str] = None):
+    def get_feature_names_out(self, input_features: List[str] = None):
         output_features = super().get_feature_names_out(input_features)
         return np.array([f.split('__')[-1] for f in output_features])
 

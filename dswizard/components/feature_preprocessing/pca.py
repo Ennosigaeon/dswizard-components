@@ -1,3 +1,5 @@
+from typing import List
+
 import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter
@@ -42,7 +44,7 @@ class PCAComponent(PreprocessingAlgorithm):
                    tol=self.tol,
                    iterated_power=self.iterated_power)
 
-    def get_feature_names_out(self, input_features: list[str] = None):
+    def get_feature_names_out(self, input_features: List[str] = None):
         return np.array(['principal_component_{}'.format(i) for i in range(self.estimator_.n_components_)])
 
     @staticmethod

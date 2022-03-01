@@ -1,3 +1,4 @@
+from typing import Dict
 from unittest import TestCase
 
 import numpy as np
@@ -13,7 +14,8 @@ class BaseComponentTest(TestCase):
     def test_configured(self):
         pass
 
-    def load_data(self, multiclass=True, categorical=False, random_state=42):
+    @staticmethod
+    def load_data(multiclass=True, categorical=False, random_state=42):
         np.random.seed(4)
 
         if categorical:
@@ -29,15 +31,17 @@ class BaseComponentTest(TestCase):
                                                             random_state=random_state)
         return X_train, X_test, y_train, y_test, feature_names
 
-    def get_config(self, actual, seed: int = None) -> dict:
+    @staticmethod
+    def get_config(actual, seed: int = None) -> Dict:
         cs = actual.get_hyperparameter_search_space()
         if seed is not None:
             cs.seed(seed)
-        config: dict = cs.sample_configuration().get_dictionary()
+        config: Dict = cs.sample_configuration().get_dictionary()
         print(config)
         return config
 
-    def get_default(self, actual) -> dict:
-        config: dict = actual.get_hyperparameter_search_space().get_default_configuration().get_dictionary()
+    @staticmethod
+    def get_default(actual) -> Dict:
+        config: Dict = actual.get_hyperparameter_search_space().get_default_configuration().get_dictionary()
         print(config)
         return config

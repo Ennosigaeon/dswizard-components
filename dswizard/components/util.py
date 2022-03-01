@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 import importlib
 import inspect
-from typing import Optional
+from typing import Optional, Dict
 
 import numpy as np
 
@@ -21,7 +21,7 @@ def get_type(clazz: str) -> type:
     return class_
 
 
-def serialize(object_) -> dict:
+def serialize(object_) -> Dict:
     try:
         return object_.serialize()
     except AttributeError:

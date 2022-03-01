@@ -38,14 +38,14 @@ def spawn_rogue_subprocess(num_procs=5):
     for i in range(num_procs):
         p = multiprocessing.Process(target=rogue_subprocess, daemon=False)
         p.start()
-    p = psutil.Process()
+    _ = psutil.Process()
     time.sleep(10)
 
 
 def simulate_work(size_in_mb, wall_time_in_s, num_processes):
     # allocate memory (size_in_mb) with an array
     # note the actual size in memory of this process is a little bit larger
-    A = [42.] * ((1024 * size_in_mb) // 8)
+    _ = [42.] * ((1024 * size_in_mb) // 8)
 
     # try to spawn new processes
     if num_processes > 0:
@@ -79,7 +79,7 @@ def svc_example(n_samples=10000, n_features=4):
     m.fit(X, Y)
 
 
-def crash_unexpectedly(signum):
+def crash_unexpectedly(_):
     print(f"Provoking segfault")
     import ctypes
     ctypes.string_at(0)

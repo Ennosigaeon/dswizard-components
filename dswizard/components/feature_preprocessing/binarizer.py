@@ -1,3 +1,5 @@
+from typing import List
+
 import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 
@@ -23,7 +25,7 @@ class BinarizerComponent(PreprocessingAlgorithm):
         # threshold = max(0., int(np.round(variance * self.threshold_factor, 0)))
         return Binarizer(threshold=self.threshold)
 
-    def get_feature_names_out(self, input_features: list[str] = None):
+    def get_feature_names_out(self, input_features: List[str] = None):
         from sklearn.utils.validation import _check_feature_names_in
         return _check_feature_names_in(self, input_features)
 

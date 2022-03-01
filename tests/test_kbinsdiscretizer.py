@@ -12,7 +12,7 @@ class TestKBinsDiscretizer(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test, feature_names = self.load_data()
 
         actual = KBinsDiscretizer()
-        config: dict = self.get_default(actual)
+        config = self.get_default(actual)
 
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)
@@ -45,7 +45,7 @@ class TestKBinsDiscretizer(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test, feature_names = self.load_data()
 
         actual = KBinsDiscretizer()
-        config: dict = self.get_config(actual, seed=0)
+        config = self.get_config(actual, seed=0)
 
         actual.set_hyperparameters(config)
         actual.fit(X_train, y_train)

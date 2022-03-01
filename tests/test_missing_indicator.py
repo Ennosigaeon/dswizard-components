@@ -15,7 +15,7 @@ class TestMissingIndicatorComponent(base_test.BaseComponentTest):
         feature_names = ['1', '2', '3']
 
         actual = MissingIndicatorComponent()
-        config: dict = self.get_default(actual)
+        config = self.get_default(actual)
 
         actual.set_hyperparameters(config)
         actual.fit(X)
@@ -28,7 +28,7 @@ class TestMissingIndicatorComponent(base_test.BaseComponentTest):
         X_train, X_test, y_train, y_test, feature_names = self.load_data()
 
         actual = MissingIndicatorComponent()
-        config: dict = self.get_default(actual)
+        config = self.get_default(actual)
 
         actual.set_hyperparameters(config)
         actual.fit(X_train)

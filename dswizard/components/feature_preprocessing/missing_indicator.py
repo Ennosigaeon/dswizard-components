@@ -1,3 +1,5 @@
+from typing import List
+
 import numpy as np
 from ConfigSpace.configuration_space import ConfigurationSpace
 
@@ -28,7 +30,7 @@ class MissingIndicatorComponent(PreprocessingAlgorithm):
         missing = self.estimator_.transform(X)
         return np.any(missing, axis=1, keepdims=True).astype(int)
 
-    def get_feature_names_out(self, input_features: list[str] = None):
+    def get_feature_names_out(self, input_features: List[str] = None):
         return np.array(['missing_values'])
 
     @staticmethod
