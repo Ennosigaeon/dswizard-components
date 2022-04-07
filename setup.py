@@ -33,10 +33,12 @@ if __name__ == '__main__':
         classifiers=[
             'License :: OSI Approved :: MIT License',
             'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 3.5'
+            'Programming Language :: Python :: 3.7',
+            'Programming Language :: Python :: 3.8',
+            'Programming Language :: Python :: 3.9'
         ],
         packages=find_namespace_packages(include=['dswizard.*']),
-        python_requires='>=3.5',
+        python_requires='>=3.7',
         include_package_data=True,
         install_requires=requirements,
         keywords=['automl', 'machine learning', 'pipeline synthesis']
