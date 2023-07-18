@@ -38,7 +38,7 @@ class RobustScalerComponent(PreprocessingAlgorithm):
     @staticmethod
     def get_hyperparameter_search_space(**kwargs):
         cs = ConfigurationSpace()
-        q_min = UniformFloatHyperparameter('q_min', 0.1, 30, default_value=25)
-        q_max = UniformFloatHyperparameter('q_max', 70, 99.9, default_value=75)
+        q_min = UniformFloatHyperparameter('q_min', 0.1, 30., default_value=25.)
+        q_max = UniformFloatHyperparameter('q_max', 70, 99.9, default_value=75.)
         cs.add_hyperparameters([q_min, q_max])
         return cs
